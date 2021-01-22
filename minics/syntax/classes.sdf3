@@ -1,0 +1,39 @@
+module classes
+
+imports
+  Common
+  types
+
+context-free sorts
+  ImportDecl ClassDecl MemberDecl ParamDecl ParentDecl
+
+context-free syntax
+
+  ImportDecl.Import = <using <ID>;>
+
+  ClassDecl.Class = <
+    class <ID> {
+      <{MemberDecl "\n"}*>
+    }
+  >
+
+  MemberDecl.Field = <<Type> <ID>;>
+  MemberDecl.Method = <
+    public <Type> <ID>(<{ParamDecl ", "}*>) {
+
+
+    }
+  >
+  //<{Statement "\n"}*>
+  // return <Exp>;
+
+  ParamDecl.Param = <<Type> <ID>>
+
+  ParentDecl.NoParent = <>
+  ParentDecl.Parent = <: <ID>>
+
+
+template options
+
+  keyword -/- [A-Za-z0-9]
+

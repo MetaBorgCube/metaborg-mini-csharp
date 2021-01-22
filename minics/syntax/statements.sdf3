@@ -1,0 +1,36 @@
+module statements
+
+imports
+  Common
+  expressions
+  types
+
+context-free sorts
+  Stmt
+
+context-free syntax
+
+  Stmt.Block = <
+  {
+    <{Stmt "\n"}*>
+  }>
+  Stmt.Empty = <;>
+
+  Stmt.DeclareTypedVar = <<Type> <ID>;>
+  Stmt.DeclareTypedVarInit = <<Type> <ID> = <Exp>;>
+  Stmt.DeclareVarInit = <var <ID> = <Exp>;>
+
+  Stmt.Assign = <<ID> = <Exp>;>
+  Stmt.If = <
+    if (<Exp>)
+      <Stmt>
+    else
+      <Stmt>
+  >
+  Stmt.Call = <<Exp>(<{Exp ", "}*>);>
+
+template options
+
+  keyword -/- [A-Za-z0-9]
+
+

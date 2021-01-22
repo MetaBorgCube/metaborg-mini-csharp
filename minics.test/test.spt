@@ -1,0 +1,7 @@
+module test
+
+language minics
+
+test parse [[
+
+]] parse succeeds

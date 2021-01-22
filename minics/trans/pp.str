@@ -1,0 +1,49 @@
+module pp
+
+imports
+
+  libstratego-gpp
+  libspoofax/sdf/pp
+  libspoofax/editor/refactoring/-
+  pp/minics-parenthesize
+  pp/minics-pp
+
+rules
+
+  editor-format:
+    (node, _, ast, path, project-path) -> (filename, result)
+    with
+      ext      := <get-extension> path
+    ; filename := <guarantee-extension(|$[pp.[ext]])> path
+    ; result   := <pp-debug> node
+
+rules
+  
+  pp-minics-string =
+    parenthesize-minics
+    ; prettyprint-minics-start-symbols
+    ; !V([], <id>)
+    ; box2text-string(|120)
+      
+  pp-partial-minics-string =
+    parenthesize-minics
+    ; prettyprint-minics
+    ; !V([], <id>)
+    ; box2text-string(|120)
+    
+  pp-partial-minics-string(|sort) =
+    parenthesize-minics
+    ; prettyprint-minics(|sort)
+    ; !V([], <id>)
+    ; box2text-string(|120)  
+      
+  pp-debug :
+    ast -> result
+    with
+       result := <pp-minics-string> ast
+    <+ <bottomup(try(not(is-string); not(is-list); not(pp-minics-string); debug(!"cannot pp ")))> ast
+    ;  result := ""
+
+rules
+  
+  construct-textual-change = construct-textual-change(pp-partial-minics-string, parenthesize, override-reconstruction, resugar)

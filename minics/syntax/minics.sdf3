@@ -1,0 +1,35 @@
+module minics
+
+imports
+  Common
+  classes
+  statements
+  expressions
+
+context-free start-symbols
+  Start
+
+context-free sorts
+  Start MainClass
+
+context-free syntax
+
+  Start.Program = <
+    <{ImportDecl "\n"}*>
+    <MainClass>
+  >
+
+  MainClass.MainClass = <
+    public class <ID>
+    {
+      public static void Main()
+      {
+
+      }
+    }
+  >
+
+template options
+
+  keyword -/- [A-Za-z0-9]
+

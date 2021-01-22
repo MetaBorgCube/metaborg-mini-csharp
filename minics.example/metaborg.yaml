@@ -1,0 +1,8 @@
+---
+id: org.metaborg:minics.example:1.0.0-SNAPSHOT
+name: minics
+dependencies:
+  compile:
+  - org.metaborg:minics:1.0.0-SNAPSHOT
+build:
+  useBuildSystemSpec: true

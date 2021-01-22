@@ -1,0 +1,54 @@
+# Spoofax
+*.aterm
+.cache/
+src-gen/
+.polyglot.metaborg.yaml
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Gradle
+.gradle
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# Eclipse
+bin/
+tmp/
+.classpath
+.project
+*.tmp
+*.bak
+*.swp
+*~.nib
+.factorypath
+.metadata
+.settings/
+.loadpath
+.externalToolBuilders/
+.recommenders/
+.apt_generated/
+.apt_generated_test/
+local.properties
+store.core.ds
+
+# Intellij
+*.iws
+*.iml
+*.ipr
+.idea/
+out/
+.idea_modules/
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties

@@ -1,0 +1,22 @@
+module types
+
+imports
+  Common
+
+context-free sorts
+  Type VarRef
+
+context-free syntax
+
+  Type.Int = <int>
+  Type.Bool = <bool>
+  Type.ClassType = <<ID>>
+
+context-free syntax
+
+  VarRef.VarRef = <<ID>>
+
+template options
+
+  keyword -/- [A-Za-z0-9]
+
