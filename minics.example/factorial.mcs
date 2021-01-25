@@ -4,6 +4,19 @@ public class Program
 {
     public static void Main()
     {
+        Console.WriteLine(new Fac().ComputeFac(10));
+    }
+}
 
+class Fac
+{
+    public int ComputeFac(int num)
+    {
+        int num_aux;
+        if (num < 1)
+            num_aux = 1;
+        else
+            num_aux = num * ComputeFac(num - 1);
+        return num_aux;
     }
 }

@@ -1,0 +1,21 @@
+using System;
+
+public class Program
+{
+    public static void Main()
+    {
+        ;//Console.WriteLine(new Fac().ComputeFac(10));
+    }
+}
+
+class Fac
+{
+    public int ComputeFac(int num)
+    {
+        int a1;
+        int a2;
+        int a3;
+        if (a1) int x; else int y;
+        int b;
+    }
+}
