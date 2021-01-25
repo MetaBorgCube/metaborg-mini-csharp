@@ -10,16 +10,16 @@ context-free sorts
 context-free syntax
 
   // Objects
-  Exp = <<VarRef>>
+  Exp.Var = <<ID>>
   Exp.This = <this>
   Exp.Call = <<Exp>(<{Exp ", "}*>)>
   Exp.New = <new <ID>(<>)>
   Exp.Member = <<Exp>.<ID>>
-  Exp.MemberElvis = <<Exp>?.<ID>>
-  Exp.Cast = <(<Type>)<Exp>>
-  Exp.Default = <default>
-  Exp.Null = <null>
-  Exp.NullCoal = <??> {left}
+  //Exp.MemberElvis = <<Exp>?.<ID>>
+//  Exp.Cast = <(<Type>)<Exp>>
+//  Exp.Default = <default>
+//  Exp.Null = <null>
+//  Exp.NullCoal = <??> {left}
 
   // Boolean
   Exp.True = <true>
@@ -50,15 +50,15 @@ context-free priorities
 
   {
     Exp.Member
-    Exp.MemberElvis
+//    Exp.MemberElvis
     Exp.Call
     Exp.New
-    Exp.Default
+//    Exp.Default
   } > {
     Exp.Plus
     Exp.Min
     Exp.Not
-    Exp.Cast
+//    Exp.Cast
   } > { left:
     Exp.Mul
     Exp.Div
@@ -78,13 +78,14 @@ context-free priorities
   } > {
     Exp.Or
   } > { left:
-    Exp.NullCoal
+//    Exp.NullCoal
   } > {
     Exp.Cond
   }
 
 template options
 
+  ID = keyword {reject}
   keyword -/- [A-Za-z0-9]
 
 

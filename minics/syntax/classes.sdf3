@@ -3,13 +3,14 @@ module classes
 imports
   Common
   types
+  statements
 
 context-free sorts
-  ImportDecl ClassDecl MemberDecl ParamDecl ParentDecl
+  UsingDecl ClassDecl MemberDecl ParamDecl ParentDecl
 
 context-free syntax
 
-  ImportDecl.Import = <using <ID>;>
+  UsingDecl.Using = <using <ID>;>
 
   ClassDecl.Class = <
     class <ID> {
@@ -20,8 +21,7 @@ context-free syntax
   MemberDecl.Field = <<Type> <ID>;>
   MemberDecl.Method = <
     public <Type> <ID>(<{ParamDecl ", "}*>) {
-
-
+        <Stmt>
     }
   >
   //<{Statement "\n"}*>
@@ -35,5 +35,6 @@ context-free syntax
 
 template options
 
+  ID = keyword {reject}
   keyword -/- [A-Za-z0-9]
 

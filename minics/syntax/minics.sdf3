@@ -10,26 +10,28 @@ context-free start-symbols
   Start
 
 context-free sorts
-  Start MainClass
+  Start MainClassDecl
 
 context-free syntax
 
   Start.Program = <
-    <{ImportDecl "\n"}*>
-    <MainClass>
+    <{UsingDecl "\n"}*>
+    <MainClassDecl>
+    <{ClassDecl "\n"}*>
   >
 
-  MainClass.MainClass = <
+  MainClassDecl.MainClass = <
     public class <ID>
     {
       public static void Main()
       {
-
+        <Stmt>
       }
     }
   >
 
 template options
 
+  ID = keyword {reject}
   keyword -/- [A-Za-z0-9]
 
