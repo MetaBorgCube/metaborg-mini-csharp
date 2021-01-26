@@ -352,7 +352,7 @@ rules resolveMember : scope * ID -> (ID * TYPE)
 rules unwrapVarRef : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
 
   unwrapVarRef(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
-  unwrapVarRef(s, name, []) = resolveMember(s, ref).
+  unwrapVarRef(s, ref, []) = resolveMember(s, ref).
 
 // Single-file entry point
 rules programOk : Start
