@@ -40,25 +40,25 @@ rules usingOk : scope * UsingDecl
 
 rules mainClassOk : scope * MainClassDecl
 
-  mainClassOk(globalScope, MainClass(name, stmt)) :- {classScope methodScope}
+  mainClassOk(globalScope, MainClass(name, stmts)) :- {classScope methodScope}
     new classScope,
     classScope -P-> globalScope,
     globalScope -> Class{name@name} with type CLASS(classScope),
 
     new methodScope,
     methodScope -P-> classScope,
-    stmtOk(methodScope, stmt).
+    stmtsOk(methodScope, stmts).
 
 
 rules classOk : scope * ClassDecl
   classesOk maps classOk(*, list(*))
 
-  classOk(globalScope, Class(name, members)) :- {classScope methodScope}
+  classOk(globalScope, Class(name, members)) :- {classScope methodScope T}
     new classScope,
     classScope -P-> globalScope,
-    globalScope -> Class{name@name} with type CLASS(classScope),
-    classScope -> Var{"this"@name} with type CLASS(classScope),
-
+    T == CLASS(classScope),
+    globalScope -> Class{name@name} with type T,
+    classScope -> Var{"this"@name} with type T,
     membersOk(classScope, members).
 
 rules memberOk : scope * MemberDecl
@@ -66,27 +66,31 @@ rules memberOk : scope * MemberDecl
 
   memberOk(classScope, Field(type, name)) :- {T}
     typeOfType(classScope, type) == T,
-    classScope -> Member{name@name} with type T.
+    classScope -> Member{name@name} with type T,
+    @name.type := T.
 
-  memberOk(classScope, Method(returnType, name, params, stmt)) :- {methodScope RT PTS}
+  memberOk(classScope, Method(returnType, name, params, stmts)) :- {methodScope RT PTS T}
     new methodScope,
     methodScope -P-> classScope,
     typeOfType(classScope, returnType) == RT,
     typesOfParams(methodScope, params) == PTS,
-    classScope -> Member{name@name} with type METHOD(PTS, RT),
-    methodScope -> Return{} with type RT,
-    stmtOk(methodScope, stmt).
+    T == METHOD(PTS, RT),
+    classScope -> Member{name@name} with type T,
+    methodScope -> Return{@name} with type RT,
+    stmtsOk(methodScope, stmts),
+    @name.type := T.
 
 rules stmtOk : scope * Stmt
+  stmtsOk maps stmtOk(*, list(*))
 
-  stmtOk(blockScope, Block(stmt)) :- {nestedBlockScope}
+  stmtOk(blockScope, Block(stmts)) :- {nestedBlockScope}
     new nestedBlockScope,
     nestedBlockScope -P-> blockScope,
-    stmtOk(nestedBlockScope, stmt).
+    stmtsOk(nestedBlockScope, stmts).
 
-  stmtOk(blockScope, Seq(stm1, stm2)) :-
-    stmtOk(blockScope, stm1),
-    stmtOk(blockScope, stm2).
+//  stmtOk(blockScope, Seq(stm1, stm2)) :-
+//    stmtOk(blockScope, stm1),
+//    stmtOk(blockScope, stm2).
 
   stmtOk(blockScope, Nop()).
 
@@ -96,181 +100,266 @@ rules stmtOk : scope * Stmt
   stmtOk(blockScope, DeclareTypedVar(type, name)) :- {T}
     typeOfType(blockScope, type) == T,
     // FIXME: Variable should only be declared in subsequent scopes
-    blockScope -> Var{name@name} with type T.
+    blockScope -> Var{name@name} with type T,
+    @name.type := T.
 
   stmtOk(blockScope, DeclareTypedVarInit(type, name, e)) :- {T TE}
     typeOfType(blockScope, type) == T,
     typeOfExp(blockScope, e) == TE,
     T == TE | error $[expected [T], got [TE]],
     // FIXME: Variable should only be declared in subsequent scopes
-    blockScope -> Var{name@name} with type T.
+    blockScope -> Var{name@name} with type T,
+    @name.type := T.
 
-  stmtOk(blockScope, DeclareVarInit(name, e)) :- {TE}
-    typeOfExp(blockScope, e) == TE,
+  stmtOk(blockScope, DeclareVarInit(name, e)) :- {T}
+    typeOfExp(blockScope, e) == T,
     // FIXME: Variable should only be declared in subsequent scopes
-    blockScope -> Var{name@name} with type TE.
+    blockScope -> Var{name@name} with type T,
+    @name.type := T.
 
   stmtOk(blockScope, Assign(name, e)) :- {TE TV}
     typeOfExp(blockScope, e) == TE,
-    // TODO: Get type of variable ref
-    TV == TE | error $[expected [TV], got [TE]].
+    typeOfVar(blockScope, name) == TV,
+    TV == TE | error $[expected [TV], got [TE]],
+    @name.type := TV.
 
-  stmtOk(blockScope, If(condExp, thenStmt, elseStmt)) :- {TC}
+  stmtOk(blockScope, stmt@If(condExp, thenStmt, elseStmt)) :- {TC}
     typeOfExp(blockScope, condExp) == TC,
     TC == BOOL() | error $[expected bool, got [TC]],
     stmtOk(blockScope, thenStmt),
-    stmtOk(blockScope, elseStmt).
+    stmtOk(blockScope, elseStmt),
+    @stmt.type := TC.
 
   stmtOk(blockScope, Return(e)) :- {T TR}
     typeOfExp(blockScope, e) == T,
-    //type of Return{} in blockScope |-> _,//[(_, (Return{}, TR))],
+    type of Return{@-} in blockScope |-> [(_, (Return{@_}, TR))],
     TR != VOID() | error $[expected void, got [TR]],
     TR == T | error $[expected [TR], got [T]].
 
 rules typeOfType : scope * Type -> TYPE
 
-  typeOfType(s, Int()) = INT().
-  typeOfType(s, Bool()) = BOOL().
-  typeOfType(s, Void()) = VOID().
-  typeOfType(s, ClassType(ref)) = T :- {decl}
+  typeOfType(s, t@Int()) = T :-
+    T == INT(),
+    @t.type := T.
+
+  typeOfType(s, t@Bool()) = T :-
+    T == BOOL(),
+    @t.type := T.
+
+  typeOfType(s, t@Void()) = T :-
+    T == VOID(),
+    @t.type := T.
+
+  typeOfType(s, t@ClassType(ref)) = T :- {decl}
     type of Class{ref} in s |-> [(_, (Class{decl}, T))],
-    @ref.ref := decl.
+    @ref.ref := decl,
+    @t.type := T.
 
 rules typeOfParam : scope * ParamDecl -> TYPE
   typesOfParams maps typeOfParam(*, list(*)) = list(*)
 
   typeOfParam(s, Param(type, name)) = T :-
     typeOfType(s, type) == T,
-    s -> Var{name@name} with type T.
+    s -> Var{name@name} with type T,
+    @name.type := T.
 
 rules typeOfExp : scope * Exp -> TYPE
 
   typesOfExps maps typeOfExp(*, list(*)) = list(*)
 
-  typeOfExp(s, Var(ref)) = T :- {decl}
-    type of Var{ref} in s |-> [(_, (Var{decl}, T))],
-    @ref.ref := decl.
+  typeOfExp(s, e@Var(ref)) = T :- {decl}
+    typeOfVar(s, ref) == T,
+    @e.type := T.
 
   typeOfExp(s, e@This()) = T :- {decl}
-    type of Var{"this"} in s |-> [(_, (Var{decl}, T))],
+    type of Var{"this"@-} in s |-> [(_, (Var{decl@_}, T))],
     @e.ref := decl.
 
-  typeOfExp(s, Call(e, args)) = TR :- {T TPARAMS TARGS}
-    typeOfExp(s, e) == T,
-    T == METHOD(TPARAMS, TR) | error $[expected method, got [T]],
+  typeOfExp(s, e@Call(e1, args)) = TR :- {T1 TPARAMS TARGS}
+    typeOfExp(s, e1) == T1,
+    T1 == METHOD(TPARAMS, TR) | error $[expected method, got [T1]],
     typesOfExps(s, args) == TARGS,
-    TARGS == TPARAMS | error $[expected parameters of types [TPARAMS], got [TARGS]].
+    TARGS == TPARAMS | error $[expected parameters of types [TPARAMS], got [TARGS]],
+    @e.type := TR.
 
-  typeOfExp(s, New(ref)) = T :- {decl}
-    type of Class{ref} in s |-> [(_, (Class{decl}, T))],
-    @ref.ref := decl.
+  typeOfExp(s, e@New(ref)) = T :- {decl}
+    type of Class{ref} in s |-> [(_, (Class{decl@_}, T))],
+    @ref.ref := decl,
+    @e.type := T.
 
-  typeOfExp(s, Member(e, ref)) = T :- {TE classScope decl}
-    typeOfExp(s, e) == TE,
-    TE == CLASS(classScope),
-    type of Member{ref} in classScope |-> [(_, (Member{decl}, T))],
-    @ref.ref := decl.
+  typeOfExp(s, e@Member(e1, ref)) = T :- {T1 classScope decl}
+    typeOfExp(s, e1) == T1,
+    T1 == CLASS(classScope),
+    type of Member{ref@-} in classScope |-> [(_, (Member{decl@_}, T))],
+    @ref.ref := decl,
+    @e.type := T.
 
-  typeOfExp(_, True()) = BOOL().
-  typeOfExp(_, False()) = BOOL().
+  typeOfExp(_, e@True()) = T :-
+    T == BOOL(),
+    @e.type := T.
 
-  typeOfExp(s, Lt(e1, e2)) = BOOL() :- {T1 T2}
+  typeOfExp(_, e@False()) = T :-
+    T == BOOL(),
+    @e.type := T.
+
+  typeOfExp(s, e@Lt(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
     T2 == INT() | error $[expected int, got [T2]].
 
-  typeOfExp(s, Le(e1, e2)) = BOOL() :- {T1 T2}
+  typeOfExp(s, e@Le(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
     T2 == INT() | error $[expected int, got [T2]].
 
-  typeOfExp(s, Gt(e1, e2)) = BOOL() :- {T1 T2}
+  typeOfExp(s, e@Gt(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
     T2 == INT() | error $[expected int, got [T2]].
 
-  typeOfExp(s, Ge(e1, e2)) = BOOL() :- {T1 T2}
+  typeOfExp(s, e@Ge(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
     T2 == INT() | error $[expected int, got [T2]].
 
-  typeOfExp(s, Eq(e1, e2)) = BOOL() :- {T1 T2}
+  typeOfExp(s, e@Eq(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == T2 | error $[expected [T1], got [T2]].
 
-  typeOfExp(s, Neq(e1, e2)) = BOOL() :- {T1 T2}
+  typeOfExp(s, e@Neq(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == T2 | error $[expected [T1], got [T2]].
 
-  typeOfExp(s, And(e1, e2)) = BOOL() :- {T1 T2}
+  typeOfExp(s, e@And(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == BOOL() | error $[expected bool, got [T1]],
     T2 == BOOL() | error $[expected bool, got [T2]].
 
-  typeOfExp(s, Or(e1, e2)) = BOOL() :- {T1 T2}
+  typeOfExp(s, e@Or(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == BOOL() | error $[expected bool, got [T1]],
     T2 == BOOL() | error $[expected bool, got [T2]].
 
-  typeOfExp(s, Not(e)) = BOOL() :- {T}
-    typeOfExp(s, e) == T,
-    T == BOOL() | error $[expected bool, got [T]].
+  typeOfExp(s, e@Not(e1)) = T :- {T1}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    T1 == BOOL() | error $[expected bool, got [T1]].
 
-  typeOfExp(s, Int(_)) = INT().
+  typeOfExp(s, e@Int(_)) = T :-
+    T == INT(),
+    @e.type := T.
 
-  typeOfExp(s, Plus(e)) = INT() :- {T}
-    typeOfExp(s, e) == T,
-    T == INT() | error $[expected int, got [T]].
+  typeOfExp(s, e@Plus(e1)) = T :- {T1}
+    T == INT(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    T1 == INT() | error $[expected int, got [T1]].
 
-  typeOfExp(s, Min(e)) = INT() :- {T}
-    typeOfExp(s, e) == T,
-    T == INT() | error $[expected int, got [T]].
+  typeOfExp(s, e@Min(e1)) = T :- {T1}
+    T == INT(),
+    @e.type := T,
+    typeOfExp(s, e1) == T,
+    T1 == INT() | error $[expected int, got [T1]].
 
-  typeOfExp(s, Mul(e1, e2)) = INT() :- {T1 T2}
+  typeOfExp(s, e@Mul(e1, e2)) = T :- {T1 T2}
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
     T2 == INT() | error $[expected int, got [T2]].
 
-  typeOfExp(s, Div(e1, e2)) = INT() :- {T1 T2}
+  typeOfExp(s, e@Div(e1, e2)) = T :- {T1 T2}
+    T == INT(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
     T2 == INT() | error $[expected int, got [T2]].
 
-  typeOfExp(s, Add(e1, e2)) = INT() :- {T1 T2}
+  typeOfExp(s, e@Add(e1, e2)) = T :- {T1 T2}
+    T == INT(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
     T2 == INT() | error $[expected int, got [T2]].
 
-  typeOfExp(s, Sub(e1, e2)) = INT() :- {T1 T2}
+  typeOfExp(s, e@Sub(e1, e2)) = T :- {T1 T2}
+    T == INT(),
+    @e.type := T,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
     T2 == INT() | error $[expected int, got [T2]].
 
-  typeOfExp(s, Cond(c, e1, e2)) = INT() :- {TC T1 T2}
+  typeOfExp(s, e@Cond(c, e1, e2)) = T :- {TC T1 T2}
     typeOfExp(s, c) == TC,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     TC == BOOL() | error $[expected bool, got [TC]],
-    T1 == T2 | error $[expected [T1], got [T2]].
+    T1 == T2 | error $[expected [T1], got [T2]],
+    T1 == T,
+    @e.type := T.
 
+rules typeOfVar : scope * ID -> TYPE
+
+  typeOfVar(s, ref) = T :- {p decl}
+    type of Var{ref@-} in s |-> p,
+    unwrapVarRef(s, ref, p) == (decl, T),
+    @ref.ref := decl.
+
+rules typeOfField : scope * ID -> TYPE
+
+  typeOfField(s, ref) = T :- {decl}
+    resolveMember(s, ref) == (decl, T),
+    @ref.ref := decl.
+
+rules resolveVar : scope * ID -> (ID * TYPE)
+
+  resolveVar(s, ref) = (decl, T) :- {p}
+    type of Var{ref@-} in s |-> p,
+    unwrapVarRef(s, ref, p) == (decl, T).
+
+rules resolveMember : scope * ID -> (ID * TYPE)
+
+  resolveMember(s, ref) = (decl, T) :-
+    type of Member{ref@-} in s |-> [(_, (Member{decl@_}, T))].
+
+rules unwrapVarRef : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+
+  unwrapVarRef(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
+  unwrapVarRef(s, name, []) = resolveMember(s, ref).
 
 // Single-file entry point
 rules programOk : Start
 
   programOk(Program(usings, mainClass, classes)) :- {s}
     new s,
+    init(s),
     usingsOk(s, usings),
     mainClassOk(s, mainClass),
     classesOk(s, classes).
@@ -283,3 +372,7 @@ rules projectOk : scope
 rules fileOk : scope * Start
 
   fileOk(s, _).
+
+rules init : scope
+
+  init(s).

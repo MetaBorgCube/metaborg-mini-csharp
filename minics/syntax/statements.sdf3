@@ -12,12 +12,12 @@ context-free syntax
 
   Stmt.Block = <
   {
-    <Stmt>
+    <{Stmt "\n"}*>
   }>
-  Stmt.Seq = <
-    <Stmt>
-    <Stmt>
-  > {right}
+//  Stmt.Seq = <
+//    <Stmt>
+//    <Stmt>
+//  > {right}
 
   Stmt.Nop = <;>
   Stmt.Exp = <<Exp>;>
@@ -37,7 +37,7 @@ context-free syntax
 
 context-free priorities
     Stmt.If
-  > Stmt.Seq
+//  > Stmt.Seq
 
 template options
 

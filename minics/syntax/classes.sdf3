@@ -21,7 +21,7 @@ context-free syntax
   MemberDecl.Field = <<Type> <ID>;>
   MemberDecl.Method = <
     public <Type> <ID>(<{ParamDecl ", "}*>) {
-        <Stmt>
+        <{Stmt "\n"}*>
     }
   >
   //<{Statement "\n"}*>
