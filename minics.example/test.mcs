@@ -1,12 +1,12 @@
 using System;
 
-class Program
-{
-    public static void Main()
-    {
-        (true);//Console.WriteLine(new Fac().ComputeFac(10));
-    }
-}
+//class Program
+//{
+//    public static void Main()
+//    {
+//        (true);//Console.WriteLine(new Fac().ComputeFac(10));
+//    }
+//}
 
 class A
 {
@@ -17,6 +17,7 @@ class A
 
 class P : A
 {
+    public static int s;
     public int x;
     public void M() {
     }
@@ -27,10 +28,14 @@ class Fac : P
     public int l;
     public int ComputeFac(int num)
     {
+        var _ = P;
         int l;
         l;
-        base.y;
-        base.M();
+        var s2 = s;
+        var f = new Fac();
+        f.l;
+//        base.y;
+//        base.M();
         M();
         int a1 = N();
         int a2;

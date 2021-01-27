@@ -20,15 +20,25 @@ context-free syntax
 
   MemberDecl.InstanceField = <public <Type> <ID>;>
   MemberDecl.StaticField = <public static <Type> <ID>;>
+  MemberDecl.NewField = <public new <Type> <ID>;>
+
   MemberDecl.InstanceMethod = <
     public <Type> <ID>(<{ParamDecl ", "}*>) {
         <{Stmt "\n"}*>
     }
   >
-  //<{Statement "\n"}*>
-  // return <Exp>;
+  MemberDecl.OverrideMethod = <
+    public override <Type> <ID>(<{ParamDecl ", "}*>) {
+        <{Stmt "\n"}*>
+    }
+  >
   MemberDecl.StaticMethod = <
     public static <Type> <ID>(<{ParamDecl ", "}*>) {
+        <{Stmt "\n"}*>
+    }
+  >
+  MemberDecl.NewMethod = <
+    public new <Type> <ID>(<{ParamDecl ", "}*>) {
         <{Stmt "\n"}*>
     }
   >

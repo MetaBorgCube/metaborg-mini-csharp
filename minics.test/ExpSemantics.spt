@@ -7,28 +7,26 @@ start symbol Start
 fixture [[
     using System;
 
-    class Program
-    {
-        public static void Main()
-        {
-        ;
-        }
-    }
-
     class A
     {
+        public static int sfa;
+
         public int fa;
         public bool MA() { }
     }
 
     class B : A
     {
+        public static bool sfb;
+
         public bool fb;
         public int MB() { }
     }
 
     class C : B
     {
+        public static int sfc;
+
         public int fc;
         public void MC(int a)
         {
@@ -113,19 +111,63 @@ test remote ancestor field [[
 
 // Static fields
 test local static field [[
-  sf
+  sfc
 ]] analysis succeeds
-   run get-type to BOOL()
+   run get-type to INT()
 
-test parent static field [[
-  psf
+test this local static field [[
+  this.sfc
+]] analysis fails
+
+test base local static field [[
+  base.sfc
+]] analysis fails
+
+test direct static field [[
+  C.sfc
 ]] analysis succeeds
-   run get-type to BOOL()
+   run get-type to INT()
 
 test remote static field [[
-  Q.sf
+  C.sfc
+]] analysis succeeds
+   run get-type to INT()
+
+test parent static field [[
+  sfb
 ]] analysis succeeds
    run get-type to BOOL()
+
+test this parent static field [[
+  this.sfb
+]] analysis fails
+
+test base parent static field [[
+  base.sfb
+]] analysis fails
+
+test remote parent static field [[
+  C.sfb
+]] analysis succeeds
+   run get-type to BOOL()
+
+test ancestor static field [[
+  sfa
+]] analysis succeeds
+   run get-type to INT()
+
+test this ancestor static field [[
+  this.sfa
+]] analysis fails
+
+test base ancestor static field [[
+  base.sfa
+]] analysis fails
+
+test remote ancestor static field [[
+  C.sfa
+]] analysis succeeds
+   run get-type to INT()
 
 
 // Instance methods

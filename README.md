@@ -26,6 +26,10 @@ Most features of C# are not supported in Mini C#, but the following are explicit
 - nullable types
 
 
+## Scope Graph
+A class declaration gets two scopes: a `classScope`, which contains the static members of the class, and an `instanceScope`, which contains the instance member of the class. The `instanceScope` has a `P` edge to the `classScope`, which has a `P` edge to the global scope.
+
+
 ## License
 Copyright 2021 Daniel A. A. Pelsmaeker
 

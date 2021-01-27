@@ -16,19 +16,18 @@ context-free syntax
 
   Start.Program = <
     <{UsingDecl "\n"}*>
-    <MainClassDecl>
     <{ClassDecl "\n"}*>
   >
 
-  MainClassDecl.MainClass = <
-    class <ID>
-    {
-      public static void Main()
-      {
-        <{Stmt "\n"}*>
-      }
-    }
-  >
+//  MainClassDecl.MainClass = <
+//    class <ID>
+//    {
+//      public static void Main()
+//      {
+//        <{Stmt "\n"}*>
+//      }
+//    }
+//  >
 
 template options
 
