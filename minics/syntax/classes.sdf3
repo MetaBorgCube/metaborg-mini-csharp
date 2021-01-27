@@ -18,19 +18,41 @@ context-free syntax
     }
   >
 
-  MemberDecl.Field = <public <Type> <ID>;>
-  MemberDecl.Method = <
+  MemberDecl.InstanceField = <public <Type> <ID>;>
+  MemberDecl.StaticField = <public static <Type> <ID>;>
+  MemberDecl.InstanceMethod = <
     public <Type> <ID>(<{ParamDecl ", "}*>) {
         <{Stmt "\n"}*>
     }
   >
   //<{Statement "\n"}*>
   // return <Exp>;
+  MemberDecl.StaticMethod = <
+    public static <Type> <ID>(<{ParamDecl ", "}*>) {
+        <{Stmt "\n"}*>
+    }
+  >
 
   ParamDecl.Param = <<Type> <ID>>
 
   ParentDecl.NoParent = <>
   ParentDecl.Parent = < : <ID>>
+
+  // Not currently used:
+  MemberModifier.Public     = <public>
+  MemberModifier.Protected  = <protected>
+  MemberModifier.Internal   = <internal>
+  MemberModifier.Private    = <private>
+  MemberModifier.Static     = <static>
+  MemberModifier.Override   = <override>
+  MemberModifier.New        = <new>
+  MemberModifier.Sealed     = <sealed>
+  MemberModifier.Virtual    = <virtual>
+  MemberModifier.Abstract   = <abstract>
+  MemberModifier.Extern     = <extern>
+  MemberModifier.Readonly   = <readonly>
+  MemberModifier.Volatile   = <volatile>
+  MemberModifier.Async      = <async>
 
 
 template options

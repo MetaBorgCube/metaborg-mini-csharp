@@ -1,4 +1,4 @@
-module test
+module MemberSemantics
 
 language minics
 
@@ -30,6 +30,7 @@ fixture [[
     class C : B
     {
         public int fc;
+        public int MC() { }
         [[...]]
     }
 ]]
@@ -45,4 +46,25 @@ test field not unique [[
 
 test field present in parent [[
     public int fb;
+]] analysis fails
+
+test method [[
+    public int M() {}
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test method not unique [[
+    public bool MC() {}
+]] analysis fails
+
+test method present in parent [[
+    public void MB() {}
+]] analysis fails
+
+test duplicate method with different signature (not supported in Mini C#) [[
+    public int MC(int x) {}
+]] analysis fails
+
+test method with different signature present in parent (not supported in Mini C#) [[
+    public void MB(int x) {}
 ]] analysis fails

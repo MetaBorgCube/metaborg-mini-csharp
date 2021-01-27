@@ -1,7 +1,228 @@
-module test
+module ExpSemantics
 
 language minics
 
-test parse [[
+start symbol Start
 
-]] parse succeeds
+fixture [[
+    using System;
+
+    class Program
+    {
+        public static void Main()
+        {
+        ;
+        }
+    }
+
+    class A
+    {
+        public int fa;
+        public bool MA() { }
+    }
+
+    class B : A
+    {
+        public bool fb;
+        public int MB() { }
+    }
+
+    class C : B
+    {
+        public int fc;
+        public void MC(int a)
+        {
+            int l;
+            var _ = [[...]];
+        }
+    }
+]]
+
+// Local variables
+test local variable [[
+  l
+]] analysis succeeds
+   run get-type to INT()
+
+// Arguments
+test argument [[
+  a
+]] analysis succeeds
+   run get-type to INT()
+
+// Instance Fields
+test local field [[
+  fc
+]] analysis succeeds
+   run get-type to INT()
+
+test this local field [[
+  this.fc
+]] analysis succeeds
+   run get-type to INT()
+
+test base local field [[
+  base.fc
+]] analysis fails
+
+test remote field [[
+  new C().fc
+]] analysis succeeds
+   run get-type to INT()
+
+test parent field [[
+  fb
+]] analysis succeeds
+   run get-type to BOOL()
+
+test this parent field [[
+  this.fb
+]] analysis succeeds
+   run get-type to BOOL()
+
+test base parent field [[
+  base.fb
+]] analysis succeeds
+   run get-type to BOOL()
+
+test remote parent field [[
+  new C().fb
+]] analysis succeeds
+   run get-type to BOOL()
+
+test ancestor field [[
+  fa
+]] analysis succeeds
+   run get-type to INT()
+
+test this ancestor field [[
+  this.fa
+]] analysis succeeds
+   run get-type to INT()
+
+test base ancestor field [[
+  base.fa
+]] analysis succeeds
+   run get-type to INT()
+
+test remote ancestor field [[
+  new C().fa
+]] analysis succeeds
+   run get-type to INT()
+
+
+// Static fields
+test local static field [[
+  sf
+]] analysis succeeds
+   run get-type to BOOL()
+
+test parent static field [[
+  psf
+]] analysis succeeds
+   run get-type to BOOL()
+
+test remote static field [[
+  Q.sf
+]] analysis succeeds
+   run get-type to BOOL()
+
+
+// Instance methods
+test local method [[
+  MC
+]] analysis succeeds
+   run get-type to METHOD([INT()], VOID())
+
+test this local method [[
+  this.MC
+]] analysis succeeds
+   run get-type to METHOD([INT()], VOID())
+
+test base local method [[
+  base.MC
+]] analysis fails
+
+test remote local method [[
+  new C().MC
+]] analysis succeeds
+   run get-type to METHOD([INT()], VOID())
+
+test parent method [[
+  MB
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test this parent method [[
+  this.MB
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test base parent method [[
+  base.MB
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test remote parent method [[
+  new C().MB
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test ancestor method [[
+  MA
+]] analysis succeeds
+   run get-type to METHOD([], BOOL())
+
+test this ancestor method [[
+  this.MA
+]] analysis succeeds
+   run get-type to METHOD([], BOOL())
+
+test base ancestor method [[
+  base.MA
+]] analysis succeeds
+   run get-type to METHOD([], BOOL())
+
+test remote ancestor method [[
+  new C().MA
+]] analysis succeeds
+   run get-type to METHOD([], BOOL())
+
+
+// Static functions
+test local static function [[
+  SF
+]] analysis succeeds
+   run get-type to METHOD([BOOL()], VOID())
+
+test parent static function [[
+  PSF
+]] analysis succeeds
+   run get-type to METHOD([BOOL()], VOID())
+
+test remote static function [[
+  Q.sf
+]] analysis succeeds
+   run get-type to BOOL()
+
+
+// Literals and Constants
+test true [[
+  true
+]] analysis succeeds
+   run get-type to BOOL()
+
+test false [[
+  false
+]] analysis succeeds
+   run get-type to BOOL()
+
+test this [[
+  this
+]] analysis succeeds
+  run get-type to CLASS("C", _)
+
+test base [[
+  base
+]] analysis succeeds
+  run get-type to CLASS("B", _)

@@ -10,13 +10,15 @@ public class Program
 
 class Fac
 {
+    int x;
     public int ComputeFac(int num)
     {
-        int num_aux;
-        if (num < 1)
-            num_aux = 1;
-        else
-            num_aux = num * ComputeFac(num - 1);
-        return num_aux;
+        ComputeFac(num - 1);
+//        int numaux;
+//        if (num < 1)
+//            numaux = 1;
+//        else
+//            numaux = num * this.ComputeFac(num - 1);
+        //return num_aux;
     }
 }

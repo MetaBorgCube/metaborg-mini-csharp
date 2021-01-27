@@ -1,21 +1,41 @@
 using System;
 
-public class Program
+class Program
 {
     public static void Main()
     {
-        ;//Console.WriteLine(new Fac().ComputeFac(10));
+        (true);//Console.WriteLine(new Fac().ComputeFac(10));
     }
 }
 
-class Fac
+class A
 {
+    public int y;
+    public int N() {
+    }
+}
+
+class P : A
+{
+    public int x;
+    public void M() {
+    }
+}
+
+class Fac : P
+{
+    public int l;
     public int ComputeFac(int num)
     {
-        int a1;
+        int l;
+        l;
+        base.y;
+        base.M();
+        M();
+        int a1 = N();
         int a2;
         int a3;
-        if (a1) int x; else int y;
+        //if (a1) int x; else int y;
         int b;
     }
 }
