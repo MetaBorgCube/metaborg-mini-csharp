@@ -6,7 +6,7 @@ imports
 
 signature
   sorts TYPE constructors
-    CLASS       : scope -> TYPE
+    CLASS       : string * scope -> TYPE
     INT         : TYPE
     BOOL        : TYPE
     VOID        : TYPE
@@ -44,7 +44,7 @@ rules mainClassOk : scope * MainClassDecl
   mainClassOk(globalScope, MainClass(name, stmts)) :- {classScope methodScope}
     new classScope,
     classScope -P-> globalScope,
-    globalScope -> Class{name@name} with type CLASS(classScope),
+    globalScope -> Class{name@name} with type CLASS(name, classScope),
 
     new methodScope,
     methodScope -P-> classScope,
@@ -57,7 +57,7 @@ rules classOk : scope * ClassDecl
   classOk(globalScope, Class(name, parent, members)) :- {classScope methodScope T}
     new classScope,
     classScope -P-> globalScope,
-    T == CLASS(classScope),
+    T == CLASS(name, classScope),
     globalScope -> Class{name@name} with type T,
     classScope -> Var{"this"@name} with type T,
     parentOk(classScope, parent),
@@ -69,13 +69,14 @@ rules parentOk : scope * ParentDecl
     // TODO: Inherit from Object.
     true.
 
-  parentOk(classScope, Parent(ref)) :- {parentScope}
-    typeOfClass(classScope, ref) == CLASS(parentScope),
+  parentOk(classScope, Parent(ref)) :- {parentScope T}
+    typeOfClass(classScope, ref) == T@CLASS(_, parentScope),
     // Ensure the parents are different from the class itself
     query () filter P*S* and { ancestorScope :- ancestorScope == classScope }
       min $ < P, $ < S, S < P
       in parentScope |-> [] | error $[cyclic inheritance],
-    classScope -S-> parentScope.
+    classScope -S-> parentScope,
+    classScope -> Var{"base"@ref} with type T.
 
 rules memberOk : scope * MemberDecl
   membersOk maps memberOk(*, list(*))
@@ -135,7 +136,7 @@ rules stmtOk : scope * Stmt
 
   stmtOk(blockScope, Assign(name, e)) :- {TE TV}
     typeOfExp(blockScope, e) == TE,
-    typeOfVar(blockScope, name) == TV,
+    typeOfVarOrMember(blockScope, name) == TV,
     TV == TE | error $[expected [TV], got [TE]],
     @name.type := TV.
 
@@ -184,12 +185,18 @@ rules typeOfExp : scope * Exp -> TYPE
   typesOfExps maps typeOfExp(*, list(*)) = list(*)
 
   typeOfExp(s, e@Var(ref)) = T :- {decl}
-    typeOfVar(s, ref) == T,
+    typeOfVarOrMember(s, ref) == T,
     @e.type := T.
 
   typeOfExp(s, e@This()) = T :- {decl}
     type of Var{"this"@-} in s |-> [(_, (Var{decl@_}, T))],
-    @e.ref := decl.
+    @e.ref := decl,
+    @e.type := T.
+
+  typeOfExp(s, e@Base()) = T :- {decl}
+    type of Var{"base"@-} in s |-> [(_, (Var{decl@_}, T))],
+    @e.ref := decl,
+    @e.type := T.
 
   typeOfExp(s, e@Call(e1, args)) = TR :- {T1 TPARAMS TARGS}
     typeOfExp(s, e1) == T1,
@@ -205,7 +212,7 @@ rules typeOfExp : scope * Exp -> TYPE
 
   typeOfExp(s, e@Member(e1, ref)) = T :- {T1 classScope decl}
     typeOfExp(s, e1) == T1,
-    T1 == CLASS(classScope),
+    T1 == CLASS(_, classScope),
     type of Member{ref@-} in classScope |-> [(_, (Member{decl@_}, T))],
     @ref.ref := decl,
     @e.type := T.
@@ -341,11 +348,11 @@ rules typeOfExp : scope * Exp -> TYPE
     T1 == T,
     @e.type := T.
 
-rules typeOfVar : scope * ID -> TYPE
+rules typeOfVarOrMember : scope * ID -> TYPE
 
-  typeOfVar(s, ref) = T :- {p decl}
+  typeOfVarOrMember(s, ref) = T :- {p decl}
     type of Var{ref@-} in s |-> p,
-    unwrapVarRef(s, ref, p) == (decl, T),
+    unwrapVarOrResolveMember(s, ref, p) == (decl, T),
     @ref.ref := decl.
 
 rules typeOfField : scope * ID -> TYPE
@@ -365,21 +372,21 @@ rules resolveClass : scope * ID -> (ID * TYPE)
   resolveClass(s, ref) = (decl, T) :-
     type of Class{ref@-} in s |-> [(_, (Class{decl@_}, T))].
 
-rules resolveVar : scope * ID -> (ID * TYPE)
+rules resolveVarOrMember : scope * ID -> (ID * TYPE)
 
-  resolveVar(s, ref) = (decl, T) :- {p}
+  resolveVarOrMember(s, ref) = (decl, T) :- {p}
     type of Var{ref@-} in s |-> p,
-    unwrapVarRef(s, ref, p) == (decl, T).
+    unwrapVarOrResolveMember(s, ref, p) == (decl, T).
 
 rules resolveMember : scope * ID -> (ID * TYPE)
 
   resolveMember(s, ref) = (decl, T) :-
     type of Member{ref@-} in s |-> [(_, (Member{decl@_}, T))].
 
-rules unwrapVarRef : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+rules unwrapVarOrResolveMember : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
 
-  unwrapVarRef(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
-  unwrapVarRef(s, ref, []) = resolveMember(s, ref).
+  unwrapVarOrResolveMember(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
+  unwrapVarOrResolveMember(s, ref, []) = resolveMember(s, ref).
 
 // Single-file entry point
 rules programOk : Start

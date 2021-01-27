@@ -12,6 +12,7 @@ context-free syntax
   // Objects
   Exp.Var = <<ID>>
   Exp.This = <this>
+  Exp.Base = <base>
   Exp.Call = <<Exp>(<{Exp ", "}*>)>
   Exp.New = <new <ID>(<>)>
   Exp.Member = <<Exp>.<ID>>
