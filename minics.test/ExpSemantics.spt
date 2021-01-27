@@ -262,9 +262,9 @@ test false [[
 test this [[
   this
 ]] analysis succeeds
-  run get-type to CLASS("C", _)
+  run get-type to OBJECT(CLASS("C", _), _)
 
 test base [[
   base
 ]] analysis succeeds
-  run get-type to CLASS("B", _)
+  run get-type to OBJECT(CLASS("B", _), _)

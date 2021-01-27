@@ -53,10 +53,10 @@ rules classOk : scope * ClassDecl
 
     // Instance object
     new instanceScope,
-    instanceScope -P-> classScope,
+    instanceScope -P-> globalScope,
     IT == OBJECT(CT, instanceScope),
 
-    classScope -> Var{"this"@name} with type IT,
+    instanceScope -> Var{"this"@name} with type IT,
     classScope -> Constructor{@name} with type IT,
     parentOk(classScope, instanceScope, parent),
     membersOk(classScope, instanceScope, members),
@@ -78,7 +78,7 @@ rules parentOk : scope * scope * ParentDecl
 
     // Get the parent's instanceScope.
     type of Constructor{@-} in parentClassScope |-> [(_, (_, PIT@OBJECT(_, parentInstanceScope)))],
-    classScope -> Var{"base"@ref} with type PIT,
+    instanceScope -> Var{"base"@ref} with type PIT,
     instanceScope -S-> parentInstanceScope,
 
     @parent.type := CT.
@@ -126,11 +126,6 @@ rules memberOk : scope * scope * MemberDecl
     stmtsOk(methodScope, stmts),
     @method.type := T.
 
-//  memberOk(classScope, method@StaticMethod(name, _, _)) :-
-//    true.
-
-    // tryOverride
-
 rules stmtOk : scope * Stmt
   stmtsOk maps stmtOk(*, list(*))
 
@@ -138,10 +133,6 @@ rules stmtOk : scope * Stmt
     new nestedBlockScope,
     nestedBlockScope -P-> blockScope,
     stmtsOk(nestedBlockScope, stmts).
-
-//  stmtOk(blockScope, Seq(stm1, stm2)) :-
-//    stmtOk(blockScope, stm1),
-//    stmtOk(blockScope, stm2).
 
   stmtOk(blockScope, Nop()).
 
@@ -220,6 +211,7 @@ rules typeOfExp : scope * Exp -> TYPE
   typesOfExps maps typeOfExp(*, list(*)) = list(*)
 
   typeOfExp(s, e@Var(ref)) = T :- {decl}
+    // FIXME: This should also allow us to refer to static members
     typeOfVarOrMemberOrClass(s, ref) == T,
     @e.type := T.
 
