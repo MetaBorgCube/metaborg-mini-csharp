@@ -13,7 +13,7 @@ context-free syntax
   UsingDecl.Using = <using <ID>;>
 
   ClassDecl.Class = <
-    class <ID> {
+    class <ID><ParentDecl> {
       <{MemberDecl "\n"}*>
     }
   >
@@ -30,7 +30,7 @@ context-free syntax
   ParamDecl.Param = <<Type> <ID>>
 
   ParentDecl.NoParent = <>
-  ParentDecl.Parent = <: <ID>>
+  ParentDecl.Parent = < : <ID>>
 
 
 template options

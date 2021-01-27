@@ -25,11 +25,12 @@ signature
     type        : occurrence -> TYPE
 
   name-resolution
-    labels P
-    resolve Class  filter P* min $ < P
-    resolve Member filter P* min $ < P
-//    resolve Field  filter P* min $ < P
-//    resolve Method filter P* min $ < P
+    labels
+      P     // lexical parent
+      S     // super class
+      I     // import (using)
+    resolve Class  filter P*I? min $ < P, $ < I, P < I      // prefer lexical parents over imports
+    resolve Member filter P*S* min $ < P, $ < S, S < P      // prefer super classes over lexical parents
     resolve Var    filter P* min $ < P
     resolve Return filter P* min $ < P
 
@@ -53,13 +54,28 @@ rules mainClassOk : scope * MainClassDecl
 rules classOk : scope * ClassDecl
   classesOk maps classOk(*, list(*))
 
-  classOk(globalScope, Class(name, members)) :- {classScope methodScope T}
+  classOk(globalScope, Class(name, parent, members)) :- {classScope methodScope T}
     new classScope,
     classScope -P-> globalScope,
     T == CLASS(classScope),
     globalScope -> Class{name@name} with type T,
     classScope -> Var{"this"@name} with type T,
+    parentOk(classScope, parent),
     membersOk(classScope, members).
+
+rules parentOk : scope * ParentDecl
+
+  parentOk(classScope, NoParent()) :-
+    // TODO: Inherit from Object.
+    true.
+
+  parentOk(classScope, Parent(ref)) :- {parentScope}
+    typeOfClass(classScope, ref) == CLASS(parentScope),
+    // Ensure the parents are different from the class itself
+    query () filter P*S* and { ancestorScope :- ancestorScope == classScope }
+      min $ < P, $ < S, S < P
+      in parentScope |-> [] | error $[cyclic inheritance],
+    classScope -S-> parentScope.
 
 rules memberOk : scope * MemberDecl
   membersOk maps memberOk(*, list(*))
@@ -337,6 +353,17 @@ rules typeOfField : scope * ID -> TYPE
   typeOfField(s, ref) = T :- {decl}
     resolveMember(s, ref) == (decl, T),
     @ref.ref := decl.
+
+rules typeOfClass : scope * ID -> TYPE
+
+  typeOfClass(s, ref) = T :- {decl}
+    resolveClass(s, ref) == (decl, T),
+    @ref.ref := decl.
+
+rules resolveClass : scope * ID -> (ID * TYPE)
+
+  resolveClass(s, ref) = (decl, T) :-
+    type of Class{ref@-} in s |-> [(_, (Class{decl@_}, T))].
 
 rules resolveVar : scope * ID -> (ID * TYPE)
 
