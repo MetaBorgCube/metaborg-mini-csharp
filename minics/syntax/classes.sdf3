@@ -18,7 +18,7 @@ context-free syntax
     }
   >
 
-  MemberDecl.Field = <<Type> <ID>;>
+  MemberDecl.Field = <public <Type> <ID>;>
   MemberDecl.Method = <
     public <Type> <ID>(<{ParamDecl ", "}*>) {
         <{Stmt "\n"}*>

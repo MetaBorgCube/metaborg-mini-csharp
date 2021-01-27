@@ -21,7 +21,7 @@ context-free syntax
   >
 
   MainClassDecl.MainClass = <
-    public class <ID>
+    class <ID>
     {
       public static void Main()
       {

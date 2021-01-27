@@ -41,42 +41,46 @@ rules usingOk : scope * UsingDecl
 
 rules mainClassOk : scope * MainClassDecl
 
-  mainClassOk(globalScope, MainClass(name, stmts)) :- {classScope methodScope}
+  mainClassOk(globalScope, class@MainClass(name, stmts)) :- {classScope methodScope T}
     new classScope,
     classScope -P-> globalScope,
-    globalScope -> Class{name@name} with type CLASS(name, classScope),
+    T == CLASS(name, classScope),
+    globalScope -> Class{name@name} with type T,
 
     new methodScope,
     methodScope -P-> classScope,
-    stmtsOk(methodScope, stmts).
+    stmtsOk(methodScope, stmts),
+    @class.type := T.
 
 
 rules classOk : scope * ClassDecl
   classesOk maps classOk(*, list(*))
 
-  classOk(globalScope, Class(name, parent, members)) :- {classScope methodScope T}
+  classOk(globalScope, class@Class(name, parent, members)) :- {classScope methodScope T}
     new classScope,
     classScope -P-> globalScope,
     T == CLASS(name, classScope),
     globalScope -> Class{name@name} with type T,
     classScope -> Var{"this"@name} with type T,
     parentOk(classScope, parent),
-    membersOk(classScope, members).
+    membersOk(classScope, members),
+    @class.type := T.
 
 rules parentOk : scope * ParentDecl
 
-  parentOk(classScope, NoParent()) :-
+  parentOk(classScope, parent@NoParent()) :-
     // TODO: Inherit from Object.
     true.
 
-  parentOk(classScope, Parent(ref)) :- {parentScope T}
+  parentOk(classScope, parent@Parent(ref)) :- {parentScope T}
     typeOfClass(classScope, ref) == T@CLASS(_, parentScope),
     // Ensure the parents are different from the class itself
     query () filter P*S* and { ancestorScope :- ancestorScope == classScope }
       min $ < P, $ < S, S < P
       in parentScope |-> [] | error $[cyclic inheritance],
     classScope -S-> parentScope,
-    classScope -> Var{"base"@ref} with type T.
+    classScope -> Var{"base"@ref} with type T,
+    @parent.type := T.
 
 rules memberOk : scope * MemberDecl
   membersOk maps memberOk(*, list(*))
