@@ -1,0 +1,51 @@
+module test
+
+language minics
+
+start symbol Start
+
+fixture [[
+    using System;
+
+    class Program
+    {
+        public static void Main()
+        {
+        ;
+        }
+    }
+
+    class A { }
+
+    class B : A { }
+
+    [[...]]
+
+    class CC : C { }
+]]
+
+test class [[
+    class C
+    {
+    }
+]] analysis succeeds
+   run get-type to CLASS("C", _)
+
+test class with parent [[
+    class C : B
+    {
+    }
+]] analysis succeeds
+   run get-type to CLASS("C", _)
+
+test class with cyclic inheritance [[
+    class C : C
+    {
+    }
+]] analysis fails
+
+test class with indirect cyclic inheritance [[
+    class C : CC
+    {
+    }
+]] analysis fails

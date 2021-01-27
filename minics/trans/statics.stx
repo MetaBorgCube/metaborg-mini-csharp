@@ -29,8 +29,8 @@ signature
       P     // lexical parent
       S     // super class
       I     // import (using)
-    resolve Class  filter P*I? min $ < P, $ < I, P < I      // prefer lexical parents over imports
-    resolve Member filter P*S* min $ < P, $ < S, S < P      // prefer super classes over lexical parents
+    resolve Class  filter P* I? min $ < P, $ < I, P < I      // prefer lexical parents over imports
+    resolve Member filter P* S* min $ < P, $ < S, S < P      // prefer super classes over lexical parents
     resolve Var    filter P* min $ < P
     resolve Return filter P* min $ < P
 
@@ -75,7 +75,7 @@ rules parentOk : scope * ParentDecl
   parentOk(classScope, parent@Parent(ref)) :- {parentScope T}
     typeOfClass(classScope, ref) == T@CLASS(_, parentScope),
     // Ensure the parents are different from the class itself
-    query () filter P*S* and { ancestorScope :- ancestorScope == classScope }
+    query () filter P* S* and { ancestorScope :- ancestorScope == classScope }
       min $ < P, $ < S, S < P
       in parentScope |-> [] | error $[cyclic inheritance],
     classScope -S-> parentScope,
@@ -85,12 +85,18 @@ rules parentOk : scope * ParentDecl
 rules memberOk : scope * MemberDecl
   membersOk maps memberOk(*, list(*))
 
-  memberOk(classScope, Field(type, name)) :- {T}
+  memberOk(classScope, field@Field(type, name)) :- {T}
     typeOfType(classScope, type) == T,
     classScope -> Member{name@name} with type T,
-    @name.type := T.
+    // Ensure the field is distinct
+    type of Member{name@name} in classScope |-> [(_, (_, T))] | error $[field is not unique],
+    // Ensure the field is not declared in a super class
+    query type filter S S* and { d :- d == Member{name@_} }
+      min $ < P, $ < S, S < P
+      in classScope |-> [] | error $[field is already declared in super class],
+    @field.type := T.
 
-  memberOk(classScope, Method(returnType, name, params, stmts)) :- {methodScope RT PTS T}
+  memberOk(classScope, method@Method(returnType, name, params, stmts)) :- {methodScope RT PTS T}
     new methodScope,
     methodScope -P-> classScope,
     typeOfType(classScope, returnType) == RT,
@@ -99,7 +105,7 @@ rules memberOk : scope * MemberDecl
     classScope -> Member{name@name} with type T,
     methodScope -> Return{@name} with type RT,
     stmtsOk(methodScope, stmts),
-    @name.type := T.
+    @method.type := T.
 
 rules stmtOk : scope * Stmt
   stmtsOk maps stmtOk(*, list(*))

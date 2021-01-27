@@ -1,0 +1,48 @@
+module test
+
+language minics
+
+start symbol Start
+
+fixture [[
+    using System;
+
+    class Program
+    {
+        public static void Main()
+        {
+        ;
+        }
+    }
+
+    class A
+    {
+        public int fa;
+        public bool MA() { }
+    }
+
+    class B : A
+    {
+        public bool fb;
+        public int MB() { }
+    }
+
+    class C : B
+    {
+        public int fc;
+        [[...]]
+    }
+]]
+
+test field [[
+    public int x;
+]] analysis succeeds
+   run get-type to INT()
+
+test field not unique [[
+    public bool fc;
+]] analysis fails
+
+test field present in parent [[
+    public int fb;
+]] analysis fails
