@@ -1,0 +1,187 @@
+module analysis/expressions
+
+imports
+  signatures/minics-sig
+  analysis/types
+
+rules typeOfExp : scope * Exp -> TYPE
+
+  typesOfExps maps typeOfExp(*, list(*)) = list(*)
+
+  typeOfExp(s, e@Var(ref)) = T :- {decl}
+    // FIXME: This should also allow us to refer to static members
+    typeOfVarOrMemberOrClass(s, ref) == T,
+    @e.type := T.
+
+  typeOfExp(s, e@This()) = T :- {decl}
+    type of Var{"this"@-} in s |-> [(_, (Var{decl@_}, T))],
+    @e.ref := decl,
+    @e.type := T.
+
+  typeOfExp(s, e@Base()) = T :- {decl}
+    type of Var{"base"@-} in s |-> [(_, (Var{decl@_}, T))],
+    @e.ref := decl,
+    @e.type := T.
+
+  typeOfExp(s, e@Call(e1, args)) = TR :- {T1 TPARAMS TARGS}
+    typeOfExp(s, e1) == T1,
+    T1 == METHOD(TPARAMS, TR) | error $[expected method, got [T1]],
+    typesOfExps(s, args) == TARGS,
+    TARGS == TPARAMS | error $[expected parameters of types [TPARAMS], got [TARGS]],
+    @e.type := TR.
+
+  typeOfExp(s, e@New(ref)) = T :- {classScope decl}
+    type of Class{ref@-} in s |-> [(_, (Class{decl@_}, CLASS(_, classScope)))],
+    type of Constructor{@-} in classScope |-> [(_, (_, T))],
+    @ref.ref := decl,
+    @e.type := T.
+
+  typeOfExp(s, e@Member(e1, ref)) = T :- {T1 scope decl}
+    typeOfExp(s, e1) == T1,
+    getScope(T1) == scope,
+    type of Member{ref@-} in scope |-> [(_, (Member{decl@_}, T))],
+    @ref.ref := decl,
+    @e.type := T.
+
+  typeOfExp(_, e@True()) = T :-
+    T == BOOL(),
+    @e.type := T.
+
+  typeOfExp(_, e@False()) = T :-
+    T == BOOL(),
+    @e.type := T.
+
+  typeOfExp(s, e@Lt(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == INT() | error $[expected int, got [T1]],
+    T2 == INT() | error $[expected int, got [T2]].
+
+  typeOfExp(s, e@Le(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == INT() | error $[expected int, got [T1]],
+    T2 == INT() | error $[expected int, got [T2]].
+
+  typeOfExp(s, e@Gt(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == INT() | error $[expected int, got [T1]],
+    T2 == INT() | error $[expected int, got [T2]].
+
+  typeOfExp(s, e@Ge(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == INT() | error $[expected int, got [T1]],
+    T2 == INT() | error $[expected int, got [T2]].
+
+  typeOfExp(s, e@Eq(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == T2 | error $[expected [T1], got [T2]].
+
+  typeOfExp(s, e@Neq(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == T2 | error $[expected [T1], got [T2]].
+
+  typeOfExp(s, e@And(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == BOOL() | error $[expected bool, got [T1]],
+    T2 == BOOL() | error $[expected bool, got [T2]].
+
+  typeOfExp(s, e@Or(e1, e2)) = T :- {T1 T2}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == BOOL() | error $[expected bool, got [T1]],
+    T2 == BOOL() | error $[expected bool, got [T2]].
+
+  typeOfExp(s, e@Not(e1)) = T :- {T1}
+    T == BOOL(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    T1 == BOOL() | error $[expected bool, got [T1]].
+
+  typeOfExp(s, e@Int(_)) = T :-
+    T == INT(),
+    @e.type := T.
+
+  typeOfExp(s, e@Plus(e1)) = T :- {T1}
+    T == INT(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    T1 == INT() | error $[expected int, got [T1]].
+
+  typeOfExp(s, e@Min(e1)) = T :- {T1}
+    T == INT(),
+    @e.type := T,
+    typeOfExp(s, e1) == T,
+    T1 == INT() | error $[expected int, got [T1]].
+
+  typeOfExp(s, e@Mul(e1, e2)) = T :- {T1 T2}
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == INT() | error $[expected int, got [T1]],
+    T2 == INT() | error $[expected int, got [T2]].
+
+  typeOfExp(s, e@Div(e1, e2)) = T :- {T1 T2}
+    T == INT(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == INT() | error $[expected int, got [T1]],
+    T2 == INT() | error $[expected int, got [T2]].
+
+  typeOfExp(s, e@Add(e1, e2)) = T :- {T1 T2}
+    T == INT(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == INT() | error $[expected int, got [T1]],
+    T2 == INT() | error $[expected int, got [T2]].
+
+  typeOfExp(s, e@Sub(e1, e2)) = T :- {T1 T2}
+    T == INT(),
+    @e.type := T,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    T1 == INT() | error $[expected int, got [T1]],
+    T2 == INT() | error $[expected int, got [T2]].
+
+  typeOfExp(s, e@Cond(c, e1, e2)) = T :- {TC T1 T2}
+    typeOfExp(s, c) == TC,
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    TC == BOOL() | error $[expected bool, got [TC]],
+    T1 == T2 | error $[expected [T1], got [T2]],
+    T1 == T,
+    @e.type := T.
+
+rules typeOfVarOrMemberOrClass : scope * ID -> TYPE
+
+  typeOfVarOrMemberOrClass(s, ref) = T :- {p decl}
+    type of Var{ref@-} in s |-> p,
+    unwrapVarOrResolveMemberOrClass(s, ref, p) == (decl, T),
+    @ref.ref := decl.
+
+rules getScope : TYPE -> scope
+
+  getScope(OBJECT(_, instanceScope)) = instanceScope.
+  getScope(CLASS(_, classScope)) = classScope.

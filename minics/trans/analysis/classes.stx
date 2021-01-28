@@ -1,0 +1,112 @@
+module analysis/classes
+
+imports
+  signatures/minics-sig
+  analysis/types
+  analysis/statements
+
+rules usingOk : scope * UsingDecl
+  usingsOk maps usingOk(*, list(*))
+
+  usingOk(s, u).
+
+
+rules classOk : scope * ClassDecl
+  classesOk maps classOk(*, list(*))
+
+  classOk(globalScope, class@Class(name, parent, members)) :- {classScope instanceScope methodScope CT IT}
+    // Static class
+    new classScope,
+    classScope -P-> globalScope,
+    CT == CLASS(name, classScope),
+    globalScope -> Class{name@name} with type CT,
+
+    // Instance object
+    new instanceScope,
+    instanceScope -P-> globalScope,
+    IT == OBJECT(CT, instanceScope),
+
+    instanceScope -> Var{"this"@name} with type IT,
+    classScope -> Constructor{@name} with type IT,
+    parentOk(classScope, instanceScope, parent),
+    membersOk(classScope, instanceScope, members),
+    @class.type := CT.
+
+rules parentOk : scope * scope * ParentDecl
+
+  parentOk(classScope, instanceScope, parent@NoParent()) :-
+    // TODO: Inherit from Object.
+    true.
+
+  parentOk(classScope, instanceScope, parent@Parent(ref)) :- {parentClassScope parentInstanceScope CT PIT}
+    typeOfClass(classScope, ref) == CT@CLASS(_, parentClassScope),
+    // Ensure the parents are different from the class itself
+    query () filter P* S* and { ancestorScope :- ancestorScope == classScope }
+      min $ < P, $ < S, S < P
+      in parentClassScope |-> [] | error $[cyclic inheritance],
+    classScope -S-> parentClassScope,
+
+    // Get the parent's instanceScope.
+    type of Constructor{@-} in parentClassScope |-> [(_, (_, PIT@OBJECT(_, parentInstanceScope)))],
+    instanceScope -> Var{"base"@ref} with type PIT,
+    instanceScope -S-> parentInstanceScope,
+
+    @parent.type := CT.
+
+rules memberOk : scope * scope * MemberDecl
+  membersOk maps memberOk(*, *, list(*))
+
+  memberOk(classScope, instanceScope, field@InstanceField(type, name)) :- {T}
+    typeOfType(classScope, type) == T,
+    instanceScope -> Member{name@name} with type T,
+    // Ensure the member is distinct
+    type of Member{name@-} in instanceScope |-> [(_, (_, T))] | error $[duplicate member definition],
+    type of Member{name@-} in classScope |-> [] | error $[duplicate member definition],
+    // Ensure the member is not declared in a super class
+    query type filter S S* and { d :- d == Member{name@_} } min $ < S
+      in instanceScope |-> [] | error $[member is already declared in super class],
+    query type filter S S* and { d :- d == Member{name@_} } min $ < S
+      in classScope |-> [] | error $[member is already declared in super class],
+    @field.type := T.
+
+  memberOk(classScope, instanceScope, field@StaticField(type, name)) :- {T}
+    typeOfType(classScope, type) == T,
+    classScope -> Member{name@name} with type T,
+    // Ensure the member is distinct
+    type of Member{name@name} in classScope |-> [(_, (_, T))] | error $[duplicate member definition],
+    // Ensure the member is not declared in a super class
+    query type filter S S* and { d :- d == Member{name@_} } min $ < S
+      in classScope |-> [] | error $[member is already declared in super class],
+    @field.type := T.
+
+  memberOk(classScope, instanceScope, method@InstanceMethod(returnType, name, params, stmts)) :- {methodScope RT PTS T}
+    new methodScope,
+    methodScope -P-> instanceScope,
+    typeOfType(classScope, returnType) == RT,
+    typesOfParams(methodScope, params) == PTS,
+    T == METHOD(PTS, RT),
+    instanceScope -> Member{name@name} with type T,
+    // Ensure the member is distinct
+    type of Member{name@name} in instanceScope |-> [(_, (_, T))] | error $[duplicate member definition],
+    // Ensure the member is not declared in a super class
+    query type filter S S* and { d :- d == Member{name@_} }
+      min $ < P, $ < S, S < P
+      in instanceScope |-> [] | error $[method is already declared in super class],
+    methodScope -> Return{@name} with type RT,
+    stmtsOk(methodScope, stmts),
+    @method.type := T.
+
+
+rules typeOfParam : scope * ParamDecl -> TYPE
+  typesOfParams maps typeOfParam(*, list(*)) = list(*)
+
+  typeOfParam(s, Param(type, name)) = T :-
+    typeOfType(s, type) == T,
+    s -> Var{name@name} with type T,
+    @name.type := T.
+
+rules typeOfClass : scope * ID -> TYPE
+
+  typeOfClass(s, ref) = T :- {decl}
+    resolveClass(s, ref) == (decl, T),
+    @ref.ref := decl.

@@ -1,0 +1,82 @@
+module analysis/types
+
+imports
+  signatures/minics-sig
+
+signature
+  sorts TYPE constructors
+    CLASS       : string * scope -> TYPE
+    OBJECT      : TYPE * scope -> TYPE
+    INT         : TYPE
+    BOOL        : TYPE
+    VOID        : TYPE
+    // TODO: Add receiver type?
+    METHOD      : list(TYPE) * TYPE -> TYPE
+
+  namespaces
+    Class       : ID
+    Member      : ID
+    Var         : ID
+    Constructor :
+    Return      :
+
+  relations
+    type        : occurrence -> TYPE
+
+  name-resolution
+    labels
+      P     // lexical parent
+      S     // super class
+      I     // import (using)
+    resolve Class       filter P* I? min $ < P, $ < I, P < I      // prefer lexical parents over imports
+    resolve Constructor filter P* min $ < P
+    resolve Member      filter P* S* min $ < P, $ < S, S < P      // prefer super classes over lexical parents
+    resolve Var         filter P* min $ < P
+    resolve Return      filter P* min $ < P
+
+rules typeOfType : scope * Type -> TYPE
+
+  typeOfType(s, t@Int()) = T :-
+    T == INT(),
+    @t.type := T.
+
+  typeOfType(s, t@Bool()) = T :-
+    T == BOOL(),
+    @t.type := T.
+
+  typeOfType(s, t@Void()) = T :-
+    T == VOID(),
+    @t.type := T.
+
+  typeOfType(s, t@ClassType(ref)) = T :- {decl}
+    type of Class{ref} in s |-> [(_, (Class{decl}, T))],
+    @ref.ref := decl,
+    @t.type := T.
+
+
+rules resolveVarOrMemberOrClass : scope * ID -> (ID * TYPE)
+
+  resolveVarOrMemberOrClass(s, ref) = (decl, T) :- {p}
+    type of Var{ref@-} in s |-> p,
+    unwrapVarOrResolveMemberOrClass(s, ref, p) == (decl, T).
+
+rules resolveMemberOrClass : scope * ID -> (ID * TYPE)
+
+  resolveMemberOrClass(s, ref) = (decl, T) :- {p}
+    type of Member{ref@-} in s |-> p,
+    unwrapMemberOrResolveClass(s, ref, p) == (decl, T).
+
+rules resolveClass : scope * ID -> (ID * TYPE)
+
+  resolveClass(s, ref) = (decl, T) :-
+    type of Class{ref@-} in s |-> [(_, (Class{decl@_}, T))].
+
+rules unwrapVarOrResolveMemberOrClass : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+
+  unwrapVarOrResolveMemberOrClass(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
+  unwrapVarOrResolveMemberOrClass(s, ref, []) = resolveMemberOrClass(s, ref).
+
+rules unwrapMemberOrResolveClass : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+
+  unwrapMemberOrResolveClass(_, _, [(_, (Member{decl@_}, T))]) = (decl, T).
+  unwrapMemberOrResolveClass(s, ref, []) = resolveClass(s, ref).
