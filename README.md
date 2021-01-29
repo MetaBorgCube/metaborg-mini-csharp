@@ -11,8 +11,13 @@ The following features are demonstrated in Mini C#:
 - class inheritance
 - instance field and method declarations
 - static field declarations
-- method overrides
 - references to local variables, arguments, `this`, `base`, (inherited) fields, and (inherited) methods
+
+
+## TODO
+The following features are planned to be added:
+
+- method overrides
 
 
 ## Unsupported Features
