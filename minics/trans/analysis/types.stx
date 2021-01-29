@@ -49,34 +49,57 @@ rules typeOfType : scope * Type -> TYPE
     @t.type := T.
 
   typeOfType(s, t@ClassType(ref)) = T :- {decl}
-    type of Class{ref} in s |-> [(_, (Class{decl}, T))],
+    resolveType(s, ref) == [(_, (decl, T))]
+      | error $[Undefined type [ref]],
     @ref.ref := decl,
     @t.type := T.
 
 
-rules resolveVarOrMemberOrClass : scope * ID -> (ID * TYPE)
+rules declareType : scope * ID * TYPE
 
-  resolveVarOrMemberOrClass(s, ref) = (decl, T) :- {p}
-    type of Var{ref@-} in s |-> p,
-    unwrapVarOrResolveMemberOrClass(s, ref, p) == (decl, T).
+  declareType(s, decl, T) :-
+    !type[Class{decl@decl}, T] in s,
+    resolveType(s, decl) == [(_, (_, _))]
+      | error $[Duplicate declaration of type [decl]].
 
-rules resolveMemberOrClass : scope * ID -> (ID * TYPE)
+rules resolveType : scope * ID -> list((path * (occurrence * TYPE)))
 
-  resolveMemberOrClass(s, ref) = (decl, T) :- {p}
+  resolveType(s, ref) = ps :-
+    query type
+      filter P* I? and { d' :- d' == Class{ref@_} }
+      min $ < P, $ < I, P < I      // prefer lexical parents over imports
+      and true
+      in s |-> ps.
+
+
+
+rules resolveAmb1 : scope * ID -> (ID * TYPE)
+
+  resolveAmb1(s, ref) = unwrapAmb1(s, ref, resolveVar(s, ref)).
+
+rules resolveAmb2 : scope * ID -> (ID * TYPE)
+
+  resolveAmb2(s, ref) = (decl, T) :- {p}
     type of Member{ref@-} in s |-> p,
-    unwrapMemberOrResolveClass(s, ref, p) == (decl, T).
+    unwrapAmb2(s, ref, p) == (decl, T).
 
-rules resolveClass : scope * ID -> (ID * TYPE)
+rules resolveAmb3 : scope * ID -> (ID * TYPE)
 
-  resolveClass(s, ref) = (decl, T) :-
+  resolveAmb3(s, ref) = (decl, T) :-
     type of Class{ref@-} in s |-> [(_, (Class{decl@_}, T))].
 
-rules unwrapVarOrResolveMemberOrClass : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+rules unwrapAmb1 : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
 
-  unwrapVarOrResolveMemberOrClass(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
-  unwrapVarOrResolveMemberOrClass(s, ref, []) = resolveMemberOrClass(s, ref).
+  unwrapAmb1(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
+  unwrapAmb1(s, ref, []) = resolveAmb2(s, ref).
 
-rules unwrapMemberOrResolveClass : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+rules unwrapAmb2 : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
 
-  unwrapMemberOrResolveClass(_, _, [(_, (Member{decl@_}, T))]) = (decl, T).
-  unwrapMemberOrResolveClass(s, ref, []) = resolveClass(s, ref).
+  unwrapAmb2(_, _, [(_, (Member{decl@_}, T))]) = (decl, T).
+  unwrapAmb2(s, ref, []) = resolveAmb3(s, ref).
+
+
+rules resolveVar : scope * ID -> list((path * (occurrence * TYPE)))
+
+  resolveVar(s, x) = p :-
+    type of Var{x@-} in s |-> p.

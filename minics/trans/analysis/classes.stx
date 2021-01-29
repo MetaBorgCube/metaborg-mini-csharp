@@ -117,5 +117,5 @@ rules typeOfParam : scope * ParamDecl -> TYPE
 rules typeOfClass : scope * ID -> TYPE
 
   typeOfClass(s, ref) = T :- {decl}
-    resolveClass(s, ref) == (decl, T),
+    resolveAmb3(s, ref) == (decl, T),
     @ref.ref := decl.

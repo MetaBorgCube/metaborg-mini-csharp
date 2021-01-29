@@ -180,7 +180,7 @@ rules typeOfVarOrMemberOrClass : scope * ID -> TYPE
 
   typeOfVarOrMemberOrClass(s, ref) = T :- {p decl}
     type of Var{ref@-} in s |-> p,
-    unwrapVarOrResolveMemberOrClass(s, ref, p) == (decl, T),
+    unwrapAmb1(s, ref, p) == (decl, T),
     @ref.ref := decl.
 
 rules getScope : TYPE -> scope
