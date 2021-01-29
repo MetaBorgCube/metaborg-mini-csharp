@@ -20,6 +20,8 @@ rules programOk : Start
     usingsOk(s, usings),
     classesOk(s, classes).
 
+  programOk(Start-Plhdr()).
+
 // Multi-file entry point
 rules projectOk : scope
 

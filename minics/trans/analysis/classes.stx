@@ -8,7 +8,9 @@ imports
 rules usingOk : scope * UsingDecl
   usingsOk maps usingOk(*, list(*))
 
-  usingOk(s, u).
+  usingOk(s, Using(ref)).   // TODO
+
+  usingOk(_, UsingDecl-Plhdr()).
 
 
 rules classOk : scope * ClassDecl
@@ -32,6 +34,8 @@ rules classOk : scope * ClassDecl
     membersOk(classScope, instanceScope, members),
     @class.type := CT.
 
+  classOk(_, ClassDecl-Plhdr()).
+
 rules parentOk : scope * scope * ParentDecl
 
   parentOk(classScope, instanceScope, parent@NoParent()) :-
@@ -52,6 +56,8 @@ rules parentOk : scope * scope * ParentDecl
     instanceScope -S-> parentInstanceScope,
 
     @parent.type := CT.
+
+  parentOk(_, _, ParentDecl-Plhdr()).
 
 rules memberOk : scope * scope * MemberDecl
   membersOk maps memberOk(*, *, list(*))
@@ -96,6 +102,7 @@ rules memberOk : scope * scope * MemberDecl
     stmtsOk(methodScope, stmts),
     @method.type := T.
 
+  memberOk(_, _, MemberDecl-Plhdr()).
 
 rules typeOfParam : scope * ParamDecl -> TYPE
   typesOfParams maps typeOfParam(*, list(*)) = list(*)
@@ -104,6 +111,8 @@ rules typeOfParam : scope * ParamDecl -> TYPE
     typeOfType(s, type) == T,
     s -> Var{name@name} with type T,
     @name.type := T.
+
+  typeOfParam(_, ParamDecl-Plhdr()) = _.
 
 rules typeOfClass : scope * ID -> TYPE
 
