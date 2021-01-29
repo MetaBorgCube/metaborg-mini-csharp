@@ -28,10 +28,10 @@ class Fac : P
     public int l;
     public int ComputeFac(int num)
     {
-        var _ = P;
+        var _ = this;
         int l;
         l;
-        var s2 = s;
+        var s2 = P.s;
         var f = new Fac();
         f.l;
 //        base.y;

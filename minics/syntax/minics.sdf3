@@ -10,7 +10,7 @@ context-free start-symbols
   Start
 
 context-free sorts
-  Start MainClassDecl
+  Start
 
 context-free syntax
 
@@ -18,16 +18,6 @@ context-free syntax
     <{UsingDecl "\n"}*>
     <{ClassDecl "\n"}*>
   >
-
-//  MainClassDecl.MainClass = <
-//    class <ID>
-//    {
-//      public static void Main()
-//      {
-//        <{Stmt "\n"}*>
-//      }
-//    }
-//  >
 
 template options
 

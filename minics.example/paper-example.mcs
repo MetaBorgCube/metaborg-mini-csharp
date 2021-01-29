@@ -1,0 +1,17 @@
+using System;
+
+class A
+{
+    public static bool sfa;
+    public int fa;
+    public void MA() { }
+}
+
+class B : A
+{
+    public static int sfb;
+    public bool fb;
+    public void MB(int a, int b) {
+        $Exp;
+    }
+}

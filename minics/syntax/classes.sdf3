@@ -48,22 +48,6 @@ context-free syntax
   ParentDecl.NoParent = <>
   ParentDecl.Parent = < : <ID>>
 
-  // Not currently used:
-  MemberModifier.Public     = <public>
-  MemberModifier.Protected  = <protected>
-  MemberModifier.Internal   = <internal>
-  MemberModifier.Private    = <private>
-  MemberModifier.Static     = <static>
-  MemberModifier.Override   = <override>
-  MemberModifier.New        = <new>
-  MemberModifier.Sealed     = <sealed>
-  MemberModifier.Virtual    = <virtual>
-  MemberModifier.Abstract   = <abstract>
-  MemberModifier.Extern     = <extern>
-  MemberModifier.Readonly   = <readonly>
-  MemberModifier.Volatile   = <volatile>
-  MemberModifier.Async      = <async>
-
 
 template options
 
