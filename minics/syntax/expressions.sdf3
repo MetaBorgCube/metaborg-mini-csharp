@@ -14,7 +14,7 @@ context-free syntax
   Exp.This = <this>
   Exp.Base = <base>
   Exp.Call = <<Exp>(<{Exp ", "}*>)>
-  Exp.New = <new <ID>(<>)>
+  Exp.New = <new <Type>(<>)>
   Exp.Member = <<Exp>.<ID>>
   //Exp.MemberElvis = <<Exp>?.<ID>>
 //  Exp.Cast = <(<Type>)<Exp>>

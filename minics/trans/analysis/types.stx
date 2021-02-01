@@ -2,6 +2,7 @@ module analysis/types
 
 imports
   signatures/minics-sig
+  analysis/declarations
 
 signature
   sorts TYPE constructors
@@ -13,27 +14,7 @@ signature
     // TODO: Add receiver type?
     METHOD      : list(TYPE) * TYPE -> TYPE
 
-  namespaces
-    Class       : ID
-    Member      : ID
-    Var         : ID
-    Constructor :
-    Return      :
-
-  relations
-    type        : occurrence -> TYPE
-
-  name-resolution
-    labels
-      P     // lexical parent
-      S     // super class
-      I     // import (using)
-    resolve Class       filter P* I? min $ < P, $ < I, P < I      // prefer lexical parents over imports
-    resolve Constructor filter P* min $ < P
-    resolve Member      filter P* S* min $ < P, $ < S, S < P      // prefer super classes over lexical parents
-    resolve Var         filter P* min $ < P
-    resolve Return      filter P* min $ < P
-
+// Types
 rules typeOfType : scope * Type -> TYPE
 
   typeOfType(s, t@Int()) = T :-
@@ -49,57 +30,15 @@ rules typeOfType : scope * Type -> TYPE
     @t.type := T.
 
   typeOfType(s, t@ClassType(ref)) = T :- {decl}
-    resolveType(s, ref) == [(_, (decl, T))]
-      | error $[Undefined type [ref]],
+    typeOfClass(s, ref) == T.
+
+// Variables
+rules typeOfVar : scope * ID -> TYPE
+
+  typeOfVar(s, ref) = T :- {decl}
+    resolveVar(s, ref) == [(_, (decl, T))|_]
+      | error $[Undefined variable [ref]],
     @ref.ref := decl,
-    @t.type := T.
+    @ref.type := T.
 
 
-rules declareType : scope * ID * TYPE
-
-  declareType(s, decl, T) :-
-    !type[Class{decl@decl}, T] in s,
-    resolveType(s, decl) == [(_, (_, _))]
-      | error $[Duplicate declaration of type [decl]].
-
-rules resolveType : scope * ID -> list((path * (occurrence * TYPE)))
-
-  resolveType(s, ref) = ps :-
-    query type
-      filter P* I? and { d' :- d' == Class{ref@_} }
-      min $ < P, $ < I, P < I      // prefer lexical parents over imports
-      and true
-      in s |-> ps.
-
-
-
-rules resolveAmb1 : scope * ID -> (ID * TYPE)
-
-  resolveAmb1(s, ref) = unwrapAmb1(s, ref, resolveVar(s, ref)).
-
-rules resolveAmb2 : scope * ID -> (ID * TYPE)
-
-  resolveAmb2(s, ref) = (decl, T) :- {p}
-    type of Member{ref@-} in s |-> p,
-    unwrapAmb2(s, ref, p) == (decl, T).
-
-rules resolveAmb3 : scope * ID -> (ID * TYPE)
-
-  resolveAmb3(s, ref) = (decl, T) :-
-    type of Class{ref@-} in s |-> [(_, (Class{decl@_}, T))].
-
-rules unwrapAmb1 : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
-
-  unwrapAmb1(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
-  unwrapAmb1(s, ref, []) = resolveAmb2(s, ref).
-
-rules unwrapAmb2 : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
-
-  unwrapAmb2(_, _, [(_, (Member{decl@_}, T))]) = (decl, T).
-  unwrapAmb2(s, ref, []) = resolveAmb3(s, ref).
-
-
-rules resolveVar : scope * ID -> list((path * (occurrence * TYPE)))
-
-  resolveVar(s, x) = p :-
-    type of Var{x@-} in s |-> p.

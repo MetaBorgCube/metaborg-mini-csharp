@@ -4,6 +4,7 @@ imports
   signatures/minics-sig
   analysis/types
   analysis/expressions
+  analysis/declarations
 
 rules stmtOk : scope * Stmt
   stmtsOk maps stmtOk(*, list(*))
@@ -21,7 +22,7 @@ rules stmtOk : scope * Stmt
   stmtOk(blockScope, DeclareTypedVar(type, name)) :- {T}
     typeOfType(blockScope, type) == T,
     // FIXME: Variable should only be declared in subsequent scopes
-    blockScope -> Var{name@name} with type T,
+    declareVar(blockScope, name, T),
     @name.type := T.
 
   stmtOk(blockScope, DeclareTypedVarInit(type, name, e)) :- {T TE}
@@ -29,7 +30,7 @@ rules stmtOk : scope * Stmt
     typeOfExp(blockScope, e) == TE,
     T == TE | error $[expected [T], got [TE]],
     // FIXME: Variable should only be declared in subsequent scopes
-    blockScope -> Var{name@name} with type T,
+    declareVar(blockScope, name, T),
     @name.type := T.
 
   stmtOk(blockScope, DeclareVarInit(name, e)) :- {T}
@@ -47,14 +48,15 @@ rules stmtOk : scope * Stmt
 
   stmtOk(blockScope, stmt@If(condExp, thenStmt, elseStmt)) :- {TC}
     typeOfExp(blockScope, condExp) == TC,
-    TC == BOOL() | error $[expected bool, got [TC]],
+    TC == BOOL() | error $[expected [BOOL()], got [TC]],
     stmtOk(blockScope, thenStmt),
     stmtOk(blockScope, elseStmt),
     @stmt.type := TC.
 
-  stmtOk(blockScope, Return(e)) :- {T TR}
+  stmtOk(blockScope, stmt@Return(e)) :- {T TR}
     typeOfExp(blockScope, e) == T,
-    type of Return{@-} in blockScope |-> [(_, (Return{@_}, TR))],
-    TR != VOID() | error $[expected void, got [TR]],
-    TR == T | error $[expected [TR], got [T]].
+    typeOfReturnType(blockScope) == TR,
+    TR != VOID() | error $[expected [VOID()], got [TR]],
+    TR == T | error $[expected [TR], got [T]],
+    @stmt.type := TR.
 

@@ -1,0 +1,211 @@
+module analysis/declarations
+
+imports
+  signatures/minics-sig
+  analysis/types
+
+signature
+  namespaces
+    Class       : ID
+    Member      : ID
+    Var         : ID
+    Constructor :
+    Return      :
+
+  relations
+    type        : occurrence -> TYPE
+
+  name-resolution
+    labels
+      P     // lexical parent
+      E     // super class
+      I     // import (using)
+
+// Classes
+rules declareClass : scope * ID * TYPE
+
+  declareClass(s, decl, T) :-
+    !type[Class{decl@decl}, T] in s,
+    resolveClass(s, decl) == [(_, (_, _))]
+      | error $[Duplicate declaration of class [decl]].
+
+rules resolveClass : scope * ID -> list((path * (occurrence * TYPE)))
+
+  resolveClass(s, ref) = ps :-
+    query type
+      filter P* I?                  // no transitive imports (I)
+      and { d' :- d' == Class{ref@_} }
+      min $ < P, $ < I, P < I       // prefer lexical parents (P) over imports (I)
+      in s |-> ps.
+
+rules typeOfClass : scope * ID -> TYPE
+
+  typeOfClass(s, ref) = T :- {decl}
+    resolveClass(s, ref) == [(_, (decl, T))|_]
+      | error $[Undefined class [ref]],
+    @ref.ref := decl,
+    @ref.type := T.
+
+// Variables
+rules declareVarOccurrence : scope * occurrence * TYPE
+
+  declareVarOccurrence(s, occ@Var{name@decl}, T) :-
+    !type[occ, T] in s,
+    resolveVar(s, name) == [(_, (_, _))]
+      | error $[Duplicate declaration of variable [name]].
+
+rules declareVar : scope * ID * TYPE
+
+  declareVar(s, decl, T) :-
+    declareVarOccurrence(s, Var{decl@decl}, T).
+
+rules resolveVar : scope * ID -> list((path * (occurrence * TYPE)))
+
+  resolveVar(s, ref) = ps :-
+    query type
+      filter P*
+      and { d' :- d' == Var{ref@_} }
+      min $ < P
+      in s |-> ps.
+
+// Constructors
+rules declareConstructor : scope * TYPE
+
+  declareConstructor(classScope, T) :-
+    !type[Constructor{}, T] in classScope,
+    resolveConstructor(classScope) == [(_, (_, _))]
+      | error $[Duplicate declaration of constructor].
+
+rules resolveConstructor : scope -> list((path * (occurrence * TYPE)))
+
+  resolveConstructor(classScope) = ps :-
+    query type
+      filter P*
+      and { d' :- d' == Constructor{} }
+      min $ < P
+      in classScope |-> ps.
+
+rules typeOfConstructor : scope -> TYPE
+
+  typeOfConstructor(classScope) = T :-
+    resolveConstructor(classScope) == [(_, (_, T))|_]
+      | error $[Undefined constructor].
+
+rules ensureNoInheritanceCycle : scope * scope
+
+  ensureNoInheritanceCycle(classScope, parentClassScope) :-
+    query () filter P* E* and { ancestorScope :- ancestorScope == classScope }
+      min $ < P, $ < E, E < P
+      in parentClassScope |-> []
+      | error $[Inheritance cycle detected].
+
+// Members
+rules declareInstanceMember : scope * scope * ID * TYPE
+
+  declareInstanceMember(instanceScope, classScope, decl, T) :-
+    !type[Member{decl@decl}, T] in instanceScope,
+    resolveMember(instanceScope, decl) == [(_, (_, _))]
+      | error $[Duplicate declaration of instance member [decl]],
+    resolveMember(classScope, decl) == []
+      | error $[Shadowing declaration of static member [decl]],
+    query type
+      filter E E*
+      and { d :- d == Member{decl@_} }
+      min $ < E
+      in instanceScope |-> []
+      | error $[Shadowing declaration of instance member [decl] in super class],
+    query type
+      filter E E*
+      and { d :- d == Member{decl@_} }
+      min $ < E
+      in classScope |-> []
+      | error $[Shadowing declaration of static member [decl] in super class].
+
+rules declareStaticMember : scope * ID * TYPE
+
+  declareStaticMember(classScope, decl, T) :-
+    !type[Member{decl@decl}, T] in classScope,
+    resolveMember(classScope, decl) == [(_, (_, _))]
+      | error $[Duplicate declaration of static member [decl]],
+    query type
+      filter E E*
+      and { d :- d == Member{decl@_} }
+      min $ < E
+      in classScope |-> []
+      | error $[Shadowing declaration of static member [decl] in super class].
+
+rules resolveMember : scope * ID -> list((path * (occurrence * TYPE)))
+
+  resolveMember(s, ref) = ps :-
+    query type
+      filter P* E*                  // any ancestor (E)
+      and { d' :- d' == Member{ref@_} }
+      min $ < P, $ < E, E < P       // prefer super classes (E) over lexical parents (P)
+      in s |-> ps.
+
+rules typeOfMember : scope * ID -> TYPE
+
+  typeOfMember(s, ref) = T :- {decl}
+    resolveMember(s, ref) == [(_, (decl, T))|_]
+      | error $[Undefined member [ref]],
+    @ref.ref := decl,
+    @ref.type := T.
+
+// Return type
+rules declareReturnType : scope * TYPE
+
+  declareReturnType(methodScope, T) :-
+    !type[Return{}, T] in methodScope,
+    resolveReturnType(methodScope) == [(_, (_, _))]
+      | error $[Duplicate declaration of return type].
+
+rules resolveReturnType : scope -> list((path * (occurrence * TYPE)))
+
+  resolveReturnType(s) = ps :-
+    query type
+      filter P*
+      and { d' :- d' == Return{} }
+      min $ < P
+      in s |-> ps.
+
+rules typeOfReturnType : scope -> TYPE
+
+  typeOfReturnType(s) = T :-
+    resolveReturnType(s) == [(_, (_, T))|_].
+
+//  ...
+
+
+rules resolveAmb1 : scope * ID -> (ID * TYPE)
+
+  resolveAmb1(s, ref) = unwrapAmb1(s, ref, resolveVar(s, ref)).
+
+rules resolveAmb2 : scope * ID -> (ID * TYPE)
+
+  resolveAmb2(s, ref) = (decl, T) :- {p}
+    resolveMember(s, ref) == p,
+    unwrapAmb2(s, ref, p) == (decl, T).
+
+rules resolveAmb3 : scope * ID -> (ID * TYPE)
+
+    // resolveClass
+  resolveAmb3(s, ref) = (decl, T) :-
+    resolveClass(s, ref) == [(_, (Class{decl@_}, T))].
+
+rules unwrapAmb1 : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+
+  unwrapAmb1(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
+  unwrapAmb1(s, ref, []) = resolveAmb2(s, ref).
+
+rules unwrapAmb2 : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+
+  unwrapAmb2(_, _, [(_, (Member{decl@_}, T))]) = (decl, T).
+  unwrapAmb2(s, ref, []) = resolveAmb3(s, ref).
+
+
+rules typeOfVarOrMemberOrClass : scope * ID -> TYPE
+
+  typeOfVarOrMemberOrClass(s, ref) = T :- {p decl}
+    resolveVar(s, ref) == p,
+    unwrapAmb1(s, ref, p) == (decl, T),
+    @ref.ref := decl.

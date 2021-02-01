@@ -11,7 +11,11 @@ class B : A
 {
     public static int sfb;
     public bool fb;
-    public void MB(int a, int b) {
-        $Exp;
+    public int MB(int a, int b) {
+        a;  // argument
+        fb; // field
+        A;  // class
+        new A();
+        return 1;
     }
 }
