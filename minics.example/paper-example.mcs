@@ -13,9 +13,14 @@ class B : A
     public bool fb;
     public int MB(int a, int b) {
         a;  // argument
-        fb; // field
-        A;  // class
-        new A();
+        b;
+        fa;
+        fb;
+        sfa;
+        sfb;
+        A;
+        B;
+        new A().fa;
         return 1;
     }
 }

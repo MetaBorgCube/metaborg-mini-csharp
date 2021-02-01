@@ -11,7 +11,7 @@ rules typeOfExp : scope * Exp -> TYPE
 
   typeOfExp(s, e@Var(ref)) = T :- {decl}
     // FIXME: This should also allow us to refer to static members
-    typeOfVarOrMemberOrClass(s, ref) == T,
+    typeOfVarMemberClass(s, ref) == T,
     @e.type := T.
 
   typeOfExp(s, e@This()) = T :-

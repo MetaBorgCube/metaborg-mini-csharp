@@ -20,6 +20,8 @@ signature
       P     // lexical parent
       E     // super class
       I     // import (using)
+      S     // static parent
+
 
 // Classes
 rules declareClass : scope * ID * TYPE
@@ -46,6 +48,7 @@ rules typeOfClass : scope * ID -> TYPE
     @ref.ref := decl,
     @ref.type := T.
 
+
 // Variables
 rules declareVarOccurrence : scope * occurrence * TYPE
 
@@ -67,6 +70,94 @@ rules resolveVar : scope * ID -> list((path * (occurrence * TYPE)))
       and { d' :- d' == Var{ref@_} }
       min $ < P
       in s |-> ps.
+
+rules typeOfVar : scope * ID -> TYPE
+
+  typeOfVar(s, ref) = T :- {decl}
+    resolveVar(s, ref) == [(_, (decl, T))|_]
+      | error $[Undefined variable [ref]],
+    @ref.ref := decl,
+    @ref.type := T.
+
+rules resolveVarMemberClass : scope * ID -> list((path * (occurrence * TYPE)))
+
+  resolveVarMemberClass(s, ref) = unwrapVarMemberClass(s, ref, resolveVar(s, ref)).
+
+rules unwrapVarMemberClass : scope * ID * list((path * (occurrence * TYPE))) -> list((path * (occurrence * TYPE)))
+
+  unwrapVarMemberClass(_, _, ps@[(_, (Var{decl@_}, T))|_]) = ps.
+  unwrapVarMemberClass(s, ref, []) = resolveMemberClass(s, ref).
+
+rules typeOfVarMemberClass : scope * ID -> TYPE
+
+  typeOfVarMemberClass(s, ref) = T :- {decl}
+    // resolution order:
+    // 1. variables
+    // 2. member (instance or static)
+    // 3. type
+    resolveVarMemberClass(s, ref) == [(_, (decl, T))|_]
+      | error $[Undefined variable, member, or type [ref]],
+    @ref.ref := decl,
+    @ref.type := T.
+
+rules resolveMemberClass : scope * ID -> list((path * (occurrence * TYPE)))
+
+  resolveMemberClass(s, ref) = unwrapMemberClass(s, ref, resolveStaticOrInstanceMember(s, ref)).
+
+rules unwrapMemberClass : scope * ID * list((path * (occurrence * TYPE))) -> list((path * (occurrence * TYPE)))
+
+  unwrapMemberClass(_, _, ps@[(_, (Member{decl@_}, T))|_]) = ps.
+  unwrapMemberClass(s, ref, []) = resolveClass(s, ref).
+
+rules typeOfMemberClass : scope * ID -> TYPE
+
+  typeOfMemberClass(s, ref) = T :- {decl}
+    // resolution order:
+    // 1. member (instance or static)
+    // 2. type
+    resolveMemberClass(s, ref) == [(_, (decl, T))|_]
+      | error $[Undefined member or type [ref]],
+    @ref.ref := decl,
+    @ref.type := T.
+
+//
+//
+//rules typeOfMemberClass : scope * ID -> TYPE
+//
+//  typeOfMemberClass(s, ref) = T :- {decl}
+//    unwrapMemberClass(s, ref, resolveMember(s, ref)) == (decl, T),
+//    @ref.ref := decl,
+//    @ref.type := T.
+
+
+//rules resolveAmb1 : scope * ID -> (ID * TYPE)
+//
+//  resolveAmb1(s, ref) = unwrapVarMemberClass(s, ref, resolveVar(s, ref)).
+//
+//rules resolveAmb2 : scope * ID -> (ID * TYPE)
+//
+//  resolveAmb2(s, ref) = (decl, T) :- {p}
+//    resolveMember(s, ref) == p,
+//    unwrapMemberClass(s, ref, p) == (decl, T).
+
+//rules resolveAmb3 : scope * ID -> (ID * TYPE)
+//
+//    // resolveClass
+//  resolveAmb3(s, ref) = (decl, T) :-
+//    resolveClass(s, ref) == [(_, (Class{decl@_}, T))].
+
+//rules unwrapVarMemberClass : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+//
+//  unwrapVarMemberClass(_, _, [(_, (Var{decl@_}, T))|_]) = (decl, T).
+//  unwrapVarMemberClass(s, ref, []) = resolveAmb2(s, ref).
+
+//rules unwrapMemberClass : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
+//
+//  unwrapMemberClass(_, _, [(_, (Member{decl@_}, T))]) = (decl, T).
+//  unwrapMemberClass(s, ref, []) = resolveAmb3(s, ref).
+
+
+
 
 // Constructors
 rules declareConstructor : scope * TYPE
@@ -98,6 +189,7 @@ rules ensureNoInheritanceCycle : scope * scope
       min $ < P, $ < E, E < P
       in parentClassScope |-> []
       | error $[Inheritance cycle detected].
+
 
 // Members
 rules declareInstanceMember : scope * scope * ID * TYPE
@@ -143,6 +235,15 @@ rules resolveMember : scope * ID -> list((path * (occurrence * TYPE)))
       min $ < P, $ < E, E < P       // prefer super classes (E) over lexical parents (P)
       in s |-> ps.
 
+rules resolveStaticOrInstanceMember : scope * ID -> list((path * (occurrence * TYPE)))
+
+  resolveStaticOrInstanceMember(s, ref) = ps :-
+    query type
+      filter P* S? E*               // any ancestor (E), maybe static (S)
+      and { d' :- d' == Member{ref@_} }
+      min $ < P, $ < E, $ < S, E < P, P < S // prefer super classes (E) over lexical parents (P), prefer lexical parents (P) over static parents (S)
+      in s |-> ps.
+
 rules typeOfMember : scope * ID -> TYPE
 
   typeOfMember(s, ref) = T :- {decl}
@@ -150,6 +251,7 @@ rules typeOfMember : scope * ID -> TYPE
       | error $[Undefined member [ref]],
     @ref.ref := decl,
     @ref.type := T.
+
 
 // Return type
 rules declareReturnType : scope * TYPE
@@ -172,40 +274,3 @@ rules typeOfReturnType : scope -> TYPE
 
   typeOfReturnType(s) = T :-
     resolveReturnType(s) == [(_, (_, T))|_].
-
-//  ...
-
-
-rules resolveAmb1 : scope * ID -> (ID * TYPE)
-
-  resolveAmb1(s, ref) = unwrapAmb1(s, ref, resolveVar(s, ref)).
-
-rules resolveAmb2 : scope * ID -> (ID * TYPE)
-
-  resolveAmb2(s, ref) = (decl, T) :- {p}
-    resolveMember(s, ref) == p,
-    unwrapAmb2(s, ref, p) == (decl, T).
-
-rules resolveAmb3 : scope * ID -> (ID * TYPE)
-
-    // resolveClass
-  resolveAmb3(s, ref) = (decl, T) :-
-    resolveClass(s, ref) == [(_, (Class{decl@_}, T))].
-
-rules unwrapAmb1 : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
-
-  unwrapAmb1(_, _, [(_, (Var{decl@_}, T))]) = (decl, T).
-  unwrapAmb1(s, ref, []) = resolveAmb2(s, ref).
-
-rules unwrapAmb2 : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
-
-  unwrapAmb2(_, _, [(_, (Member{decl@_}, T))]) = (decl, T).
-  unwrapAmb2(s, ref, []) = resolveAmb3(s, ref).
-
-
-rules typeOfVarOrMemberOrClass : scope * ID -> TYPE
-
-  typeOfVarOrMemberOrClass(s, ref) = T :- {p decl}
-    resolveVar(s, ref) == p,
-    unwrapAmb1(s, ref, p) == (decl, T),
-    @ref.ref := decl.

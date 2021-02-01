@@ -54,6 +54,8 @@ rules parentOk : scope * scope * ParentDecl
     declareVarOccurrence(instanceScope, Var{"base"@ref}, PIT),     // @ref
     instanceScope -E-> parentInstanceScope,
 
+    instanceScope -S-> classScope,
+
     @parent.type := CT.
 
   parentOk(_, _, ParentDecl-Plhdr()).
@@ -93,9 +95,3 @@ rules typeOfParam : scope * ParamDecl -> TYPE
     @name.type := T.
 
   typeOfParam(_, ParamDecl-Plhdr()) = _.
-
-rules typeOfClass : scope * ID -> TYPE
-
-  typeOfClass(s, ref) = T :- {decl}
-    resolveAmb3(s, ref) == (decl, T),
-    @ref.ref := decl.

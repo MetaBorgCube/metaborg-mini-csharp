@@ -42,7 +42,7 @@ rules stmtOk : scope * Stmt
   stmtOk(blockScope, Assign(name, e)) :- {TE TV}
     typeOfExp(blockScope, e) == TE,
     // TODO: Disallow assigning to a class
-    typeOfVarOrMemberOrClass(blockScope, name) == TV,
+    typeOfVarMemberClass(blockScope, name) == TV,
     TV == TE | error $[expected [TV], got [TE]],
     @name.type := TV.
 

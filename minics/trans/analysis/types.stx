@@ -31,14 +31,3 @@ rules typeOfType : scope * Type -> TYPE
 
   typeOfType(s, t@ClassType(ref)) = T :- {decl}
     typeOfClass(s, ref) == T.
-
-// Variables
-rules typeOfVar : scope * ID -> TYPE
-
-  typeOfVar(s, ref) = T :- {decl}
-    resolveVar(s, ref) == [(_, (decl, T))|_]
-      | error $[Undefined variable [ref]],
-    @ref.ref := decl,
-    @ref.type := T.
-
-
