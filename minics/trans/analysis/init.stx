@@ -1,0 +1,22 @@
+module analysis/init
+
+imports
+  signatures/minics-sig
+  analysis/classes
+
+
+rules init : scope
+
+  init(s) :-
+  // FIXME: Not possible because: statics!programOk(Program([],[])) (no origin information) - termId("Type", ?astId2-6)
+//    classOk(s, Class("Object", NoParent(), [
+//        InstanceMethod(Bool(), "Equals", [Param(ClassType("Object"), "that")], []),
+//        //StaticMethod(Bool(), "ReferenceEquals", [Param(ClassType("object"), "objA"), Param(ClassType("object"), "objB")], []),
+//        InstanceMethod(Int(), "GetHashCode", [], []),
+//        InstanceMethod(ClassType("String"), "ToString", [], []),
+//        InstanceMethod(ClassType("Type"), "GetType", [], [])
+//      ])
+//    ),
+//    classOk(s, Class("String", NoParent(), [])),
+//    classOk(s, Class("Type", NoParent(), [])),
+    true.

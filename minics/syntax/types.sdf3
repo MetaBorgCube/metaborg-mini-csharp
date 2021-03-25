@@ -10,6 +10,7 @@ context-free syntax
 
   Type.Int = <int>
   Type.Bool = <bool>
+  Type.Object = <object>
   Type.Void = <void>
   Type.ClassType = <<ID>>
 

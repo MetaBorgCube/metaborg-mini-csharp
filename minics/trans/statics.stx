@@ -2,14 +2,12 @@ module statics
 
 imports
   signatures/minics-sig
+  analysis/init
   analysis/statements
   analysis/expressions
   analysis/types
   analysis/classes
 
-rules init : scope
-
-  init(s).
 
 // Single-file entry point
 rules programOk : Start

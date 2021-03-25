@@ -10,6 +10,7 @@ signature
     OBJECT      : TYPE * scope -> TYPE
     INT         : TYPE
     BOOL        : TYPE
+    OBJECT      : TYPE
     VOID        : TYPE
     // TODO: Add receiver type?
     METHOD      : list(TYPE) * TYPE -> TYPE
@@ -25,9 +26,43 @@ rules typeOfType : scope * Type -> TYPE
     T == BOOL(),
     @t.type := T.
 
+  typeOfType(s, t@Object()) = T :-
+    T == OBJECT(),
+    @t.type := T.
+
   typeOfType(s, t@Void()) = T :-
     T == VOID(),
     @t.type := T.
 
   typeOfType(s, t@ClassType(ref)) = T :- {decl}
     typeOfClass(s, ref) == T.
+
+// Finds the least upper bound of two types
+// (i.e., the closest common type that both types (indirectly) extend
+rules lub : TYPE * TYPE -> TYPE
+
+  lub(T1@OBJECT(CLASS(_, _), s1), T2@OBJECT(CLASS(_, _), s2)) = T :- {A1 A2}
+    getAncestors(T1) == A1,     	// Ancestors of T1, from far to close
+    getAncestors(T2) == A2,     	// Ancestors of T2, from far to close
+    lub3(OBJECT(), A1, A2) == T.  	// TODO: Use System.Object
+  lub(T, T) = T.
+
+  // Given two lists of ancestors, ordered from far to close,
+  // we match the tops of the lists until we no longer can.
+  // The last succeeded match is the closest common ancestor.
+  // lub3 : candidate * ancestors1 * ancestors2 -> lub
+  lub3 : TYPE * list(TYPE) * list(TYPE) -> TYPE
+  lub3( _, [T|TS1], [T|TS2]) = lub3(T, TS1, TS2).
+  lub3(TC,       _,       _) = TC.
+
+  // Gets the ancestors of an instance object, including the instance itself,
+  // ordered from far to close.
+  getAncestors : TYPE -> list(TYPE)
+  getAncestors(T@OBJECT(CLASS(_, _), s)) = TR :-
+    unwrapAncestorsRecursive([T], resolveVar(s, "base")) == TR.
+
+  // Unwraps the resolution of `base` and adds it to the start of the accumulator,
+  // then recursively finds the next parent.
+  unwrapAncestorsRecursive : list(TYPE) * list((path * (occurrence * TYPE))) -> list(TYPE)
+  unwrapAncestorsRecursive(TS, [(_, (_, PT@OBJECT(CLASS(_, _), sp)))|_]) = unwrapAncestorsRecursive([PT|TS], resolveVar(sp, "base")).
+  unwrapAncestorsRecursive(TS, []) = TS.

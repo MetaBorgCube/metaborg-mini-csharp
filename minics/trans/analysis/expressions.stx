@@ -170,8 +170,9 @@ rules typeOfExp : scope * Exp -> TYPE
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     TC == BOOL() | error $[Expected [BOOL()], got [TC]],
-    T1 == T2 | error $[Expected [T1], got [T2]],
-    T == T1,
+    lub(T1, T2) == T,
+//    T1 == T2 | error $[Expected [T1], got [T2]],
+//    T == T1,
     @e.type := T.
 
   typeOfExp(_, Exp-Plhdr()) = _.

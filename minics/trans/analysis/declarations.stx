@@ -48,6 +48,15 @@ rules typeOfClass : scope * ID -> TYPE
     @ref.ref := decl,
     @ref.type := T.
 
+// Parents
+rules resolveParent : scope -> list((path * (occurrence * TYPE)))
+
+  resolveParent(s) = ps :-
+    query type
+      filter E                     // direct parent (E)
+      and { d' :- d' == Class{_@_} }
+      min $ < E
+      in s |-> ps.
 
 // Variables
 rules declareVarOccurrence : scope * occurrence * TYPE
@@ -119,44 +128,6 @@ rules typeOfMemberClass : scope * ID -> TYPE
       | error $[Undefined member or type [ref]],
     @ref.ref := decl,
     @ref.type := T.
-
-//
-//
-//rules typeOfMemberClass : scope * ID -> TYPE
-//
-//  typeOfMemberClass(s, ref) = T :- {decl}
-//    unwrapMemberClass(s, ref, resolveMember(s, ref)) == (decl, T),
-//    @ref.ref := decl,
-//    @ref.type := T.
-
-
-//rules resolveAmb1 : scope * ID -> (ID * TYPE)
-//
-//  resolveAmb1(s, ref) = unwrapVarMemberClass(s, ref, resolveVar(s, ref)).
-//
-//rules resolveAmb2 : scope * ID -> (ID * TYPE)
-//
-//  resolveAmb2(s, ref) = (decl, T) :- {p}
-//    resolveMember(s, ref) == p,
-//    unwrapMemberClass(s, ref, p) == (decl, T).
-
-//rules resolveAmb3 : scope * ID -> (ID * TYPE)
-//
-//    // resolveClass
-//  resolveAmb3(s, ref) = (decl, T) :-
-//    resolveClass(s, ref) == [(_, (Class{decl@_}, T))].
-
-//rules unwrapVarMemberClass : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
-//
-//  unwrapVarMemberClass(_, _, [(_, (Var{decl@_}, T))|_]) = (decl, T).
-//  unwrapVarMemberClass(s, ref, []) = resolveAmb2(s, ref).
-
-//rules unwrapMemberClass : scope * ID * list((path * (occurrence * TYPE))) -> (ID * TYPE)
-//
-//  unwrapMemberClass(_, _, [(_, (Member{decl@_}, T))]) = (decl, T).
-//  unwrapMemberClass(s, ref, []) = resolveAmb3(s, ref).
-
-
 
 
 // Constructors
