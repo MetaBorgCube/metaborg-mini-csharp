@@ -34,11 +34,11 @@ new:
 build:
 	$(BASE_COMMAND) build
 
-help:
-	$(BASE_COMMAND) -h
-
 deploy:
 	$(BASE_COMMAND) gh-deploy --force
 
-.PHONY: serve new build help
+help:
+	$(BASE_COMMAND) -h
+
+.PHONY: serve new build deploy help
 SILENT:
