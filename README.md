@@ -1,4 +1,6 @@
 # Mini C#
+[![https://img.shields.io/badge/docs-latest-success]](https://metaborgcube.github.io/metaborg-mini-csharp/)
+
 This is an implementation of a subset of C# in the [Spoofax Language Workbench][1]. Its syntax is declared in SDF3, and its semantics are declared in Statix. This version only support the syntactic and semantic analysis, and can neither run nor produce a C# class file.
 
 The implementation is based on the [ECMA-334 standard][2].
