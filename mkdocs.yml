@@ -1,0 +1,47 @@
+site_name: Mini C#
+site_description: Mini C# language for Spoofax
+site_author: Daniel A. A. Pelsmaeker
+site_dir: .docs_site/
+
+repo_url: https://github.com/MetaBorgCube/metaborg-mini-csharp
+
+theme:
+  name: material
+  language: en
+  icon:
+    logo: fontawesome/solid/sticky-note
+    repo: fontawesome/brands/github
+  palette:
+    primary: green
+    accent: purple
+  font:
+    code: JetBrains Mono
+    
+markdown_extensions:
+  - abbr
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.saneheaders
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+plugins:
+  - search
