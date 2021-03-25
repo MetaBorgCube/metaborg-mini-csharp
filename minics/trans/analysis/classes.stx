@@ -83,6 +83,17 @@ rules memberOk : scope * scope * MemberDecl
     declareReturnType(methodScope, RT),      // @name
     stmtsOk(methodScope, stmts),
     @method.type := T.
+    
+  memberOk(classScope, _, method@StaticMethod(returnType, name, params, stmts)) :- {methodScope RT PTS T}
+    new methodScope,
+    methodScope -P-> classScope,
+    typeOfType(classScope, returnType) == RT,
+    typesOfParams(methodScope, params) == PTS,
+    T == METHOD(PTS, RT),
+    declareStaticMember(classScope, name, T),
+    declareReturnType(methodScope, RT),
+    stmtsOk(methodScope, stmts),
+    @method.type := T.
 
   memberOk(_, _, MemberDecl-Plhdr()).
 

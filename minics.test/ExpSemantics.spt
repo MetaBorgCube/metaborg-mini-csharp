@@ -12,6 +12,9 @@ fixture [[
         public static int sfa;
 
         public int fa;
+        
+        public static bool SFA(int y) { }
+        
         public bool MA() { }
     }
 
@@ -20,6 +23,9 @@ fixture [[
         public static bool sfb;
 
         public bool fb;
+        
+        public static int PSF(bool x) { }
+        
         public int MB() { }
     }
 
@@ -28,6 +34,9 @@ fixture [[
         public static int sfc;
 
         public int fc;
+        
+        public static void SF() { }
+        
         public void MC(int a)
         {
             int l;
@@ -235,17 +244,17 @@ test remote ancestor method [[
 test local static function [[
   SF
 ]] analysis succeeds
-   run get-type to METHOD([BOOL()], VOID())
+   run get-type to METHOD([], VOID())
 
 test parent static function [[
   PSF
 ]] analysis succeeds
-   run get-type to METHOD([BOOL()], VOID())
+   run get-type to METHOD([BOOL()], INT())
 
 test remote static function [[
-  Q.sf
+  A.SFA
 ]] analysis succeeds
-   run get-type to BOOL()
+   run get-type to METHOD([INT()], BOOL())
 
 
 // Literals and Constants
