@@ -1,0 +1,604 @@
+module injections/Common-injections
+
+imports
+  signatures/Common-sig
+  pp/Common-pp
+  libspoofax/term/origin
+
+
+signature
+  constructors
+    ID-Plhdr             : ID
+    INT-Plhdr            : INT
+    STRING-Plhdr         : STRING
+    STRING_CHAR-Plhdr    : STRING_CHAR
+    BACKSLASH_CHAR-Plhdr : BACKSLASH_CHAR
+    COMMENT_CHAR-Plhdr   : COMMENT_CHAR
+    INSIDE_COMMENT-Plhdr : INSIDE_COMMENT
+    NEWLINE_EOF-Plhdr    : NEWLINE_EOF
+    EOF-Plhdr            : EOF
+
+
+rules
+
+  is-minics-ID-or-inj =
+    is-string
+
+  is-minics-ID-or-inj =
+    ?ID-Plhdr()
+
+  is-minics-INT-or-inj =
+    is-string
+
+  is-minics-INT-or-inj =
+    ?INT-Plhdr()
+
+  is-minics-STRING-or-inj =
+    is-string
+
+  is-minics-STRING-or-inj =
+    ?STRING-Plhdr()
+
+  is-minics-STRING_CHAR-or-inj =
+    is-string
+
+  is-minics-STRING_CHAR-or-inj =
+    ?STRING_CHAR-Plhdr()
+
+  is-minics-BACKSLASH_CHAR-or-inj =
+    is-string
+
+  is-minics-BACKSLASH_CHAR-or-inj =
+    ?BACKSLASH_CHAR-Plhdr()
+
+  is-minics-COMMENT_CHAR-or-inj =
+    is-string
+
+  is-minics-COMMENT_CHAR-or-inj =
+    ?COMMENT_CHAR-Plhdr()
+
+  is-minics-INSIDE_COMMENT-or-inj =
+    is-string
+
+  is-minics-INSIDE_COMMENT-or-inj =
+    ?INSIDE_COMMENT-Plhdr()
+
+  is-minics-NEWLINE_EOF-or-inj =
+    is-string
+
+  is-minics-NEWLINE_EOF-or-inj =
+    ?NEWLINE_EOF-Plhdr()
+
+  is-minics-EOF-or-inj =
+    is-string
+
+  is-minics-EOF-or-inj =
+    ?EOF-Plhdr()
+
+
+rules
+
+  explicate-injections-minics =
+    explicate-injections-minics-ID
+
+  explicate-injections-minics-ID =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-ID-or-inj> t \
+    )
+
+  explicate-injections-minics =
+    explicate-injections-minics-INT
+
+  explicate-injections-minics-INT =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-INT-or-inj> t \
+    )
+
+  explicate-injections-minics =
+    explicate-injections-minics-STRING
+
+  explicate-injections-minics-STRING =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-STRING-or-inj> t \
+    )
+
+  explicate-injections-minics =
+    explicate-injections-minics-STRING_CHAR
+
+  explicate-injections-minics-STRING_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-STRING_CHAR-or-inj> t \
+    )
+
+  explicate-injections-minics =
+    explicate-injections-minics-BACKSLASH_CHAR
+
+  explicate-injections-minics-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-BACKSLASH_CHAR-or-inj> t \
+    )
+
+  explicate-injections-minics =
+    explicate-injections-minics-COMMENT_CHAR
+
+  explicate-injections-minics-COMMENT_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-COMMENT_CHAR-or-inj> t \
+    )
+
+  explicate-injections-minics =
+    explicate-injections-minics-INSIDE_COMMENT
+
+  explicate-injections-minics-INSIDE_COMMENT =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-INSIDE_COMMENT-or-inj> t \
+    )
+
+  explicate-injections-minics =
+    explicate-injections-minics-NEWLINE_EOF
+
+  explicate-injections-minics-NEWLINE_EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-NEWLINE_EOF-or-inj> t \
+    )
+
+  explicate-injections-minics =
+    explicate-injections-minics-EOF
+
+  explicate-injections-minics-EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-EOF-or-inj> t \
+    )
+
+
+rules
+
+  implicate-injections-minics =
+    implicate-injections-minics-ID
+
+  implicate-injections-minics-ID =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-ID-or-inj> t \
+    )
+
+  implicate-injections-minics =
+    implicate-injections-minics-INT
+
+  implicate-injections-minics-INT =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-INT-or-inj> t \
+    )
+
+  implicate-injections-minics =
+    implicate-injections-minics-STRING
+
+  implicate-injections-minics-STRING =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-STRING-or-inj> t \
+    )
+
+  implicate-injections-minics =
+    implicate-injections-minics-STRING_CHAR
+
+  implicate-injections-minics-STRING_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-STRING_CHAR-or-inj> t \
+    )
+
+  implicate-injections-minics =
+    implicate-injections-minics-BACKSLASH_CHAR
+
+  implicate-injections-minics-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-BACKSLASH_CHAR-or-inj> t \
+    )
+
+  implicate-injections-minics =
+    implicate-injections-minics-COMMENT_CHAR
+
+  implicate-injections-minics-COMMENT_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-COMMENT_CHAR-or-inj> t \
+    )
+
+  implicate-injections-minics =
+    implicate-injections-minics-INSIDE_COMMENT
+
+  implicate-injections-minics-INSIDE_COMMENT =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-INSIDE_COMMENT-or-inj> t \
+    )
+
+  implicate-injections-minics =
+    implicate-injections-minics-NEWLINE_EOF
+
+  implicate-injections-minics-NEWLINE_EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-NEWLINE_EOF-or-inj> t \
+    )
+
+  implicate-injections-minics =
+    implicate-injections-minics-EOF
+
+  implicate-injections-minics-EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-minics-EOF-or-inj> t \
+    )
+
+
+rules
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-ID
+
+  upgrade-placeholders-minics-ID =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-ID =
+    origin-track-forced(
+      \ ID-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "ID" \
+    )
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-INT
+
+  upgrade-placeholders-minics-INT =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-INT =
+    origin-track-forced(
+      \ INT-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "INT" \
+    )
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-STRING
+
+  upgrade-placeholders-minics-STRING =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-STRING =
+    origin-track-forced(
+      \ STRING-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "STRING" \
+    )
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-STRING_CHAR
+
+  upgrade-placeholders-minics-STRING_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-STRING_CHAR =
+    origin-track-forced(
+      \ STRING_CHAR-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "STRING_CHAR" \
+    )
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-BACKSLASH_CHAR
+
+  upgrade-placeholders-minics-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ BACKSLASH_CHAR-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "BACKSLASH_CHAR" \
+    )
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-COMMENT_CHAR
+
+  upgrade-placeholders-minics-COMMENT_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-COMMENT_CHAR =
+    origin-track-forced(
+      \ COMMENT_CHAR-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "COMMENT_CHAR" \
+    )
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-INSIDE_COMMENT
+
+  upgrade-placeholders-minics-INSIDE_COMMENT =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-INSIDE_COMMENT =
+    origin-track-forced(
+      \ INSIDE_COMMENT-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "INSIDE_COMMENT" \
+    )
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-NEWLINE_EOF
+
+  upgrade-placeholders-minics-NEWLINE_EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-NEWLINE_EOF =
+    origin-track-forced(
+      \ NEWLINE_EOF-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "NEWLINE_EOF" \
+    )
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-EOF
+
+  upgrade-placeholders-minics-EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-minics-EOF =
+    origin-track-forced(
+      \ EOF-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "EOF" \
+    )
+
+
+rules
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-ID
+
+  downgrade-placeholders-minics-ID =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-ID =
+    origin-track-forced(
+      \ p{anno*} -> ID-Plhdr(){anno*}
+        where <(is-placeholder + ?ID-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-INT
+
+  downgrade-placeholders-minics-INT =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-INT =
+    origin-track-forced(
+      \ p{anno*} -> INT-Plhdr(){anno*}
+        where <(is-placeholder + ?INT-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-STRING
+
+  downgrade-placeholders-minics-STRING =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-STRING =
+    origin-track-forced(
+      \ p{anno*} -> STRING-Plhdr(){anno*}
+        where <(is-placeholder + ?STRING-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-STRING_CHAR
+
+  downgrade-placeholders-minics-STRING_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-STRING_CHAR =
+    origin-track-forced(
+      \ p{anno*} -> STRING_CHAR-Plhdr(){anno*}
+        where <(is-placeholder + ?STRING_CHAR-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-BACKSLASH_CHAR
+
+  downgrade-placeholders-minics-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ p{anno*} -> BACKSLASH_CHAR-Plhdr(){anno*}
+        where <(is-placeholder + ?BACKSLASH_CHAR-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-COMMENT_CHAR
+
+  downgrade-placeholders-minics-COMMENT_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-COMMENT_CHAR =
+    origin-track-forced(
+      \ p{anno*} -> COMMENT_CHAR-Plhdr(){anno*}
+        where <(is-placeholder + ?COMMENT_CHAR-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-INSIDE_COMMENT
+
+  downgrade-placeholders-minics-INSIDE_COMMENT =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-INSIDE_COMMENT =
+    origin-track-forced(
+      \ p{anno*} -> INSIDE_COMMENT-Plhdr(){anno*}
+        where <(is-placeholder + ?INSIDE_COMMENT-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-NEWLINE_EOF
+
+  downgrade-placeholders-minics-NEWLINE_EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-NEWLINE_EOF =
+    origin-track-forced(
+      \ p{anno*} -> NEWLINE_EOF-Plhdr(){anno*}
+        where <(is-placeholder + ?NEWLINE_EOF-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-EOF
+
+  downgrade-placeholders-minics-EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-minics-EOF =
+    origin-track-forced(
+      \ p{anno*} -> EOF-Plhdr(){anno*}
+        where <(is-placeholder + ?EOF-Plhdr())> p \
+    )
+
+
+rules
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ []{anno*} -> None(){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [t]{anno*} -> Some(<s> t){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [_, _|_] -> <fatal-err(|"Cannot implicate multi-element list to option.")> \
+    )
+
+
+rules
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <is-list> l
+        with l' := <map(s)> l \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <fail> l
+        with l' := <make-placeholder> "list" \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> None(){anno*} \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> Some(<s> t){anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ p -> p'
+        where <is-placeholder> p
+        with p' := [] \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ []{anno*} -> []{anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ [e|es]{anno*} -> [e'|es']{anno*}
+        with e' := <s> e
+             ; es' := <downgrade-list(s)> es \
+    )

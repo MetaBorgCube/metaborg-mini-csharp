@@ -1,0 +1,300 @@
+module injections/types-injections
+
+imports
+  signatures/types-sig
+  pp/types-pp
+  libspoofax/term/origin
+
+
+imports
+  injections/Common-injections
+
+
+signature
+  constructors
+    Type-Plhdr : Type
+
+
+rules
+
+  is-minics-Type-or-inj =
+    ?Int()
+
+  is-minics-Type-or-inj =
+    ?Bool()
+
+  is-minics-Type-or-inj =
+    ?Object()
+
+  is-minics-Type-or-inj =
+    ?Void()
+
+  is-minics-Type-or-inj =
+    ?ClassType(_)
+
+
+rules
+
+  is-minics-inj-cons =
+    is-minics-Type-inj-cons
+
+  is-minics-Type-inj-cons =
+    fail
+
+
+rules
+
+  explicate-injections-minics =
+    explicate-injections-minics-Type
+
+  explicate-injections-minics-Type =
+    origin-track-forced(
+      \ Int(){anno*} -> Int(){anno*} \
+    )
+
+  explicate-injections-minics-Type =
+    origin-track-forced(
+      \ Bool(){anno*} -> Bool(){anno*} \
+    )
+
+  explicate-injections-minics-Type =
+    origin-track-forced(
+      \ Object(){anno*} -> Object(){anno*} \
+    )
+
+  explicate-injections-minics-Type =
+    origin-track-forced(
+      \ Void(){anno*} -> Void(){anno*} \
+    )
+
+  explicate-injections-minics-Type =
+    origin-track-forced(
+      \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
+        with id_' := <explicate-injections-minics-ID> id_ \
+    )
+
+  explicate-injections-minics-Type =
+    origin-track-forced(
+      \ Type-Plhdr(){anno*} -> Type-Plhdr(){anno*} \
+    )
+
+  explicate-injections-minics-Type =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-minics-Type)> alts \
+    )
+
+
+rules
+
+  implicate-injections-minics =
+    implicate-injections-minics-Type
+
+  implicate-injections-minics-Type =
+    origin-track-forced(
+      \ Int(){anno*} -> Int(){anno*} \
+    )
+
+  implicate-injections-minics-Type =
+    origin-track-forced(
+      \ Bool(){anno*} -> Bool(){anno*} \
+    )
+
+  implicate-injections-minics-Type =
+    origin-track-forced(
+      \ Object(){anno*} -> Object(){anno*} \
+    )
+
+  implicate-injections-minics-Type =
+    origin-track-forced(
+      \ Void(){anno*} -> Void(){anno*} \
+    )
+
+  implicate-injections-minics-Type =
+    origin-track-forced(
+      \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
+        with id_' := <implicate-injections-minics-ID> id_ \
+    )
+
+  implicate-injections-minics-Type =
+    origin-track-forced(
+      \ Type-Plhdr(){anno*} -> Type-Plhdr(){anno*} \
+    )
+
+  implicate-injections-minics-Type =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-minics-Type)> alts \
+    )
+
+
+rules
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-Type
+
+  upgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Int(){anno*} -> Int(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Bool(){anno*} -> Bool(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Object(){anno*} -> Object(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Void(){anno*} -> Void(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
+        with id_' := <upgrade-placeholders-minics-ID> id_ \
+    )
+
+  upgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Type-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "Type" \
+    )
+
+  upgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-minics-Type)> alts \
+    )
+
+
+rules
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-Type
+
+  downgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Int(){anno*} -> Int(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Bool(){anno*} -> Bool(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Object(){anno*} -> Object(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ Void(){anno*} -> Void(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
+        with id_' := <downgrade-placeholders-minics-ID> id_ \
+    )
+
+  downgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ p{anno*} -> Type-Plhdr(){anno*}
+        where <(is-placeholder + ?Type-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics-Type =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-minics-Type)> alts \
+    )
+
+
+rules
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ []{anno*} -> None(){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [t]{anno*} -> Some(<s> t){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [_, _|_] -> <fatal-err(|"Cannot implicate multi-element list to option.")> \
+    )
+
+
+rules
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <is-list> l
+        with l' := <map(s)> l \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <fail> l
+        with l' := <make-placeholder> "list" \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> None(){anno*} \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> Some(<s> t){anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ p -> p'
+        where <is-placeholder> p
+        with p' := [] \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ []{anno*} -> []{anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ [e|es]{anno*} -> [e'|es']{anno*}
+        with e' := <s> e
+             ; es' := <downgrade-list(s)> es \
+    )

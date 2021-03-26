@@ -1,0 +1,905 @@
+module injections/expressions-injections
+
+imports
+  signatures/expressions-sig
+  pp/expressions-pp
+  libspoofax/term/origin
+
+
+imports
+  injections/Common-injections
+  injections/types-injections
+
+
+signature
+  constructors
+    Exp-Plhdr : Exp
+
+
+rules
+
+  is-minics-Exp-or-inj =
+    ?Var(_)
+
+  is-minics-Exp-or-inj =
+    ?This()
+
+  is-minics-Exp-or-inj =
+    ?Base()
+
+  is-minics-Exp-or-inj =
+    ?Call(_, _)
+
+  is-minics-Exp-or-inj =
+    ?New(_)
+
+  is-minics-Exp-or-inj =
+    ?Member(_, _)
+
+  is-minics-Exp-or-inj =
+    ?True()
+
+  is-minics-Exp-or-inj =
+    ?False()
+
+  is-minics-Exp-or-inj =
+    ?Lt(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Le(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Gt(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Ge(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Eq(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Neq(_, _)
+
+  is-minics-Exp-or-inj =
+    ?And(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Or(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Not(_)
+
+  is-minics-Exp-or-inj =
+    ?Int(_)
+
+  is-minics-Exp-or-inj =
+    ?Plus(_)
+
+  is-minics-Exp-or-inj =
+    ?Min(_)
+
+  is-minics-Exp-or-inj =
+    ?Mul(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Div(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Add(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Sub(_, _)
+
+  is-minics-Exp-or-inj =
+    ?Cond(_, _, _)
+
+
+rules
+
+  is-minics-inj-cons =
+    is-minics-Exp-inj-cons
+
+  is-minics-Exp-inj-cons =
+    fail
+
+
+rules
+
+  explicate-injections-minics =
+    explicate-injections-minics-Exp
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <explicate-injections-minics-ID> id_ \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Base(){anno*} -> Base(){anno*} \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Call(exp, exps){anno*} -> Call(exp', exps'){anno*}
+        with exp' := <explicate-injections-minics-Exp> exp
+             ; exps' := <map(explicate-injections-minics-Exp)> exps \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ New(type){anno*} -> New(type'){anno*}
+        with type' := <explicate-injections-minics-Type> type \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <explicate-injections-minics-Exp> exp
+             ; id_' := <explicate-injections-minics-ID> id_ \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ True(){anno*} -> True(){anno*} \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ False(){anno*} -> False(){anno*} \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Le(exp1, exp2){anno*} -> Le(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Gt(exp1, exp2){anno*} -> Gt(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Ge(exp1, exp2){anno*} -> Ge(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Eq(exp1, exp2){anno*} -> Eq(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Neq(exp1, exp2){anno*} -> Neq(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ And(exp1, exp2){anno*} -> And(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Or(exp1, exp2){anno*} -> Or(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Not(exp){anno*} -> Not(exp'){anno*}
+        with exp' := <explicate-injections-minics-Exp> exp \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Int(int){anno*} -> Int(int'){anno*}
+        with int' := <explicate-injections-minics-INT> int \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Plus(exp){anno*} -> Plus(exp'){anno*}
+        with exp' := <explicate-injections-minics-Exp> exp \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Min(exp){anno*} -> Min(exp'){anno*}
+        with exp' := <explicate-injections-minics-Exp> exp \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Mul(exp1, exp2){anno*} -> Mul(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Div(exp1, exp2){anno*} -> Div(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Add(exp1, exp2){anno*} -> Add(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Sub(exp1, exp2){anno*} -> Sub(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Cond(exp1, exp2, exp3){anno*} -> Cond(exp1', exp2', exp3'){anno*}
+        with exp1' := <explicate-injections-minics-Exp> exp1
+             ; exp2' := <explicate-injections-minics-Exp> exp2
+             ; exp3' := <explicate-injections-minics-Exp> exp3 \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Exp-Plhdr(){anno*} -> Exp-Plhdr(){anno*} \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-minics-Exp)> alts \
+    )
+
+
+rules
+
+  implicate-injections-minics =
+    implicate-injections-minics-Exp
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <implicate-injections-minics-ID> id_ \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Base(){anno*} -> Base(){anno*} \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Call(exp, exps){anno*} -> Call(exp', exps'){anno*}
+        with exp' := <implicate-injections-minics-Exp> exp
+             ; exps' := <map(implicate-injections-minics-Exp)> exps \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ New(type){anno*} -> New(type'){anno*}
+        with type' := <implicate-injections-minics-Type> type \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <implicate-injections-minics-Exp> exp
+             ; id_' := <implicate-injections-minics-ID> id_ \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ True(){anno*} -> True(){anno*} \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ False(){anno*} -> False(){anno*} \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Le(exp1, exp2){anno*} -> Le(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Gt(exp1, exp2){anno*} -> Gt(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Ge(exp1, exp2){anno*} -> Ge(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Eq(exp1, exp2){anno*} -> Eq(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Neq(exp1, exp2){anno*} -> Neq(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ And(exp1, exp2){anno*} -> And(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Or(exp1, exp2){anno*} -> Or(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Not(exp){anno*} -> Not(exp'){anno*}
+        with exp' := <implicate-injections-minics-Exp> exp \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Int(int){anno*} -> Int(int'){anno*}
+        with int' := <implicate-injections-minics-INT> int \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Plus(exp){anno*} -> Plus(exp'){anno*}
+        with exp' := <implicate-injections-minics-Exp> exp \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Min(exp){anno*} -> Min(exp'){anno*}
+        with exp' := <implicate-injections-minics-Exp> exp \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Mul(exp1, exp2){anno*} -> Mul(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Div(exp1, exp2){anno*} -> Div(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Add(exp1, exp2){anno*} -> Add(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Sub(exp1, exp2){anno*} -> Sub(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Cond(exp1, exp2, exp3){anno*} -> Cond(exp1', exp2', exp3'){anno*}
+        with exp1' := <implicate-injections-minics-Exp> exp1
+             ; exp2' := <implicate-injections-minics-Exp> exp2
+             ; exp3' := <implicate-injections-minics-Exp> exp3 \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Exp-Plhdr(){anno*} -> Exp-Plhdr(){anno*} \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-minics-Exp)> alts \
+    )
+
+
+rules
+
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-Exp
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <upgrade-placeholders-minics-ID> id_ \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Base(){anno*} -> Base(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Call(exp, exps){anno*} -> Call(exp', exps'){anno*}
+        with exp' := <upgrade-placeholders-minics-Exp> exp
+             ; exps' := <upgrade-list(upgrade-placeholders-minics-Exp)> exps \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ New(type){anno*} -> New(type'){anno*}
+        with type' := <upgrade-placeholders-minics-Type> type \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <upgrade-placeholders-minics-Exp> exp
+             ; id_' := <upgrade-placeholders-minics-ID> id_ \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ True(){anno*} -> True(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ False(){anno*} -> False(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Le(exp1, exp2){anno*} -> Le(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Gt(exp1, exp2){anno*} -> Gt(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Ge(exp1, exp2){anno*} -> Ge(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Eq(exp1, exp2){anno*} -> Eq(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Neq(exp1, exp2){anno*} -> Neq(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ And(exp1, exp2){anno*} -> And(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Or(exp1, exp2){anno*} -> Or(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Not(exp){anno*} -> Not(exp'){anno*}
+        with exp' := <upgrade-placeholders-minics-Exp> exp \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Int(int){anno*} -> Int(int'){anno*}
+        with int' := <upgrade-placeholders-minics-INT> int \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Plus(exp){anno*} -> Plus(exp'){anno*}
+        with exp' := <upgrade-placeholders-minics-Exp> exp \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Min(exp){anno*} -> Min(exp'){anno*}
+        with exp' := <upgrade-placeholders-minics-Exp> exp \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Mul(exp1, exp2){anno*} -> Mul(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Div(exp1, exp2){anno*} -> Div(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Add(exp1, exp2){anno*} -> Add(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Sub(exp1, exp2){anno*} -> Sub(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Cond(exp1, exp2, exp3){anno*} -> Cond(exp1', exp2', exp3'){anno*}
+        with exp1' := <upgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <upgrade-placeholders-minics-Exp> exp2
+             ; exp3' := <upgrade-placeholders-minics-Exp> exp3 \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Exp-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "Exp" \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-minics-Exp)> alts \
+    )
+
+
+rules
+
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-Exp
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <downgrade-placeholders-minics-ID> id_ \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Base(){anno*} -> Base(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Call(exp, exps){anno*} -> Call(exp', exps'){anno*}
+        with exp' := <downgrade-placeholders-minics-Exp> exp
+             ; exps' := <downgrade-list(downgrade-placeholders-minics-Exp)> exps \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ New(type){anno*} -> New(type'){anno*}
+        with type' := <downgrade-placeholders-minics-Type> type \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <downgrade-placeholders-minics-Exp> exp
+             ; id_' := <downgrade-placeholders-minics-ID> id_ \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ True(){anno*} -> True(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ False(){anno*} -> False(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Le(exp1, exp2){anno*} -> Le(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Gt(exp1, exp2){anno*} -> Gt(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Ge(exp1, exp2){anno*} -> Ge(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Eq(exp1, exp2){anno*} -> Eq(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Neq(exp1, exp2){anno*} -> Neq(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ And(exp1, exp2){anno*} -> And(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Or(exp1, exp2){anno*} -> Or(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Not(exp){anno*} -> Not(exp'){anno*}
+        with exp' := <downgrade-placeholders-minics-Exp> exp \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Int(int){anno*} -> Int(int'){anno*}
+        with int' := <downgrade-placeholders-minics-INT> int \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Plus(exp){anno*} -> Plus(exp'){anno*}
+        with exp' := <downgrade-placeholders-minics-Exp> exp \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Min(exp){anno*} -> Min(exp'){anno*}
+        with exp' := <downgrade-placeholders-minics-Exp> exp \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Mul(exp1, exp2){anno*} -> Mul(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Div(exp1, exp2){anno*} -> Div(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Add(exp1, exp2){anno*} -> Add(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Sub(exp1, exp2){anno*} -> Sub(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Cond(exp1, exp2, exp3){anno*} -> Cond(exp1', exp2', exp3'){anno*}
+        with exp1' := <downgrade-placeholders-minics-Exp> exp1
+             ; exp2' := <downgrade-placeholders-minics-Exp> exp2
+             ; exp3' := <downgrade-placeholders-minics-Exp> exp3 \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ p{anno*} -> Exp-Plhdr(){anno*}
+        where <(is-placeholder + ?Exp-Plhdr())> p \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-minics-Exp)> alts \
+    )
+
+
+rules
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ []{anno*} -> None(){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [t]{anno*} -> Some(<s> t){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [_, _|_] -> <fatal-err(|"Cannot implicate multi-element list to option.")> \
+    )
+
+
+rules
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <is-list> l
+        with l' := <map(s)> l \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <fail> l
+        with l' := <make-placeholder> "list" \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> None(){anno*} \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> Some(<s> t){anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ p -> p'
+        where <is-placeholder> p
+        with p' := [] \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ []{anno*} -> []{anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ [e|es]{anno*} -> [e'|es']{anno*}
+        with e' := <s> e
+             ; es' := <downgrade-list(s)> es \
+    )
