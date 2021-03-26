@@ -20,13 +20,13 @@ rules stmtOk : scope * Stmt
     typeOfExp(blockScope, e) == _.
 
   stmtOk(blockScope, DeclareTypedVar(type, name)) :- {T}
-    typeOfType(blockScope, type) == T,
+    typeOfObjectType(blockScope, type) == T,
     // FIXME: Variable should only be declared in subsequent scopes
     declareVar(blockScope, name, T),
     @name.type := T.
 
   stmtOk(blockScope, DeclareTypedVarInit(type, name, e)) :- {T TE}
-    typeOfType(blockScope, type) == T,
+    typeOfObjectType(blockScope, type) == T,
     typeOfExp(blockScope, e) == TE,
     T == TE | error $[expected [T], got [TE]],
     // FIXME: Variable should only be declared in subsequent scopes

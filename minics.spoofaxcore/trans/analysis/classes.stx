@@ -64,30 +64,30 @@ rules memberOk : scope * scope * MemberDecl
   membersOk maps memberOk(*, *, list(*))
 
   memberOk(classScope, instanceScope, field@InstanceField(type, name)) :- {T}
-    typeOfType(classScope, type) == T,
+    typeOfObjectType(classScope, type) == T,
     declareInstanceMember(instanceScope, classScope, name, T),
     @field.type := T.
 
   memberOk(classScope, _, field@StaticField(type, name)) :- {T}
-    typeOfType(classScope, type) == T,
+    typeOfObjectType(classScope, type) == T,
     declareStaticMember(classScope, name, T),
     @field.type := T.
 
   memberOk(classScope, instanceScope, method@InstanceMethod(returnType, name, params, stmts)) :- {methodScope RT PTS T}
     new methodScope,
     methodScope -P-> instanceScope,
-    typeOfType(classScope, returnType) == RT,
+    typeOfObjectType(classScope, returnType) == RT,
     typesOfParams(methodScope, params) == PTS,
     T == METHOD(PTS, RT),
     declareInstanceMember(instanceScope, classScope, name, T),
     declareReturnType(methodScope, RT),      // @name
     stmtsOk(methodScope, stmts),
     @method.type := T.
-    
+
   memberOk(classScope, _, method@StaticMethod(returnType, name, params, stmts)) :- {methodScope RT PTS T}
     new methodScope,
     methodScope -P-> classScope,
-    typeOfType(classScope, returnType) == RT,
+    typeOfObjectType(classScope, returnType) == RT,
     typesOfParams(methodScope, params) == PTS,
     T == METHOD(PTS, RT),
     declareStaticMember(classScope, name, T),
@@ -101,7 +101,7 @@ rules typeOfParam : scope * ParamDecl -> TYPE
   typesOfParams maps typeOfParam(*, list(*)) = list(*)
 
   typeOfParam(s, Param(type, name)) = T :-
-    typeOfType(s, type) == T,
+    typeOfObjectType(s, type) == T,
     declareVar(s, name, T),
     @name.type := T.
 

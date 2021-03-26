@@ -15,7 +15,7 @@ signature
     // TODO: Add receiver type?
     METHOD      : list(TYPE) * TYPE -> TYPE
 
-// Types
+// Static type
 rules typeOfType : scope * Type -> TYPE
 
   typeOfType(s, t@Int()) = T :-
@@ -39,8 +39,34 @@ rules typeOfType : scope * Type -> TYPE
 
   typeOfType(_, Type-Plhdr()) = _.
 
+// Instance type
+rules typeOfObjectType : scope * Type -> TYPE
+
+  typeOfObjectType(s, t@Int()) = T :-
+    T == INT(),
+    @t.type := T.
+
+  typeOfObjectType(s, t@Bool()) = T :-
+    T == BOOL(),
+    @t.type := T.
+
+  typeOfObjectType(s, t@Object()) = T :-
+    T == OBJECT(),
+    @t.type := T.
+
+  typeOfObjectType(s, t@Void()) = T :-
+    T == VOID(),
+    @t.type := T.
+
+  typeOfObjectType(s, t@ClassType(ref)) = T :- {decl classScope}
+    typeOfClass(s, ref) == CLASS(_, classScope),
+    typeOfConstructor(classScope) == T.
+//    resolveConstructor(classScope) == [(_, (_, T@OBJECT(_, classScope)))].
+
+  typeOfObjectType(_, Type-Plhdr()) = _.
+
 // Finds the least upper bound of two types
-// (i.e., the closest common type that both types (indirectly) extend
+// (i.e., the closest common type that both types (indirectly) extend)
 rules lub : TYPE * TYPE -> TYPE
 
   lub(T1@OBJECT(CLASS(_, _), s1), T2@OBJECT(CLASS(_, _), s2)) = T :- {A1 A2}
