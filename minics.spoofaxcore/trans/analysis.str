@@ -19,8 +19,8 @@ rules // Analysis
   // multi-file analysis
 //  editor-analyze = stx-editor-analyze(pre-analyze, post-analyze|"statics", "projectOk", "fileOk")
 
-  pre-analyze  = origin-track-forced(explicate-injections-minics-Start)
-  post-analyze = origin-track-forced(implicate-injections-minics-Start)
+  pre-analyze  = origin-track-forced(explicate-injections-minics)
+  post-analyze = origin-track-forced(implicate-injections-minics)
 
   get-type: exp -> <strip-annos> type
     where <debug(!"Debug get-type: ")> exp
