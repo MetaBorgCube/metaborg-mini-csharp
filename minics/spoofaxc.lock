@@ -1,0 +1,5 @@
+shared.defaultArtifactId=minics
+shared.defaultClassPrefix=Minics
+shared.defaultGroupId=org.metaborg
+shared.defaultPackageId=mb.minics
+shared.defaultVersion=0.1.0
