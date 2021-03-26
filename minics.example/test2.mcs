@@ -1,0 +1,15 @@
+using System;
+
+class A {}
+
+class B1 : A {
+    public static B1 b1;
+    public static B2 b2;
+
+    public static bool t( ) {
+        A y = true ? b1 : b2;
+    }
+}
+
+class B2 : A {
+}
