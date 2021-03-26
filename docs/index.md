@@ -67,3 +67,6 @@ The following aspects have been implemented:
     - [x] Integer operators
     - [x] Ternary conditional operator
 
+
+[1]: https://spoofax.org/
+[2]: https://www.ecma-international.org/publications-and-standards/standards/ecma-334/
