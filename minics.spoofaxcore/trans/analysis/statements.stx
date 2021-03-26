@@ -60,3 +60,4 @@ rules stmtOk : scope * Stmt
     TR == T | error $[expected [TR], got [T]],
     @stmt.type := TR.
 
+  stmtOk(_, Stmt-Plhdr()).

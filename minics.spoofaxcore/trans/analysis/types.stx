@@ -37,6 +37,8 @@ rules typeOfType : scope * Type -> TYPE
   typeOfType(s, t@ClassType(ref)) = T :- {decl}
     typeOfClass(s, ref) == T.
 
+  typeOfType(_, Type-Plhdr()) = _.
+
 // Finds the least upper bound of two types
 // (i.e., the closest common type that both types (indirectly) extend
 rules lub : TYPE * TYPE -> TYPE
