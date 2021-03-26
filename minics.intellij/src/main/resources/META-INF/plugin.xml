@@ -1,0 +1,25 @@
+<idea-plugin>
+  <id>minics.intellij</id>
+  <name>Mini C#</name>
+  <vendor>org.metaborg</vendor>
+  <extensions defaultExtensionNs="com.intellij">
+    <ApplicationLoadListener
+      implementation="mb.minics.intellij.MinicsLoader"
+    />
+    <fileTypeFactory
+      implementation="mb.minics.intellij.MinicsFileTypeFactory"
+    />
+    <lang.syntaxHighlighterFactory
+      language="Minics"
+      implementationClass="mb.minics.intellij.MinicsSyntaxHighlighterFactory"
+    />
+    <lang.parserDefinition
+      language="Minics"
+      implementationClass="mb.minics.intellij.MinicsParserDefinition"
+    />
+    <completion.contributor
+      language="Minics"
+      implementationClass="mb.minics.intellij.editor.MinicsCompletionContributor"
+    />
+  </extensions>
+</idea-plugin>
