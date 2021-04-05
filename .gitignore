@@ -1,5 +1,6 @@
 # Spoofax
 *.aterm
+!*.stx.aterm
 .cache/
 src-gen/
 .polyglot.metaborg.yaml
