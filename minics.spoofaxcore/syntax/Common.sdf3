@@ -10,6 +10,7 @@ lexical syntax
 
   ID               = [a-zA-Z\_] [a-zA-Z0-9\_\-]*
   INT              = [1-9][0-9]*
+  INT              = "0"
   STRING           = "\"" STRING_CHAR* "\""
   STRING_CHAR      = ~[\\\"\n]
   STRING_CHAR      = "\\\""
