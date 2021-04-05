@@ -5,14 +5,12 @@ imports
   types
 
 context-free sorts
-  Exp
+  Exp Ref
 
 context-free syntax
 
   // Objects
-  Exp.Var = <<ID>>
-  Exp.This = <this>
-  Exp.Base = <base>
+  Exp = <<Ref>>
   Exp.Call = <<Exp>(<{Exp ", "}*>)>
   Exp.New = <new <Type>(<>)>
   Exp.Member = <<Exp>.<ID>>
@@ -46,6 +44,12 @@ context-free syntax
 
   Exp.Cond = <<Exp> ? <Exp> : <Exp>>
   Exp = <(<Exp>)> {bracket}
+
+context-free syntax
+
+  Ref.Var = <<ID>>
+  Ref.This = <this>
+  Ref.Base = <base>
 
 context-free priorities
 

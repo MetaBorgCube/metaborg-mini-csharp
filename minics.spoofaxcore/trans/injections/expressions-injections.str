@@ -13,19 +13,19 @@ imports
 
 signature
   constructors
+    Ref2Exp : Ref -> Exp
+
+
+signature
+  constructors
     Exp-Plhdr : Exp
+    Ref-Plhdr : Ref
 
 
 rules
 
   is-minics-Exp-or-inj =
-    ?Var(_)
-
-  is-minics-Exp-or-inj =
-    ?This()
-
-  is-minics-Exp-or-inj =
-    ?Base()
+    is-minics-Ref-or-inj
 
   is-minics-Exp-or-inj =
     ?Call(_, _)
@@ -93,6 +93,15 @@ rules
   is-minics-Exp-or-inj =
     ?Cond(_, _, _)
 
+  is-minics-Ref-or-inj =
+    ?Var(_)
+
+  is-minics-Ref-or-inj =
+    ?This()
+
+  is-minics-Ref-or-inj =
+    ?Base()
+
 
 rules
 
@@ -102,26 +111,28 @@ rules
   is-minics-Exp-inj-cons =
     fail
 
+  is-minics-inj-cons =
+    is-minics-Ref-inj-cons
+
+  is-minics-Ref-inj-cons =
+    fail
+
+  is-minics-Ref-inj-cons =
+    ?Ref2Exp(_)
+
 
 rules
 
   explicate-injections-minics =
     explicate-injections-minics-Exp
 
-  explicate-injections-minics-Exp =
-    origin-track-forced(
-      \ Var(id_){anno*} -> Var(id_'){anno*}
-        with id_' := <explicate-injections-minics-ID> id_ \
-    )
+  explicate-injections-minics =
+    explicate-injections-minics-Ref
 
   explicate-injections-minics-Exp =
     origin-track-forced(
-      \ This(){anno*} -> This(){anno*} \
-    )
-
-  explicate-injections-minics-Exp =
-    origin-track-forced(
-      \ Base(){anno*} -> Base(){anno*} \
+      \ ref -> Ref2Exp(<explicate-injections-minics-Ref> ref)
+        where <is-minics-Ref-or-inj> ref \
     )
 
   explicate-injections-minics-Exp =
@@ -270,9 +281,30 @@ rules
              ; exp3' := <explicate-injections-minics-Exp> exp3 \
     )
 
+  explicate-injections-minics-Ref =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <explicate-injections-minics-ID> id_ \
+    )
+
+  explicate-injections-minics-Ref =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  explicate-injections-minics-Ref =
+    origin-track-forced(
+      \ Base(){anno*} -> Base(){anno*} \
+    )
+
   explicate-injections-minics-Exp =
     origin-track-forced(
       \ Exp-Plhdr(){anno*} -> Exp-Plhdr(){anno*} \
+    )
+
+  explicate-injections-minics-Ref =
+    origin-track-forced(
+      \ Ref-Plhdr(){anno*} -> Ref-Plhdr(){anno*} \
     )
 
   explicate-injections-minics-Exp =
@@ -281,26 +313,24 @@ rules
         with alts' := <map(explicate-injections-minics-Exp)> alts \
     )
 
+  explicate-injections-minics-Ref =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-minics-Ref)> alts \
+    )
+
 
 rules
 
   implicate-injections-minics =
     implicate-injections-minics-Exp
 
-  implicate-injections-minics-Exp =
-    origin-track-forced(
-      \ Var(id_){anno*} -> Var(id_'){anno*}
-        with id_' := <implicate-injections-minics-ID> id_ \
-    )
+  implicate-injections-minics =
+    implicate-injections-minics-Ref
 
   implicate-injections-minics-Exp =
     origin-track-forced(
-      \ This(){anno*} -> This(){anno*} \
-    )
-
-  implicate-injections-minics-Exp =
-    origin-track-forced(
-      \ Base(){anno*} -> Base(){anno*} \
+      \ Ref2Exp(ref) -> <implicate-injections-minics-Ref> ref \
     )
 
   implicate-injections-minics-Exp =
@@ -449,9 +479,30 @@ rules
              ; exp3' := <implicate-injections-minics-Exp> exp3 \
     )
 
+  implicate-injections-minics-Ref =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <implicate-injections-minics-ID> id_ \
+    )
+
+  implicate-injections-minics-Ref =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  implicate-injections-minics-Ref =
+    origin-track-forced(
+      \ Base(){anno*} -> Base(){anno*} \
+    )
+
   implicate-injections-minics-Exp =
     origin-track-forced(
       \ Exp-Plhdr(){anno*} -> Exp-Plhdr(){anno*} \
+    )
+
+  implicate-injections-minics-Ref =
+    origin-track-forced(
+      \ Ref-Plhdr(){anno*} -> Ref-Plhdr(){anno*} \
     )
 
   implicate-injections-minics-Exp =
@@ -460,26 +511,30 @@ rules
         with alts' := <map(implicate-injections-minics-Exp)> alts \
     )
 
+  implicate-injections-minics-Ref =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-minics-Ref)> alts \
+    )
+
 
 rules
 
   upgrade-placeholders-minics =
     upgrade-placeholders-minics-Exp
 
+  upgrade-placeholders-minics =
+    upgrade-placeholders-minics-Ref
+
   upgrade-placeholders-minics-Exp =
     origin-track-forced(
-      \ Var(id_){anno*} -> Var(id_'){anno*}
-        with id_' := <upgrade-placeholders-minics-ID> id_ \
+      \ ref -> <upgrade-placeholders-minics-Ref> ref
+        where <is-minics-Ref-or-inj> ref \
     )
 
   upgrade-placeholders-minics-Exp =
     origin-track-forced(
-      \ This(){anno*} -> This(){anno*} \
-    )
-
-  upgrade-placeholders-minics-Exp =
-    origin-track-forced(
-      \ Base(){anno*} -> Base(){anno*} \
+      \ Ref2Exp(ref){anno*} -> Ref2Exp(<upgrade-placeholders-minics-Ref> ref){anno*} \
     )
 
   upgrade-placeholders-minics-Exp =
@@ -628,10 +683,32 @@ rules
              ; exp3' := <upgrade-placeholders-minics-Exp> exp3 \
     )
 
+  upgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <upgrade-placeholders-minics-ID> id_ \
+    )
+
+  upgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ Base(){anno*} -> Base(){anno*} \
+    )
+
   upgrade-placeholders-minics-Exp =
     origin-track-forced(
       \ Exp-Plhdr(){anno*} -> p{anno*}
         with p := <make-placeholder> "Exp" \
+    )
+
+  upgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ Ref-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "Ref" \
     )
 
   upgrade-placeholders-minics-Exp =
@@ -640,26 +717,30 @@ rules
         with alts' := <upgrade-list(upgrade-placeholders-minics-Exp)> alts \
     )
 
+  upgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-minics-Ref)> alts \
+    )
+
 
 rules
 
   downgrade-placeholders-minics =
     downgrade-placeholders-minics-Exp
 
+  downgrade-placeholders-minics =
+    downgrade-placeholders-minics-Ref
+
   downgrade-placeholders-minics-Exp =
     origin-track-forced(
-      \ Var(id_){anno*} -> Var(id_'){anno*}
-        with id_' := <downgrade-placeholders-minics-ID> id_ \
+      \ ref -> <downgrade-placeholders-minics-Ref> ref
+        where <is-minics-Ref-or-inj> ref \
     )
 
   downgrade-placeholders-minics-Exp =
     origin-track-forced(
-      \ This(){anno*} -> This(){anno*} \
-    )
-
-  downgrade-placeholders-minics-Exp =
-    origin-track-forced(
-      \ Base(){anno*} -> Base(){anno*} \
+      \ Ref2Exp(ref){anno*} -> Ref2Exp(<downgrade-placeholders-minics-Ref> ref){anno*} \
     )
 
   downgrade-placeholders-minics-Exp =
@@ -808,16 +889,44 @@ rules
              ; exp3' := <downgrade-placeholders-minics-Exp> exp3 \
     )
 
+  downgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <downgrade-placeholders-minics-ID> id_ \
+    )
+
+  downgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  downgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ Base(){anno*} -> Base(){anno*} \
+    )
+
   downgrade-placeholders-minics-Exp =
     origin-track-forced(
       \ p{anno*} -> Exp-Plhdr(){anno*}
         where <(is-placeholder + ?Exp-Plhdr())> p \
     )
 
+  downgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ p{anno*} -> Ref-Plhdr(){anno*}
+        where <(is-placeholder + ?Ref-Plhdr())> p \
+    )
+
   downgrade-placeholders-minics-Exp =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
         with alts' := <downgrade-list(downgrade-placeholders-minics-Exp)> alts \
+    )
+
+  downgrade-placeholders-minics-Ref =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-minics-Ref)> alts \
     )
 
 

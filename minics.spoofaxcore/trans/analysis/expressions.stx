@@ -9,17 +9,8 @@ rules typeOfExp : scope * Exp -> TYPE
 
   typesOfExps maps typeOfExp(*, list(*)) = list(*)
 
-  typeOfExp(s, e@Var(ref)) = T :- {decl}
-    // FIXME: This should also allow us to refer to static members
-    typeOfVarMemberClass(s, ref) == T,
-    @e.type := T.
-
-  typeOfExp(s, e@This()) = T :-
-    typeOfVar(s, "this") == T,
-    @e.type := T.
-
-  typeOfExp(s, e@Base()) = T :-
-    typeOfVar(s, "base") == T,
+  typeOfExp(s, e@Ref2Exp(ref)) = T :- {decl}
+    typeOfRef(s, ref) == T,
     @e.type := T.
 
   typeOfExp(s, e@Call(e1, args)) = TR :- {T1 TPARAMS TARGS}
@@ -171,11 +162,27 @@ rules typeOfExp : scope * Exp -> TYPE
     typeOfExp(s, e2) == T2,
     TC == BOOL() | error $[Expected [BOOL()], got [TC]],
     lub(T1, T2) == T,
-//    T1 == T2 | error $[Expected [T1], got [T2]],
-//    T == T1,
     @e.type := T.
 
   typeOfExp(_, Exp-Plhdr()) = _.
+
+rules typeOfRef : scope * Ref -> TYPE
+
+  typesOfRefs maps typeOfRef(*, list(*)) = list(*)
+
+  typeOfRef(s, e@Var(ref)) = T :- {decl}
+    typeOfVarMemberClass(s, ref) == T,
+    @e.type := T.
+
+  typeOfRef(s, e@This()) = T :-
+    typeOfVar(s, "this") == T,
+    @e.type := T.
+
+  typeOfRef(s, e@Base()) = T :-
+    typeOfVar(s, "base") == T,
+    @e.type := T.
+
+  typeOfRef(_, Ref-Plhdr()) = _.
 
 rules getScope : TYPE -> scope
 
