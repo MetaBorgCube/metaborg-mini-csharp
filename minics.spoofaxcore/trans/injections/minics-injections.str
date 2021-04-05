@@ -21,6 +21,9 @@ signature
 rules
 
   is-minics-Start-or-inj =
+    ?Start-Plhdr()
+
+  is-minics-Start-or-inj =
     ?Program(_, _)
 
 

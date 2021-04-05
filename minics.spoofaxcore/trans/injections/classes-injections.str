@@ -24,6 +24,21 @@ signature
 rules
 
   is-minics-UsingDecl-or-inj =
+    ?UsingDecl-Plhdr()
+
+  is-minics-ClassDecl-or-inj =
+    ?ClassDecl-Plhdr()
+
+  is-minics-MemberDecl-or-inj =
+    ?MemberDecl-Plhdr()
+
+  is-minics-ParamDecl-or-inj =
+    ?ParamDecl-Plhdr()
+
+  is-minics-ParentDecl-or-inj =
+    ?ParentDecl-Plhdr()
+
+  is-minics-UsingDecl-or-inj =
     ?Using(_)
 
   is-minics-ClassDecl-or-inj =

@@ -25,6 +25,12 @@ signature
 rules
 
   is-minics-Exp-or-inj =
+    ?Exp-Plhdr()
+
+  is-minics-Ref-or-inj =
+    ?Ref-Plhdr()
+
+  is-minics-Exp-or-inj =
     is-minics-Ref-or-inj
 
   is-minics-Exp-or-inj =

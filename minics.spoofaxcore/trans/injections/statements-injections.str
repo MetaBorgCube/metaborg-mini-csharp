@@ -20,6 +20,9 @@ signature
 rules
 
   is-minics-Stmt-or-inj =
+    ?Stmt-Plhdr()
+
+  is-minics-Stmt-or-inj =
     ?Block(_)
 
   is-minics-Stmt-or-inj =

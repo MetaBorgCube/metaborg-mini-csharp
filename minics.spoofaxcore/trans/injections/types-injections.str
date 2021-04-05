@@ -18,6 +18,9 @@ signature
 rules
 
   is-minics-Type-or-inj =
+    ?Type-Plhdr()
+
+  is-minics-Type-or-inj =
     ?Int()
 
   is-minics-Type-or-inj =
