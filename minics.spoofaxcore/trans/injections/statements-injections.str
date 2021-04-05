@@ -46,9 +46,6 @@ rules
   is-minics-Stmt-or-inj =
     ?If(_, _, _)
 
-  is-minics-Stmt-or-inj =
-    ?Return(_)
-
 
 rules
 
@@ -116,12 +113,6 @@ rules
         with exp' := <explicate-injections-minics-Exp> exp
              ; stmt1' := <explicate-injections-minics-Stmt> stmt1
              ; stmt2' := <explicate-injections-minics-Stmt> stmt2 \
-    )
-
-  explicate-injections-minics-Stmt =
-    origin-track-forced(
-      \ Return(exp){anno*} -> Return(exp'){anno*}
-        with exp' := <explicate-injections-minics-Exp> exp \
     )
 
   explicate-injections-minics-Stmt =
@@ -197,12 +188,6 @@ rules
 
   implicate-injections-minics-Stmt =
     origin-track-forced(
-      \ Return(exp){anno*} -> Return(exp'){anno*}
-        with exp' := <implicate-injections-minics-Exp> exp \
-    )
-
-  implicate-injections-minics-Stmt =
-    origin-track-forced(
       \ Stmt-Plhdr(){anno*} -> Stmt-Plhdr(){anno*} \
     )
 
@@ -270,12 +255,6 @@ rules
         with exp' := <upgrade-placeholders-minics-Exp> exp
              ; stmt1' := <upgrade-placeholders-minics-Stmt> stmt1
              ; stmt2' := <upgrade-placeholders-minics-Stmt> stmt2 \
-    )
-
-  upgrade-placeholders-minics-Stmt =
-    origin-track-forced(
-      \ Return(exp){anno*} -> Return(exp'){anno*}
-        with exp' := <upgrade-placeholders-minics-Exp> exp \
     )
 
   upgrade-placeholders-minics-Stmt =
@@ -348,12 +327,6 @@ rules
         with exp' := <downgrade-placeholders-minics-Exp> exp
              ; stmt1' := <downgrade-placeholders-minics-Stmt> stmt1
              ; stmt2' := <downgrade-placeholders-minics-Stmt> stmt2 \
-    )
-
-  downgrade-placeholders-minics-Stmt =
-    origin-track-forced(
-      \ Return(exp){anno*} -> Return(exp'){anno*}
-        with exp' := <downgrade-placeholders-minics-Exp> exp \
     )
 
   downgrade-placeholders-minics-Stmt =

@@ -10,6 +10,7 @@ imports
   injections/Common-injections
   injections/types-injections
   injections/statements-injections
+  injections/expressions-injections
 
 
 signature
@@ -54,16 +55,10 @@ rules
     ?NewField(_, _)
 
   is-minics-MemberDecl-or-inj =
-    ?InstanceMethod(_, _, _, _)
+    ?InstanceMethod(_, _, _, _, _)
 
   is-minics-MemberDecl-or-inj =
-    ?OverrideMethod(_, _, _, _)
-
-  is-minics-MemberDecl-or-inj =
-    ?StaticMethod(_, _, _, _)
-
-  is-minics-MemberDecl-or-inj =
-    ?NewMethod(_, _, _, _)
+    ?StaticMethod(_, _, _, _, _)
 
   is-minics-ParamDecl-or-inj =
     ?Param(_, _)
@@ -162,38 +157,22 @@ rules
 
   explicate-injections-minics-MemberDecl =
     origin-track-forced(
-      \ InstanceMethod(type, id_, paramDecls, stmts){anno*} -> InstanceMethod(type', id_', paramDecls', stmts'){anno*}
+      \ InstanceMethod(type, id_, paramDecls, stmts, exp){anno*} -> InstanceMethod(type', id_', paramDecls', stmts', exp'){anno*}
         with type' := <explicate-injections-minics-Type> type
              ; id_' := <explicate-injections-minics-ID> id_
              ; paramDecls' := <map(explicate-injections-minics-ParamDecl)> paramDecls
-             ; stmts' := <map(explicate-injections-minics-Stmt)> stmts \
+             ; stmts' := <map(explicate-injections-minics-Stmt)> stmts
+             ; exp' := <explicate-injections-minics-Exp> exp \
     )
 
   explicate-injections-minics-MemberDecl =
     origin-track-forced(
-      \ OverrideMethod(type, id_, paramDecls, stmts){anno*} -> OverrideMethod(type', id_', paramDecls', stmts'){anno*}
+      \ StaticMethod(type, id_, paramDecls, stmts, exp){anno*} -> StaticMethod(type', id_', paramDecls', stmts', exp'){anno*}
         with type' := <explicate-injections-minics-Type> type
              ; id_' := <explicate-injections-minics-ID> id_
              ; paramDecls' := <map(explicate-injections-minics-ParamDecl)> paramDecls
-             ; stmts' := <map(explicate-injections-minics-Stmt)> stmts \
-    )
-
-  explicate-injections-minics-MemberDecl =
-    origin-track-forced(
-      \ StaticMethod(type, id_, paramDecls, stmts){anno*} -> StaticMethod(type', id_', paramDecls', stmts'){anno*}
-        with type' := <explicate-injections-minics-Type> type
-             ; id_' := <explicate-injections-minics-ID> id_
-             ; paramDecls' := <map(explicate-injections-minics-ParamDecl)> paramDecls
-             ; stmts' := <map(explicate-injections-minics-Stmt)> stmts \
-    )
-
-  explicate-injections-minics-MemberDecl =
-    origin-track-forced(
-      \ NewMethod(type, id_, paramDecls, stmts){anno*} -> NewMethod(type', id_', paramDecls', stmts'){anno*}
-        with type' := <explicate-injections-minics-Type> type
-             ; id_' := <explicate-injections-minics-ID> id_
-             ; paramDecls' := <map(explicate-injections-minics-ParamDecl)> paramDecls
-             ; stmts' := <map(explicate-injections-minics-Stmt)> stmts \
+             ; stmts' := <map(explicate-injections-minics-Stmt)> stmts
+             ; exp' := <explicate-injections-minics-Exp> exp \
     )
 
   explicate-injections-minics-ParamDecl =
@@ -324,38 +303,22 @@ rules
 
   implicate-injections-minics-MemberDecl =
     origin-track-forced(
-      \ InstanceMethod(type, id_, paramDecls, stmts){anno*} -> InstanceMethod(type', id_', paramDecls', stmts'){anno*}
+      \ InstanceMethod(type, id_, paramDecls, stmts, exp){anno*} -> InstanceMethod(type', id_', paramDecls', stmts', exp'){anno*}
         with type' := <implicate-injections-minics-Type> type
              ; id_' := <implicate-injections-minics-ID> id_
              ; paramDecls' := <map(implicate-injections-minics-ParamDecl)> paramDecls
-             ; stmts' := <map(implicate-injections-minics-Stmt)> stmts \
+             ; stmts' := <map(implicate-injections-minics-Stmt)> stmts
+             ; exp' := <implicate-injections-minics-Exp> exp \
     )
 
   implicate-injections-minics-MemberDecl =
     origin-track-forced(
-      \ OverrideMethod(type, id_, paramDecls, stmts){anno*} -> OverrideMethod(type', id_', paramDecls', stmts'){anno*}
+      \ StaticMethod(type, id_, paramDecls, stmts, exp){anno*} -> StaticMethod(type', id_', paramDecls', stmts', exp'){anno*}
         with type' := <implicate-injections-minics-Type> type
              ; id_' := <implicate-injections-minics-ID> id_
              ; paramDecls' := <map(implicate-injections-minics-ParamDecl)> paramDecls
-             ; stmts' := <map(implicate-injections-minics-Stmt)> stmts \
-    )
-
-  implicate-injections-minics-MemberDecl =
-    origin-track-forced(
-      \ StaticMethod(type, id_, paramDecls, stmts){anno*} -> StaticMethod(type', id_', paramDecls', stmts'){anno*}
-        with type' := <implicate-injections-minics-Type> type
-             ; id_' := <implicate-injections-minics-ID> id_
-             ; paramDecls' := <map(implicate-injections-minics-ParamDecl)> paramDecls
-             ; stmts' := <map(implicate-injections-minics-Stmt)> stmts \
-    )
-
-  implicate-injections-minics-MemberDecl =
-    origin-track-forced(
-      \ NewMethod(type, id_, paramDecls, stmts){anno*} -> NewMethod(type', id_', paramDecls', stmts'){anno*}
-        with type' := <implicate-injections-minics-Type> type
-             ; id_' := <implicate-injections-minics-ID> id_
-             ; paramDecls' := <map(implicate-injections-minics-ParamDecl)> paramDecls
-             ; stmts' := <map(implicate-injections-minics-Stmt)> stmts \
+             ; stmts' := <map(implicate-injections-minics-Stmt)> stmts
+             ; exp' := <implicate-injections-minics-Exp> exp \
     )
 
   implicate-injections-minics-ParamDecl =
@@ -486,38 +449,22 @@ rules
 
   upgrade-placeholders-minics-MemberDecl =
     origin-track-forced(
-      \ InstanceMethod(type, id_, paramDecls, stmts){anno*} -> InstanceMethod(type', id_', paramDecls', stmts'){anno*}
+      \ InstanceMethod(type, id_, paramDecls, stmts, exp){anno*} -> InstanceMethod(type', id_', paramDecls', stmts', exp'){anno*}
         with type' := <upgrade-placeholders-minics-Type> type
              ; id_' := <upgrade-placeholders-minics-ID> id_
              ; paramDecls' := <upgrade-list(upgrade-placeholders-minics-ParamDecl)> paramDecls
-             ; stmts' := <upgrade-list(upgrade-placeholders-minics-Stmt)> stmts \
+             ; stmts' := <upgrade-list(upgrade-placeholders-minics-Stmt)> stmts
+             ; exp' := <upgrade-placeholders-minics-Exp> exp \
     )
 
   upgrade-placeholders-minics-MemberDecl =
     origin-track-forced(
-      \ OverrideMethod(type, id_, paramDecls, stmts){anno*} -> OverrideMethod(type', id_', paramDecls', stmts'){anno*}
+      \ StaticMethod(type, id_, paramDecls, stmts, exp){anno*} -> StaticMethod(type', id_', paramDecls', stmts', exp'){anno*}
         with type' := <upgrade-placeholders-minics-Type> type
              ; id_' := <upgrade-placeholders-minics-ID> id_
              ; paramDecls' := <upgrade-list(upgrade-placeholders-minics-ParamDecl)> paramDecls
-             ; stmts' := <upgrade-list(upgrade-placeholders-minics-Stmt)> stmts \
-    )
-
-  upgrade-placeholders-minics-MemberDecl =
-    origin-track-forced(
-      \ StaticMethod(type, id_, paramDecls, stmts){anno*} -> StaticMethod(type', id_', paramDecls', stmts'){anno*}
-        with type' := <upgrade-placeholders-minics-Type> type
-             ; id_' := <upgrade-placeholders-minics-ID> id_
-             ; paramDecls' := <upgrade-list(upgrade-placeholders-minics-ParamDecl)> paramDecls
-             ; stmts' := <upgrade-list(upgrade-placeholders-minics-Stmt)> stmts \
-    )
-
-  upgrade-placeholders-minics-MemberDecl =
-    origin-track-forced(
-      \ NewMethod(type, id_, paramDecls, stmts){anno*} -> NewMethod(type', id_', paramDecls', stmts'){anno*}
-        with type' := <upgrade-placeholders-minics-Type> type
-             ; id_' := <upgrade-placeholders-minics-ID> id_
-             ; paramDecls' := <upgrade-list(upgrade-placeholders-minics-ParamDecl)> paramDecls
-             ; stmts' := <upgrade-list(upgrade-placeholders-minics-Stmt)> stmts \
+             ; stmts' := <upgrade-list(upgrade-placeholders-minics-Stmt)> stmts
+             ; exp' := <upgrade-placeholders-minics-Exp> exp \
     )
 
   upgrade-placeholders-minics-ParamDecl =
@@ -653,38 +600,22 @@ rules
 
   downgrade-placeholders-minics-MemberDecl =
     origin-track-forced(
-      \ InstanceMethod(type, id_, paramDecls, stmts){anno*} -> InstanceMethod(type', id_', paramDecls', stmts'){anno*}
+      \ InstanceMethod(type, id_, paramDecls, stmts, exp){anno*} -> InstanceMethod(type', id_', paramDecls', stmts', exp'){anno*}
         with type' := <downgrade-placeholders-minics-Type> type
              ; id_' := <downgrade-placeholders-minics-ID> id_
              ; paramDecls' := <downgrade-list(downgrade-placeholders-minics-ParamDecl)> paramDecls
-             ; stmts' := <downgrade-list(downgrade-placeholders-minics-Stmt)> stmts \
+             ; stmts' := <downgrade-list(downgrade-placeholders-minics-Stmt)> stmts
+             ; exp' := <downgrade-placeholders-minics-Exp> exp \
     )
 
   downgrade-placeholders-minics-MemberDecl =
     origin-track-forced(
-      \ OverrideMethod(type, id_, paramDecls, stmts){anno*} -> OverrideMethod(type', id_', paramDecls', stmts'){anno*}
+      \ StaticMethod(type, id_, paramDecls, stmts, exp){anno*} -> StaticMethod(type', id_', paramDecls', stmts', exp'){anno*}
         with type' := <downgrade-placeholders-minics-Type> type
              ; id_' := <downgrade-placeholders-minics-ID> id_
              ; paramDecls' := <downgrade-list(downgrade-placeholders-minics-ParamDecl)> paramDecls
-             ; stmts' := <downgrade-list(downgrade-placeholders-minics-Stmt)> stmts \
-    )
-
-  downgrade-placeholders-minics-MemberDecl =
-    origin-track-forced(
-      \ StaticMethod(type, id_, paramDecls, stmts){anno*} -> StaticMethod(type', id_', paramDecls', stmts'){anno*}
-        with type' := <downgrade-placeholders-minics-Type> type
-             ; id_' := <downgrade-placeholders-minics-ID> id_
-             ; paramDecls' := <downgrade-list(downgrade-placeholders-minics-ParamDecl)> paramDecls
-             ; stmts' := <downgrade-list(downgrade-placeholders-minics-Stmt)> stmts \
-    )
-
-  downgrade-placeholders-minics-MemberDecl =
-    origin-track-forced(
-      \ NewMethod(type, id_, paramDecls, stmts){anno*} -> NewMethod(type', id_', paramDecls', stmts'){anno*}
-        with type' := <downgrade-placeholders-minics-Type> type
-             ; id_' := <downgrade-placeholders-minics-ID> id_
-             ; paramDecls' := <downgrade-list(downgrade-placeholders-minics-ParamDecl)> paramDecls
-             ; stmts' := <downgrade-list(downgrade-placeholders-minics-Stmt)> stmts \
+             ; stmts' := <downgrade-list(downgrade-placeholders-minics-Stmt)> stmts
+             ; exp' := <downgrade-placeholders-minics-Exp> exp \
     )
 
   downgrade-placeholders-minics-ParamDecl =

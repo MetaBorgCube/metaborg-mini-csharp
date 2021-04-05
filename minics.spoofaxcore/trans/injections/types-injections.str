@@ -30,9 +30,6 @@ rules
     ?Object()
 
   is-minics-Type-or-inj =
-    ?Void()
-
-  is-minics-Type-or-inj =
     ?ClassType(_)
 
 
@@ -63,11 +60,6 @@ rules
   explicate-injections-minics-Type =
     origin-track-forced(
       \ Object(){anno*} -> Object(){anno*} \
-    )
-
-  explicate-injections-minics-Type =
-    origin-track-forced(
-      \ Void(){anno*} -> Void(){anno*} \
     )
 
   explicate-injections-minics-Type =
@@ -110,11 +102,6 @@ rules
 
   implicate-injections-minics-Type =
     origin-track-forced(
-      \ Void(){anno*} -> Void(){anno*} \
-    )
-
-  implicate-injections-minics-Type =
-    origin-track-forced(
       \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
         with id_' := <implicate-injections-minics-ID> id_ \
     )
@@ -149,11 +136,6 @@ rules
   upgrade-placeholders-minics-Type =
     origin-track-forced(
       \ Object(){anno*} -> Object(){anno*} \
-    )
-
-  upgrade-placeholders-minics-Type =
-    origin-track-forced(
-      \ Void(){anno*} -> Void(){anno*} \
     )
 
   upgrade-placeholders-minics-Type =
@@ -193,11 +175,6 @@ rules
   downgrade-placeholders-minics-Type =
     origin-track-forced(
       \ Object(){anno*} -> Object(){anno*} \
-    )
-
-  downgrade-placeholders-minics-Type =
-    origin-track-forced(
-      \ Void(){anno*} -> Void(){anno*} \
     )
 
   downgrade-placeholders-minics-Type =
