@@ -4,6 +4,7 @@ imports
   Common
   types
   statements
+  expressions
 
 context-free sorts
   UsingDecl ClassDecl MemberDecl ParamDecl ParentDecl
@@ -25,21 +26,13 @@ context-free syntax
   MemberDecl.InstanceMethod = <
     public <Type> <ID>(<{ParamDecl ", "}*>) {
         <{Stmt "\n"}*>
-    }
-  >
-  MemberDecl.OverrideMethod = <
-    public override <Type> <ID>(<{ParamDecl ", "}*>) {
-        <{Stmt "\n"}*>
+        return <Exp>;
     }
   >
   MemberDecl.StaticMethod = <
     public static <Type> <ID>(<{ParamDecl ", "}*>) {
         <{Stmt "\n"}*>
-    }
-  >
-  MemberDecl.NewMethod = <
-    public new <Type> <ID>(<{ParamDecl ", "}*>) {
-        <{Stmt "\n"}*>
+        return <Exp>;
     }
   >
 

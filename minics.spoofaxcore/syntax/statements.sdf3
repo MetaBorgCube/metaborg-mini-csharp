@@ -33,7 +33,6 @@ context-free syntax
     else
       <Stmt>
   >
-  Stmt.Return = <return <Exp>;>
 
 context-free priorities
     Stmt.If

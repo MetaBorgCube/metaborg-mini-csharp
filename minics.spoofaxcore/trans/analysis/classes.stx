@@ -5,6 +5,7 @@ imports
   analysis/types
   analysis/statements
   analysis/declarations
+  analysis/expressions
 
 rules usingOk : scope * UsingDecl
   usingsOk maps usingOk(*, list(*))
@@ -73,7 +74,7 @@ rules memberOk : scope * scope * MemberDecl
     declareStaticMember(classScope, name, T),
     @field.type := T.
 
-  memberOk(classScope, instanceScope, method@InstanceMethod(returnType, name, params, stmts)) :- {methodScope RT PTS T}
+  memberOk(classScope, instanceScope, method@InstanceMethod(returnType, name, params, stmts, returnExp)) :- {methodScope RT ERT PTS T}
     new methodScope,
     methodScope -P-> instanceScope,
     typeOfObjectType(classScope, returnType) == RT,
@@ -81,10 +82,11 @@ rules memberOk : scope * scope * MemberDecl
     T == METHOD(PTS, RT),
     declareInstanceMember(instanceScope, classScope, name, T),
     declareReturnType(methodScope, RT),      // @name
+    ERT@typeOfExp(methodScope, returnExp) == RT | error $[expected [RT], got [ERT]],
     stmtsOk(methodScope, stmts),
     @method.type := T.
 
-  memberOk(classScope, _, method@StaticMethod(returnType, name, params, stmts)) :- {methodScope RT PTS T}
+  memberOk(classScope, _, method@StaticMethod(returnType, name, params, stmts, returnExp)) :- {methodScope RT ERT PTS T}
     new methodScope,
     methodScope -P-> classScope,
     typeOfObjectType(classScope, returnType) == RT,
@@ -92,6 +94,7 @@ rules memberOk : scope * scope * MemberDecl
     T == METHOD(PTS, RT),
     declareStaticMember(classScope, name, T),
     declareReturnType(methodScope, RT),
+    ERT@typeOfExp(methodScope, returnExp) == RT | error $[expected [RT], got [ERT]],
     stmtsOk(methodScope, stmts),
     @method.type := T.
 

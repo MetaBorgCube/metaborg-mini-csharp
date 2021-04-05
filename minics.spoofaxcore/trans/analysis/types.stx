@@ -30,10 +30,6 @@ rules typeOfType : scope * Type -> TYPE
     T == OBJECT(),
     @t.type := T.
 
-  typeOfType(s, t@Void()) = T :-
-    T == VOID(),
-    @t.type := T.
-
   typeOfType(s, t@ClassType(ref)) = T :- {decl}
     typeOfClass(s, ref) == T.
 
@@ -54,14 +50,10 @@ rules typeOfObjectType : scope * Type -> TYPE
     T == OBJECT(),
     @t.type := T.
 
-  typeOfObjectType(s, t@Void()) = T :-
-    T == VOID(),
-    @t.type := T.
 
   typeOfObjectType(s, t@ClassType(ref)) = T :- {decl classScope}
     typeOfClass(s, ref) == CLASS(_, classScope),
     typeOfConstructor(classScope) == T.
-//    resolveConstructor(classScope) == [(_, (_, T@OBJECT(_, classScope)))].
 
   typeOfObjectType(_, Type-Plhdr()) = _.
 

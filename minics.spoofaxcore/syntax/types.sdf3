@@ -4,19 +4,14 @@ imports
   Common
 
 context-free sorts
-  Type //VarRef
+  Type
 
 context-free syntax
 
   Type.Int = <int>
   Type.Bool = <bool>
   Type.Object = <object>
-  Type.Void = <void>
   Type.ClassType = <<ID>>
-
-//context-free syntax
-//
-//  VarRef.VarRef = <<ID>>
 
 template options
 
