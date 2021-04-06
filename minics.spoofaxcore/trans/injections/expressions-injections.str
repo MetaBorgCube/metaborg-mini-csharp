@@ -43,6 +43,9 @@ rules
     ?Member(_, _)
 
   is-minics-Exp-or-inj =
+    ?Null()
+
+  is-minics-Exp-or-inj =
     ?True()
 
   is-minics-Exp-or-inj =
@@ -159,6 +162,11 @@ rules
       \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
         with exp' := <explicate-injections-minics-Exp> exp
              ; id_' := <explicate-injections-minics-ID> id_ \
+    )
+
+  explicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Null(){anno*} -> Null(){anno*} \
     )
 
   explicate-injections-minics-Exp =
@@ -357,6 +365,11 @@ rules
       \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
         with exp' := <implicate-injections-minics-Exp> exp
              ; id_' := <implicate-injections-minics-ID> id_ \
+    )
+
+  implicate-injections-minics-Exp =
+    origin-track-forced(
+      \ Null(){anno*} -> Null(){anno*} \
     )
 
   implicate-injections-minics-Exp =
@@ -565,6 +578,11 @@ rules
 
   upgrade-placeholders-minics-Exp =
     origin-track-forced(
+      \ Null(){anno*} -> Null(){anno*} \
+    )
+
+  upgrade-placeholders-minics-Exp =
+    origin-track-forced(
       \ True(){anno*} -> True(){anno*} \
     )
 
@@ -767,6 +785,11 @@ rules
       \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
         with exp' := <downgrade-placeholders-minics-Exp> exp
              ; id_' := <downgrade-placeholders-minics-ID> id_ \
+    )
+
+  downgrade-placeholders-minics-Exp =
+    origin-track-forced(
+      \ Null(){anno*} -> Null(){anno*} \
     )
 
   downgrade-placeholders-minics-Exp =

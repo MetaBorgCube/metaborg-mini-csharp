@@ -189,8 +189,8 @@ rules
 
   explicate-injections-minics-ParentDecl =
     origin-track-forced(
-      \ Parent(id_){anno*} -> Parent(id_'){anno*}
-        with id_' := <explicate-injections-minics-ID> id_ \
+      \ Parent(type){anno*} -> Parent(type'){anno*}
+        with type' := <explicate-injections-minics-Type> type \
     )
 
   explicate-injections-minics-UsingDecl =
@@ -335,8 +335,8 @@ rules
 
   implicate-injections-minics-ParentDecl =
     origin-track-forced(
-      \ Parent(id_){anno*} -> Parent(id_'){anno*}
-        with id_' := <implicate-injections-minics-ID> id_ \
+      \ Parent(type){anno*} -> Parent(type'){anno*}
+        with type' := <implicate-injections-minics-Type> type \
     )
 
   implicate-injections-minics-UsingDecl =
@@ -481,8 +481,8 @@ rules
 
   upgrade-placeholders-minics-ParentDecl =
     origin-track-forced(
-      \ Parent(id_){anno*} -> Parent(id_'){anno*}
-        with id_' := <upgrade-placeholders-minics-ID> id_ \
+      \ Parent(type){anno*} -> Parent(type'){anno*}
+        with type' := <upgrade-placeholders-minics-Type> type \
     )
 
   upgrade-placeholders-minics-UsingDecl =
@@ -632,8 +632,8 @@ rules
 
   downgrade-placeholders-minics-ParentDecl =
     origin-track-forced(
-      \ Parent(id_){anno*} -> Parent(id_'){anno*}
-        with id_' := <downgrade-placeholders-minics-ID> id_ \
+      \ Parent(type){anno*} -> Parent(type'){anno*}
+        with type' := <downgrade-placeholders-minics-Type> type \
     )
 
   downgrade-placeholders-minics-UsingDecl =
