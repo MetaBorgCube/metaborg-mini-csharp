@@ -12,6 +12,7 @@ signature
     BOOL        : TYPE
     OBJECT      : TYPE
     VOID        : TYPE
+    NULL        : TYPE
     // TODO: Add receiver type?
     METHOD      : list(TYPE) * TYPE -> TYPE
 
@@ -65,6 +66,8 @@ rules lub : TYPE * TYPE -> TYPE
     getAncestors(T1) == A1,     	// Ancestors of T1, from far to close
     getAncestors(T2) == A2,     	// Ancestors of T2, from far to close
     lub3(OBJECT(), A1, A2) == T.  	// TODO: Use System.Object
+  lub(T@OBJECT(CLASS(_, _), _), NULL()) = T.
+  lub(NULL(), T@OBJECT(CLASS(_, _), _)) = T.
   lub(T, T) = T.
 
   // Given two lists of ancestors, ordered from far to close,

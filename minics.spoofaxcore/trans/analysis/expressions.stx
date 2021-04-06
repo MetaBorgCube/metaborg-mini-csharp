@@ -33,6 +33,10 @@ rules typeOfExp : scope * Exp -> TYPE
     typeOfMember(scope, ref) == T,
     @e.type := T.
 
+  typeOfExp(_, e@Null()) = T :-
+    T == NULL(),
+    @e.type := T.
+
   typeOfExp(_, e@True()) = T :-
     T == BOOL(),
     @e.type := T.
