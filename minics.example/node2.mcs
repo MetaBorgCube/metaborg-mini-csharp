@@ -1,0 +1,29 @@
+using System;
+
+class Program
+{
+	public static void Main()
+	{
+		var root = new Node("A", new Node("B1"), new Node("B2", new Node("C"), null));
+		Console.WriteLine(root);
+		Console.WriteLine("Height: " + root.Height);
+	}
+}
+
+class Node {
+	public string Value;
+    public Node Left;
+    public Node Right;
+
+	public Node(string value, Node left, Node right) {
+		this.Value = value;
+		this.Left = left;
+		this.Right = right;
+	}
+
+	public Node(string value) : this(value, null, null) { }
+
+    public int CalcHeight() {
+		return 1 + Math.Max(Left?.Height ?? 0, Right?.Height ?? 0);
+	}
+}

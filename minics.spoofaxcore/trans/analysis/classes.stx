@@ -44,15 +44,16 @@ rules parentOk : scope * scope * ParentDecl
     // TODO: Inherit from Object.
     true.
 
-  parentOk(classScope, instanceScope, parent@Parent(ref)) :- {parentClassScope parentInstanceScope CT PIT}
-    typeOfClass(classScope, ref) == CT@CLASS(_, parentClassScope),
+  parentOk(classScope, instanceScope, parent@Parent(type)) :- {parentClassScope parentInstanceScope CT PIT}
+    typeOfType(classScope, type) == CT,
+    CT == CLASS(_, parentClassScope) | error $[expected class, got [CT]],
     // Ensure the ancestors are different from the class itself
     ensureNoInheritanceCycle(classScope, parentClassScope),
     classScope -E-> parentClassScope,
 
     // Get the parent's instanceScope.
     resolveConstructor(parentClassScope) == [(_, (_, PIT@OBJECT(_, parentInstanceScope)))],
-    declareVarOccurrence(instanceScope, Var{"base"@ref}, PIT),     // @ref
+    declareVarOccurrence(instanceScope, Var{"base"@type}, PIT),     // @type
     instanceScope -E-> parentInstanceScope,
 
     instanceScope -S-> classScope,

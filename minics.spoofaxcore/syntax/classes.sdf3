@@ -39,7 +39,7 @@ context-free syntax
   ParamDecl.Param = <<Type> <ID>>
 
   ParentDecl.NoParent = <>
-  ParentDecl.Parent = < : <ID>>
+  ParentDecl.Parent = < : <Type>>
 
 
 template options
