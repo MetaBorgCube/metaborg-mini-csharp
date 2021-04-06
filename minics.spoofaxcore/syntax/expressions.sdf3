@@ -55,15 +55,12 @@ context-free priorities
 
   {
     Exp.Member
-//    Exp.MemberElvis
     Exp.Call
     Exp.New
-//    Exp.Default
   } > {
     Exp.Plus
     Exp.Min
     Exp.Not
-//    Exp.Cast
   } > { left:
     Exp.Mul
     Exp.Div
@@ -82,8 +79,6 @@ context-free priorities
     Exp.And
   } > {
     Exp.Or
-  } > { left:
-//    Exp.NullCoal
   } > {
     Exp.Cond
   }
