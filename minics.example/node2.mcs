@@ -1,29 +1,25 @@
-using System;
-
-class Program
-{
-	public static void Main()
-	{
-		var root = new Node("A", new Node("B1"), new Node("B2", new Node("C"), null));
-		Console.WriteLine(root);
-		Console.WriteLine("Height: " + root.Height);
+class Test {
+	public static Node BuildTree() {
+		return $Exp;
 	}
 }
 
 class Node {
-	public string Value;
+	public object Value;
     public Node Left;
     public Node Right;
 
-	public Node(string value, Node left, Node right) {
-		this.Value = value;
-		this.Left = left;
-		this.Right = right;
-	}
-
-	public Node(string value) : this(value, null, null) { }
-
     public int CalcHeight() {
-		return 1 + Math.Max(Left?.Height ?? 0, Right?.Height ?? 0);
+		return 1 + Math.Max(
+		    Left != null ? Left.CalcHeight() : 0,
+		    Right != null ? Right.CalcHeight() : 0
+	    );
 	}
 }
+
+class Math {
+	public static int Max(int a, int b) {
+		return a > b ? a : b;
+	}
+}
+
