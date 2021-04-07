@@ -2,6 +2,15 @@ class Test {
 	public static Node BuildTree() {
 		return $Exp;
 	}
+	public static Node BuildNode(int depth) {
+//	    Node n;
+//	    //if (depth == 0)
+//	    n = new Node();
+//	    //n.Value = depth;
+//	    n.Left = BuildNode(depth - 1);
+//	    n.Right = BuildNode(depth - 1);
+	    return new Node();
+	}
 }
 
 class Node {

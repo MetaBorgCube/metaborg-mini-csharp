@@ -29,14 +29,34 @@ import mb.statix.common.StatixAnalyzer;
 import mb.statix.common.StrategoPlaceholders;
 import mb.statix.completions.TermCompleter;
 import mb.minics.spoofax.MinicsScope;
+import mb.strategies.DebugEventHandler;
+import mb.strategies.StrategyEventHandler;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spoofax.interpreter.terms.IStrategoTerm;
 import org.spoofax.interpreter.terms.ITermFactory;
 import org.spoofax.jsglr.client.imploder.ImploderAttachment;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.error.YAMLException;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.reader.StreamReader;
+import org.yaml.snakeyaml.representer.Represent;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -147,24 +167,30 @@ public class MinicsComplete implements TaskDef<MinicsComplete.Input, @Nullable C
         // 4) Get the solver state of the program (whole project),
         //    which should have some remaining constraints on the placeholder.
         //    TODO: What to do when the file is semantically incorrect? Recovery?
-        SolverContext ctx = analyzer.createContext(placeholderVar);
-        // TODO: Specify spec name and root rule name somewhere
-        SolverState startState = analyzer.createStartState(statixAst, "statics", "programOk")
-            .withExistentials(placeholderVarMap.getVars())
-            .precomputeCriticalEdges(ctx.getSpec());
-        SolverState initialState = analyzer.analyze(ctx, startState);
-        if (initialState.hasErrors()) {
-            log.error("Completion failed: input program validation failed.\n" + initialState.toString());
-            return null;    // Cannot complete when analysis fails.
-        }
-        if (initialState.getConstraints().isEmpty()) {
-            log.error("Completion failed: no constraints left, nothing to complete.\n" + initialState.toString());
-            return null;    // Cannot complete when there are no constraints left.
-        }
 
-        // 5) Invoke the completer on the solver state, indicating the placeholder for which we want completions
-        // 6) Get the possible completions back, as a list of ASTs with new solver states
-        List<IStrategoTerm> completionTerms = complete(context, input, ctx, initialState, placeholderVar, placeholderVarMap);
+        List<IStrategoTerm> completionTerms;
+        final Path debugPath = Paths.get("/Users/daniel/repos/spoofax3/devenv/debug.yml");
+        System.out.println("DEBUG path: " + debugPath.toAbsolutePath());
+        try(final StrategyEventHandler eventHandler = new EventHandler(debugPath)) {
+            SolverContext ctx = analyzer.createContext(eventHandler, null);//placeholderVar);
+            // TODO: Specify spec name and root rule name somewhere
+            SolverState startState = analyzer.createStartState(statixAst, "statics", "programOk")
+                .withExistentials(placeholderVarMap.getVars())
+                .precomputeCriticalEdges(ctx.getSpec());
+            SolverState initialState = analyzer.analyze(ctx, startState);
+            if(initialState.hasErrors()) {
+                log.error("Completion failed: input program validation failed.\n" + initialState.toString());
+                return null;    // Cannot complete when analysis fails.
+            }
+            if(initialState.getConstraints().isEmpty()) {
+                log.error("Completion failed: no constraints left, nothing to complete.\n" + initialState.toString());
+                return null;    // Cannot complete when there are no constraints left.
+            }
+
+            // 5) Invoke the completer on the solver state, indicating the placeholder for which we want completions
+            // 6) Get the possible completions back, as a list of ASTs with new solver states
+            completionTerms = complete(context, input, ctx, initialState, placeholderVar, placeholderVarMap);
+        }
 
         // 7) Format each completion as a proposal, with pretty-printed text
         List<String> completionStrings = completionTerms.stream().map(proposal -> {
@@ -202,6 +228,52 @@ public class MinicsComplete implements TaskDef<MinicsComplete.Input, @Nullable C
 
         return new CompletionResult(ListView.copyOf(completionItems), Objects.requireNonNull(getRegion(placeholderVar)), true);
     }
+
+    private static class EventHandler extends DebugEventHandler {
+
+        public EventHandler(Path path) throws IOException {
+            super(path, new DebugRepresenter());
+        }
+
+        public EventHandler(OutputStream outputStream) {
+            super(outputStream, new DebugRepresenter());
+        }
+
+        public EventHandler(Writer writer) {
+            super(writer, new DebugRepresenter());
+        }
+
+        @Override
+        protected Object represent(Object ctx, Object obj) {
+            if (!(obj instanceof SolverState)) return super.represent(ctx, obj);
+            final SolverState ss = (SolverState)obj;
+            @Nullable ITerm focusValue = null;
+            if (ctx instanceof SolverContext) {
+                final SolverContext sc = (SolverContext)ctx;
+                final @Nullable ITermVar focusVar = sc.getFocusVar();
+                if(focusVar != null) focusValue = ss.project(focusVar);
+            }
+            LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+            map.put("focus", focusValue != null ? focusValue.toString() : "<no focus>");
+            map.put("state", ss);
+            return map;
+        }
+    }
+//    private static class DebugRepresenter extends DebugEventHandler.DebugRepresenter {
+//        public DebugRepresenter() {
+//            setRepr(SolverState.class, new SolverStateRepresent());
+//        }
+//
+//        public class SolverStateRepresent implements Represent {
+//            @Override
+//            public Node representData(Object data) {
+//                SolverState state = (SolverState)data;
+//                // TODO: Project var
+//                String value = state.toString();
+//                return representScalar(Tag.STR, value, DumperOptions.ScalarStyle.LITERAL);
+//            }
+//        }
+//    }
 
     /**
      * Creates a completion proposal.
