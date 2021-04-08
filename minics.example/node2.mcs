@@ -22,11 +22,14 @@ class Node {
     public Node Right;
 
     public int CalcHeight() {
-    return 1 + Math.Max(
-        Left != null ? Left.CalcHeight() : 0,
-        Right != null ? Right.CalcHeight() : 0
+      return 1 + Math.Max(
+          Left != null ? Left.CalcHeight() : 0,
+          Right != null ? Right.CalcHeight() : 0
       );
-  }
+    }
+    public Node N() {
+      return this;
+    }
 }
 
 class Math {

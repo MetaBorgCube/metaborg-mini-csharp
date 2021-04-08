@@ -36,7 +36,7 @@
         {
             int l;
             var _ = $Exp;
-            return new C1();
+            return this;
         }
     }
 
