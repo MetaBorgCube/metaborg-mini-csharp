@@ -23,6 +23,7 @@ import mb.pie.api.Supplier;
 import mb.pie.api.TaskDef;
 import mb.resource.ResourceKey;
 import mb.statix.common.PlaceholderVarMap;
+import mb.statix.common.SelectedConstraintSolverState;
 import mb.statix.common.SolverContext;
 import mb.statix.common.SolverState;
 import mb.statix.common.StatixAnalyzer;
@@ -58,6 +59,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -245,8 +247,12 @@ public class MinicsComplete implements TaskDef<MinicsComplete.Input, @Nullable C
 
         @Override
         protected Object represent(Object ctx, Object obj) {
-            if (!(obj instanceof SolverState)) return super.represent(ctx, obj);
-            final SolverState ss = (SolverState)obj;
+            if (obj instanceof SolverState) return represent(ctx, (SolverState)obj);
+            if (obj instanceof SelectedConstraintSolverState) return represent(ctx, (SelectedConstraintSolverState)obj);
+            return super.represent(ctx, obj);
+        }
+
+        private Map<String, Object> represent(Object ctx, SolverState ss) {
             @Nullable ITerm focusValue = null;
             if (ctx instanceof SolverContext) {
                 final SolverContext sc = (SolverContext)ctx;
@@ -255,6 +261,20 @@ public class MinicsComplete implements TaskDef<MinicsComplete.Input, @Nullable C
             }
             LinkedHashMap<String, Object> map = new LinkedHashMap<>();
             map.put("focus", focusValue != null ? focusValue.toString() : "<no focus>");
+            map.put("state", ss);
+            return map;
+        }
+
+        private Map<String, Object> represent(Object ctx, SelectedConstraintSolverState ss) {
+            @Nullable ITerm focusValue = null;
+            if (ctx instanceof SolverContext) {
+                final SolverContext sc = (SolverContext)ctx;
+                final @Nullable ITermVar focusVar = sc.getFocusVar();
+                if(focusVar != null) focusValue = ss.getInnerState().project(focusVar);
+            }
+            LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+            map.put("focus", focusValue != null ? focusValue.toString() : "<no focus>");
+            map.put("selected", ss.getSelected());
             map.put("state", ss);
             return map;
         }
