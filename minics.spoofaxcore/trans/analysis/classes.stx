@@ -106,7 +106,7 @@ rules typeOfParam : scope * ParamDecl -> TYPE
 
   typeOfParam(s, Param(type, name)) = T :-
     typeOfObjectType(s, type) == T,
-    declareVar(s, name, T),
-    @name.type := T.
+    declareVar(s, name, T).
+    //@name.type := T.
 
   typeOfParam(_, ParamDecl-Plhdr()) = _.

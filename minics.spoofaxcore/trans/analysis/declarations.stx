@@ -45,8 +45,8 @@ rules typeOfClass : scope * ID -> TYPE
   typeOfClass(s, ref) = T :- {decl}
     resolveClass(s, ref) == [(_, (decl, T))|_]
       | error $[undefined class [ref]],
-    @ref.ref := decl,
-    @ref.type := T.
+    @ref.ref := decl.
+    //@ref.type := T.
 
 // Parents
 rules resolveParent : scope -> list((path * (occurrence * TYPE)))
@@ -85,8 +85,8 @@ rules typeOfVar : scope * ID -> TYPE
   typeOfVar(s, ref) = T :- {decl}
     resolveVar(s, ref) == [(_, (decl, T))|_]
       | error $[undefined variable [ref]],
-    @ref.ref := decl,
-    @ref.type := T.
+    @ref.ref := decl.
+    //@ref.type := T.
 
 rules resolveVarMemberClass : scope * ID -> list((path * (occurrence * TYPE)))
 
@@ -106,8 +106,8 @@ rules typeOfVarMemberClass : scope * ID -> TYPE
     // 3. type
     resolveVarMemberClass(s, ref) == [(_, (decl, T))|_]
       | error $[undefined variable, member, or type [ref]],
-    @ref.ref := decl,
-    @ref.type := T.
+    @ref.ref := decl.
+    //@ref.type := T.
 
 rules resolveMemberClass : scope * ID -> list((path * (occurrence * TYPE)))
 
@@ -126,8 +126,8 @@ rules typeOfMemberClass : scope * ID -> TYPE
     // 2. type
     resolveMemberClass(s, ref) == [(_, (decl, T))|_]
       | error $[undefined member or type [ref]],
-    @ref.ref := decl,
-    @ref.type := T.
+    @ref.ref := decl.
+    //@ref.type := T.
 
 
 // Constructors
@@ -220,8 +220,8 @@ rules typeOfMember : scope * ID -> TYPE
   typeOfMember(s, ref) = T :- {decl}
     resolveMember(s, ref) == [(_, (decl, T))|_]
       | error $[undefined member [ref]],
-    @ref.ref := decl,
-    @ref.type := T.
+    @ref.ref := decl.
+    //@ref.type := T.
 
 
 // Return type
