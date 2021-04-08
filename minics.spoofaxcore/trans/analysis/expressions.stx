@@ -11,8 +11,8 @@ rules typeOfCall : scope * Exp -> TYPE
     typeOfExp(s, e1) == T1,
     T1 == METHOD(TPARAMS, TR) | error $[expected method, got [T1]],
     typesOfExps(s, args) == TARGS,
-    TARGS == TPARAMS | error $[expected parameters of types [TPARAMS], got [TARGS]],
-    @e.type := TR.
+    TARGS == TPARAMS | error $[expected parameters of types [TPARAMS], got [TARGS]].
+    //@e.type := TR.
 
 rules typeOfNew : scope * Exp -> TYPE
 
@@ -20,16 +20,16 @@ rules typeOfNew : scope * Exp -> TYPE
     typeOfType(s, type) == CT,
     CT == CLASS(_, classScope)
       | error $[Expected class type, got [CT]],
-    typeOfConstructor(classScope) == T,
-    @e.type := T.
+    typeOfConstructor(classScope) == T.
+    //@e.type := T.
 
 rules typeOfExp : scope * Exp -> TYPE
 
   typesOfExps maps typeOfExp(*, list(*)) = list(*)
 
   typeOfExp(s, e@Ref2Exp(ref)) = T :- {decl}
-    typeOfRef(s, ref) == T,
-    @e.type := T.
+    typeOfRef(s, ref) == T.
+    //@e.type := T.
 
   typeOfExp(s, e@Call(_, _)) 				= typeOfCall(s, e).
   typeOfExp(s, e@Call(Member(_, _), _)) 	= typeOfCall(s, e).
@@ -44,143 +44,143 @@ rules typeOfExp : scope * Exp -> TYPE
   typeOfExp(s, e@Member(e1, ref)) = T :- {T1 scope decl}
     typeOfExp(s, e1) == T1,
     getScope(T1) == scope,
-    typeOfMember(scope, ref) == T,
-    @e.type := T.
+    typeOfMember(scope, ref) == T.
+    //@e.type := T.
 
   typeOfExp(_, e@Null()) = T :-
-    T == NULL(),
-    @e.type := T.
+    T == NULL().
+    //@e.type := T.
 
   typeOfExp(_, e@True()) = T :-
-    T == BOOL(),
-    @e.type := T.
+    T == BOOL().
+    //@e.type := T.
 
   typeOfExp(_, e@False()) = T :-
-    T == BOOL(),
-    @e.type := T.
+    T == BOOL().
+    //@e.type := T.
 
   typeOfExp(s, e@Lt(e1, e2)) = T :- {T1 T2}
     T == BOOL(),
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
-    T2 == INT() | error $[expected int, got [T2]],
-    @e.type := T.
+    T2 == INT() | error $[expected int, got [T2]].
+    //@e.type := T.
 
   typeOfExp(s, e@Le(e1, e2)) = T :- {T1 T2}
     T == BOOL(),
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
-    T2 == INT() | error $[expected int, got [T2]],
-    @e.type := T.
+    T2 == INT() | error $[expected int, got [T2]].
+    //@e.type := T.
 
   typeOfExp(s, e@Gt(e1, e2)) = T :- {T1 T2}
     T == BOOL(),
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
-    T2 == INT() | error $[expected int, got [T2]],
-    @e.type := T.
+    T2 == INT() | error $[expected int, got [T2]].
+    //@e.type := T.
 
   typeOfExp(s, e@Ge(e1, e2)) = T :- {T1 T2}
     T == BOOL(),
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[expected int, got [T1]],
-    T2 == INT() | error $[expected int, got [T2]],
-    @e.type := T.
+    T2 == INT() | error $[expected int, got [T2]].
+    //@e.type := T.
 
   typeOfExp(s, e@Eq(e1, e2)) = T :- {T1 T2}
     T == BOOL(),
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
-    T1 == T2 | error $[expected [T1], got [T2]],
-    @e.type := T.
+    T1 == T2 | error $[expected [T1], got [T2]].
+    //@e.type := T.
 
   typeOfExp(s, e@Neq(e1, e2)) = T :- {T1 T2}
     T == BOOL(),
     typeOfExp(s, e1) == T1,
-    typeOfExp(s, e2) == T2,
-    @e.type := T.
+    typeOfExp(s, e2) == T2.
+    //@e.type := T.
 
   typeOfExp(s, e@And(e1, e2)) = T :- {T1 T2}
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == BOOL() | error $[Expected [BOOL()], got [T1]],
     T2 == BOOL() | error $[Expected [BOOL()], got [T2]],
-    T == BOOL(),
-    @e.type := T.
+    T == BOOL().
+    //@e.type := T.
 
   typeOfExp(s, e@Or(e1, e2)) = T :- {T1 T2}
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == BOOL() | error $[Expected [BOOL()], got [T1]],
     T2 == BOOL() | error $[Expected [BOOL()], got [T2]],
-    T == BOOL(),
-    @e.type := T.
+    T == BOOL().
+    //@e.type := T.
 
   typeOfExp(s, e@Not(e1)) = T :- {T1}
     typeOfExp(s, e1) == T1,
     T1 == BOOL() | error $[expected [BOOL()], got [T1]],
-    T == BOOL(),
-    @e.type := T.
+    T == BOOL().
+    //@e.type := T.
 
   typeOfExp(s, e@Int(_)) = T :-
-    T == INT(),
-    @e.type := T.
+    T == INT().
+    //@e.type := T.
 
   typeOfExp(s, e@Plus(e1)) = T :- {T1}
     typeOfExp(s, e1) == T1,
     T1 == INT() | error $[Expected [INT()], got [T1]],
-    T == INT(),
-    @e.type := T.
+    T == INT().
+    //@e.type := T.
 
   typeOfExp(s, e@Min(e1)) = T :- {T1}
     typeOfExp(s, e1) == T,
     T1 == INT() | error $[Expected [INT()], got [T1]],
-    T == INT(),
-    @e.type := T.
+    T == INT().
+    //@e.type := T.
 
   typeOfExp(s, e@Mul(e1, e2)) = T :- {T1 T2}
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[Expected [INT()], got [T1]],
     T2 == INT() | error $[Expected [INT()], got [T2]],
-    T == INT(),
-    @e.type := T.
+    T == INT().
+    //@e.type := T.
 
   typeOfExp(s, e@Div(e1, e2)) = T :- {T1 T2}
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[Expected [INT()], got [T1]],
     T2 == INT() | error $[Expected [INT()], got [T2]],
-    T == INT(),
-    @e.type := T.
+    T == INT().
+    //@e.type := T.
 
   typeOfExp(s, e@Add(e1, e2)) = T :- {T1 T2}
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[Expected [INT()], got [T1]],
     T2 == INT() | error $[Expected [INT()], got [T2]],
-    T == INT(),
-    @e.type := T.
+    T == INT().
+    //@e.type := T.
 
   typeOfExp(s, e@Sub(e1, e2)) = T :- {T1 T2}
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     T1 == INT() | error $[Expected [INT()], got [T1]],
     T2 == INT() | error $[Expected [INT()], got [T2]],
-    T == INT(),
-    @e.type := T.
+    T == INT().
+    //@e.type := T.
 
   typeOfExp(s, e@Cond(c, e1, e2)) = T :- {TC T1 T2}
     typeOfExp(s, c) == TC,
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     TC == BOOL() | error $[Expected [BOOL()], got [TC]],
-    lub(T1, T2) == T,
-    @e.type := T.
+    lub(T1, T2) == T.
+    //@e.type := T.
 
   typeOfExp(_, Exp-Plhdr()) = _.
 
@@ -189,20 +189,20 @@ rules typeOfRef : scope * Ref -> TYPE
   typesOfRefs maps typeOfRef(*, list(*)) = list(*)
 
   typeOfRef(s, e@Var(ref)) = T :- {decl}
-    typeOfVarMemberClass(s, ref) == T,
-    @e.type := T.
+    typeOfVarMemberClass(s, ref) == T.
+    //@e.type := T.
 
   typeOfRef(s, e@This()) = T :- {decl}
     resolveVar(s, "this") == [(_, (decl, T))|_]
       | error $[undefined 'this'],
-    @e.ref := decl,
-    @e.type := T.
+    @e.ref := decl.
+    //@e.type := T.
 
   typeOfRef(s, e@Base()) = T :- {decl}
     resolveVar(s, "base") == [(_, (decl, T))|_]
       | error $[undefined 'base'],
-    @e.ref := decl,
-    @e.type := T.
+    @e.ref := decl.
+    //@e.type := T.
 
   typeOfRef(_, Ref-Plhdr()) = _.
 

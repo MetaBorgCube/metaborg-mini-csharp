@@ -50,7 +50,7 @@ rules stmtOk : scope * Stmt
     typeOfExp(blockScope, condExp) == TC,
     TC == BOOL() | error $[expected [BOOL()], got [TC]],
     stmtOk(blockScope, thenStmt),
-    stmtOk(blockScope, elseStmt),
-    @stmt.type := TC.
+    stmtOk(blockScope, elseStmt).
+    //@stmt.type := TC.
 
   stmtOk(_, Stmt-Plhdr()).

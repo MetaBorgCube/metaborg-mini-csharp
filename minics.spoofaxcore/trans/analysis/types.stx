@@ -20,16 +20,16 @@ signature
 rules typeOfType : scope * Type -> TYPE
 
   typeOfType(s, t@Int()) = T :-
-    T == INT(),
-    @t.type := T.
+    T == INT().
+    //@t.type := T.
 
   typeOfType(s, t@Bool()) = T :-
-    T == BOOL(),
-    @t.type := T.
+    T == BOOL().
+    //@t.type := T.
 
   typeOfType(s, t@Object()) = T :-
-    T == OBJECT(),
-    @t.type := T.
+    T == OBJECT().
+    //@t.type := T.
 
   typeOfType(s, t@ClassType(ref)) = T :- {decl}
     typeOfClass(s, ref) == T.
@@ -40,16 +40,16 @@ rules typeOfType : scope * Type -> TYPE
 rules typeOfObjectType : scope * Type -> TYPE
 
   typeOfObjectType(s, t@Int()) = T :-
-    T == INT(),
-    @t.type := T.
+    T == INT().
+    //@t.type := T.
 
   typeOfObjectType(s, t@Bool()) = T :-
-    T == BOOL(),
-    @t.type := T.
+    T == BOOL().
+    //@t.type := T.
 
   typeOfObjectType(s, t@Object()) = T :-
-    T == OBJECT(),
-    @t.type := T.
+    T == OBJECT().
+    //@t.type := T.
 
 
   typeOfObjectType(s, t@ClassType(ref)) = T :- {decl classScope}
