@@ -34,9 +34,9 @@ rules typeOfExp : scope * Exp -> TYPE
   typeOfExp(s, e@Call(_, _)) 				= typeOfCall(s, e).
   typeOfExp(s, e@Call(Member(_, _), _)) 	= typeOfCall(s, e).
   typeOfExp(s, e@Call(Ref2Exp(_), _)) 		= typeOfCall(s, e).
-  typeOfExp(s, e@Call(Ref2Exp(Var(_)), _)) 	= typeOfCall(s, e).
-  typeOfExp(s, e@Call(Ref2Exp(This()), _)) 	= typeOfCall(s, e).
-  typeOfExp(s, e@Call(Ref2Exp(Base()), _)) 	= typeOfCall(s, e).
+//  typeOfExp(s, e@Call(Ref2Exp(Var(_)), _)) 	= typeOfCall(s, e).
+//  typeOfExp(s, e@Call(Ref2Exp(This()), _)) 	= typeOfCall(s, e).
+//  typeOfExp(s, e@Call(Ref2Exp(Base()), _)) 	= typeOfCall(s, e).
 
   typeOfExp(s, e@New(_)) 					= typeOfNew(s, e).
   typeOfExp(s, e@New(ClassType(_))) 		= typeOfNew(s, e).
