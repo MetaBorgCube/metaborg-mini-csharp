@@ -5,6 +5,24 @@ imports
   analysis/types
   analysis/declarations
 
+rules typeOfCall : scope * Exp -> TYPE
+
+  typeOfCall(s, e@Call(e1, args)) = TR :- {T1 TPARAMS TARGS}
+    typeOfExp(s, e1) == T1,
+    T1 == METHOD(TPARAMS, TR) | error $[expected method, got [T1]],
+    typesOfExps(s, args) == TARGS,
+    TARGS == TPARAMS | error $[expected parameters of types [TPARAMS], got [TARGS]],
+    @e.type := TR.
+
+rules typeOfNew : scope * Exp -> TYPE
+
+  typeOfNew(s, e@New(type)) = T :- {classScope CT}
+    typeOfType(s, type) == CT,
+    CT == CLASS(_, classScope)
+      | error $[Expected class type, got [CT]],
+    typeOfConstructor(classScope) == T,
+    @e.type := T.
+
 rules typeOfExp : scope * Exp -> TYPE
 
   typesOfExps maps typeOfExp(*, list(*)) = list(*)
@@ -13,19 +31,15 @@ rules typeOfExp : scope * Exp -> TYPE
     typeOfRef(s, ref) == T,
     @e.type := T.
 
-  typeOfExp(s, e@Call(e1, args)) = TR :- {T1 TPARAMS TARGS}
-    typeOfExp(s, e1) == T1,
-    T1 == METHOD(TPARAMS, TR) | error $[expected method, got [T1]],
-    typesOfExps(s, args) == TARGS,
-    TARGS == TPARAMS | error $[expected parameters of types [TPARAMS], got [TARGS]],
-    @e.type := TR.
+  typeOfExp(s, e@Call(_, _)) 				= typeOfCall(s, e).
+  typeOfExp(s, e@Call(Member(_, _), _)) 	= typeOfCall(s, e).
+  typeOfExp(s, e@Call(Ref2Exp(_), _)) 		= typeOfCall(s, e).
+  typeOfExp(s, e@Call(Ref2Exp(Var(_)), _)) 	= typeOfCall(s, e).
+  typeOfExp(s, e@Call(Ref2Exp(This()), _)) 	= typeOfCall(s, e).
+  typeOfExp(s, e@Call(Ref2Exp(Base()), _)) 	= typeOfCall(s, e).
 
-  typeOfExp(s, e@New(type)) = T :- {classScope CT}
-    typeOfType(s, type) == CT,
-    CT == CLASS(_, classScope)
-      | error $[Expected class type, got [CT]],
-    typeOfConstructor(classScope) == T,
-    @e.type := T.
+  typeOfExp(s, e@New(_)) 					= typeOfNew(s, e).
+  typeOfExp(s, e@New(ClassType(_))) 		= typeOfNew(s, e).
 
   typeOfExp(s, e@Member(e1, ref)) = T :- {T1 scope decl}
     typeOfExp(s, e1) == T1,
