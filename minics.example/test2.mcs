@@ -1,16 +1,43 @@
-using System;
+    using System;
 
-class A {}
+    class A
+    {
+        public static int sfa;
 
-class B1 : A {
-    public static B1 b1;
-    public static B2 b2;
+        public int fa;
 
-    public static bool t( ) {
-        //var y = true ? $Exp : $Exp;
-        var y = $Exp;
+        public static bool SFA(int y) { return false; }
+
+        public bool MA() { return true; }
     }
-}
 
-class B2 : A {
-}
+    class B : A
+    {
+        public static X sfb;
+
+        public X fb;
+
+        public static X PSF(X x) { return new X(); }
+
+        public int MB() { return 10; }
+    }
+
+    class C2 : B { }
+
+    class C1 : B
+    {
+        public static int sfc;
+
+        public int fc;
+
+        public static int SF() { return 42; }
+
+        public C1 MC(int a)
+        {
+            int l;
+            var _ = $Exp;
+            return new C1();
+        }
+    }
+
+    class X { }

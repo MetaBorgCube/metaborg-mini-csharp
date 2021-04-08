@@ -1,34 +1,37 @@
 class Test {
-	public static Node BuildTree() {
-		return $Exp;
-	}
-	public static Node BuildNode(int depth) {
+  public static Node BuildTree() {
+    Node n1 = new Node();
+    Test n2 = new Test();
+    return n1;
+    //return BuildNode(10);//$Exp;
+  }
+  public static Node BuildNode(int depth) {
 //	    Node n;
 //	    //if (depth == 0)
 //	    n = new Node();
 //	    //n.Value = depth;
 //	    n.Left = BuildNode(depth - 1);
 //	    n.Right = BuildNode(depth - 1);
-	    return new Node();
-	}
+      return new Node();
+  }
 }
 
 class Node {
-	public object Value;
+  public object Value;
     public Node Left;
     public Node Right;
 
     public int CalcHeight() {
-		return 1 + Math.Max(
-		    Left != null ? Left.CalcHeight() : 0,
-		    Right != null ? Right.CalcHeight() : 0
-	    );
-	}
+    return 1 + Math.Max(
+        Left != null ? Left.CalcHeight() : 0,
+        Right != null ? Right.CalcHeight() : 0
+      );
+  }
 }
 
 class Math {
-	public static int Max(int a, int b) {
-		return a > b ? a : b;
-	}
+  public static int Max(int a, int b) {
+    return a > b ? a : b;
+  }
 }
 
