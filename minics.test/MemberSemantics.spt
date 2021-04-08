@@ -10,19 +10,19 @@ fixture [[
     class A
     {
         public int fa;
-        public bool MA() { }
+        public bool MA() { return true; }
     }
 
     class B : A
     {
         public bool fb;
-        public int MB() { }
+        public int MB() { return 42; }
     }
 
     class C : B
     {
         public int fc;
-        public int MC() { }
+        public int MC() { return 10; }
         [[...]]
     }
 
@@ -48,32 +48,32 @@ test field present in parent [[
 ]] analysis fails
 
 test int method [[
-    public int M() {}
+    public int M() { return 1337; }
 ]] analysis succeeds
    run get-type to METHOD([], INT())
 
 test object method [[
-    public X M() {}
+    public X M() { return new X(); }
 ]] analysis succeeds
    run get-type to METHOD([], OBJECT(CLASS("X", _), _))
 
 test object method with object parameter [[
-    public X M(X x) {}
+    public X M(X x) { return x; }
 ]] analysis succeeds
    run get-type to METHOD([OBJECT(CLASS("X", _), _)], OBJECT(CLASS("X", _), _))
 
 test method not unique [[
-    public bool MC() {}
+    public bool MC() { return true; }
 ]] analysis fails
 
 test method present in parent [[
-    public void MB() {}
+    public int MB() { return 11; }
 ]] analysis fails
 
 test duplicate method with different signature (not supported in Mini C#) [[
-    public int MC(int x) {}
+    public int MC(int x) { return x; }
 ]] analysis fails
 
 test method with different signature present in parent (not supported in Mini C#) [[
-    public void MB(int x) {}
+    public int MB(int x) { return x; }
 ]] analysis fails

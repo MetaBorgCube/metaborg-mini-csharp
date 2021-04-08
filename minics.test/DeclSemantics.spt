@@ -13,9 +13,9 @@ fixture [[
 
         public int fa;
 
-        public static bool SFA(int y) { }
+        public static bool SFA(int y) { return false; }
 
-        public bool MA() { }
+        public bool MA() { return true; }
     }
 
     class B : A
@@ -24,9 +24,9 @@ fixture [[
 
         public X fb;
 
-        public static X PSF(X x) { }
+        public static X PSF(X x) { return new X(); }
 
-        public int MB() { }
+        public int MB() { return 10; }
     }
 
     class C2 : B { }
@@ -37,12 +37,13 @@ fixture [[
 
         public int fc;
 
-        public static void SF() { }
+        public static int SF() { return 42; }
 
-        public void MC(int a)
+        public C1 MC(int a)
         {
             int l;
             var _ = [[...]];
+            return new C1();
         }
     }
 
@@ -187,12 +188,12 @@ test remote ancestor static field [[
 test local method [[
   MC
 ]] analysis succeeds
-   run get-type to METHOD([INT()], VOID())
+   run get-type to METHOD([INT()], OBJECT(CLASS("C1", _), _))
 
 test this local method [[
   this.MC
 ]] analysis succeeds
-   run get-type to METHOD([INT()], VOID())
+   run get-type to METHOD([INT()], OBJECT(CLASS("C1", _), _))
 
 test base local method [[
   base.MC
@@ -201,7 +202,7 @@ test base local method [[
 test remote local method [[
   new C1().MC
 ]] analysis succeeds
-   run get-type to METHOD([INT()], VOID())
+   run get-type to METHOD([INT()], OBJECT(CLASS("C1", _), _))
 
 test parent method [[
   MB
@@ -248,12 +249,12 @@ test remote ancestor method [[
 test local method call [[
   MC(42)
 ]] analysis succeeds
-   run get-type to VOID()
+   run get-type to OBJECT(CLASS("C1", _), _)
 
 test this local method call [[
   this.MC(42)
 ]] analysis succeeds
-   run get-type to VOID()
+   run get-type to OBJECT(CLASS("C1", _), _)
 
 test base local method call [[
   base.MC(42)
@@ -262,7 +263,7 @@ test base local method call [[
 test remote local method call [[
   new C1().MC(42)
 ]] analysis succeeds
-   run get-type to VOID()
+   run get-type to OBJECT(CLASS("C1", _), _)
 
 test parent method call [[
   MB()
@@ -309,7 +310,7 @@ test remote ancestor method call [[
 test local static function [[
   SF
 ]] analysis succeeds
-   run get-type to METHOD([], VOID())
+   run get-type to METHOD([], INT())
 
 test parent static function [[
   PSF
@@ -326,7 +327,7 @@ test remote static function [[
 test local static function call [[
   SF()
 ]] analysis succeeds
-   run get-type to VOID()
+   run get-type to INT()
 
 test parent static function call [[
   PSF(new X())

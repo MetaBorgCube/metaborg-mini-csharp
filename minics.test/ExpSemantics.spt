@@ -10,10 +10,11 @@ fixture [[
     class A { }
     class B : A
     {
-        public void M(int a)
+        public bool M(int a)
         {
             int l;
             var _ = [[...]];
+            return true;
         }
     }
     class C1 : B { }
