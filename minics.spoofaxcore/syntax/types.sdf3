@@ -8,9 +8,9 @@ context-free sorts
 
 context-free syntax
 
-  Type.Int = <int>
-  Type.Bool = <bool>
-  Type.Object = <object>
+  Type.IntType = <int>
+  Type.BoolType = <bool>
+  Type.ObjectType = <object>
   Type.ClassType = <<ID>>
 
 template options
