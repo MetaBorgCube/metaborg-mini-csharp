@@ -1,0 +1,127 @@
+module microcs
+
+imports
+  Common
+
+context-free start-symbols
+  Start
+
+context-free sorts
+  Start
+
+context-free syntax
+  Start.Program = <
+    <{ClassDecl "\n"}*>
+  >
+
+context-free sorts
+  ClassDecl MemberDecl ParamDecl
+
+context-free syntax
+  ClassDecl.Class = <
+    class <ID> {
+      <{MemberDecl "\n"}*>
+    }
+  >
+
+  MemberDecl.InstanceField = <public <Type> <ID>;>
+
+  MemberDecl.InstanceMethod = <
+    public <Type> <ID>(<{ParamDecl ", "}*>) {
+        <{Stmt "\n"}*>
+        return <Exp>;
+    }
+  >
+  MemberDecl.StaticMethod = <
+    public static <Type> <ID>(<{ParamDecl ", "}*>) {
+        <{Stmt "\n"}*>
+        return <Exp>;
+    }
+  >
+
+  ParamDecl.Param = <<Type> <ID>>
+
+context-free sorts
+  Stmt
+
+context-free syntax
+  Stmt.Block = < {
+    <{Stmt "\n"}*>
+  }>
+
+  Stmt.DeclareTypedVar     = <<Type> <ID>;>
+  Stmt.DeclareTypedVarInit = <<Type> <ID> = <Exp>;>
+  Stmt.DeclareVarInit      = <var <ID> = <Exp>;>
+
+  Stmt.Assign = <<ID> = <Exp>;>
+  Stmt.Nop    = <;>
+  Stmt.Exp    = <<Exp>;>
+
+
+context-free sorts
+  Exp
+
+context-free syntax
+  Exp        = <<Ref>>
+  Exp.Call   = <<Exp>(<{Exp ", "}*>)>
+  Exp.New    = <new <Type>(<>)>
+  Exp.Member = <<Exp>.<ID>>
+  Exp.Null   = <null>
+
+  Exp.True   = <true>
+  Exp.False  = <false>
+  Exp.Lt     = [[Exp] < [Exp]]  {left}
+  Exp.Eq     = [[Exp] == [Exp]] {left}
+  Exp.Neq    = [[Exp] != [Exp]] {left}
+  Exp.And    = <<Exp> && <Exp>> {left}
+  Exp.Not    = <!<Exp>>
+
+  Exp.Int    = <<INT>>
+  Exp.Mul    = <<Exp> * <Exp>> {left}
+  Exp.Add    = <<Exp> + <Exp>> {left}
+
+  Exp.Cond   = <<Exp> ? <Exp> : <Exp>>
+  Exp        = <(<Exp>)> {bracket}
+
+context-free sorts
+  Ref
+
+context-free syntax
+  Ref.Var = <<ID>>
+  Ref.This = <this>
+
+context-free sorts
+  Type
+
+context-free syntax
+  Type.IntType    = <int>
+  Type.BoolType   = <bool>
+  Type.ObjectType = <object>
+  Type.ClassType  = <<ID>>
+
+context-free priorities
+  {
+    Exp.Member
+    Exp.Call
+    Exp.New
+  } > {
+    Exp.Not
+  } > {
+    Exp.Mul
+  } > {
+    Exp.Add
+  } > {
+    Exp.Lt
+  } > { left:
+    Exp.Eq
+    Exp.Neq
+  } > {
+    Exp.And
+  } > {
+    Exp.Cond
+  }
+
+template options
+  ID = keyword {reject}
+  keyword -/- [A-Za-z0-9]
+

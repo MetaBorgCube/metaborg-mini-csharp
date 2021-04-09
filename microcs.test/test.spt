@@ -1,0 +1,7 @@
+module test
+
+language microcs
+
+test parse [[
+
+]] parse succeeds

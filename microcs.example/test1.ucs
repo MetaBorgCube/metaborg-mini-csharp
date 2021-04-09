@@ -1,0 +1,37 @@
+
+class Node {
+    public object Value;
+//    public Node Left;
+//    public Node Right;
+
+//    public int CalcHeight() {
+//        return 1 + Math.Max(
+//          Left != null ? Left.CalcHeight() : 0,
+//          Right != null ? Right.CalcHeight() : 0
+//        );
+//    }
+}
+
+class Test {
+    public static Node BuildTree() {
+//        Node n = new Node();
+//        Test t = new Test();
+      return $Exp;
+    }
+//    public Node BuildNode(int depth) {
+//        return new Node();
+//    }
+}
+
+class Node2 {
+    public object Value;
+//    public Node Left;
+//    public Node Right;
+
+//    public int CalcHeight() {
+//        return 1 + Math.Max(
+//          Left != null ? Left.CalcHeight() : 0,
+//          Right != null ? Right.CalcHeight() : 0
+//        );
+//    }
+}
