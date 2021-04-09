@@ -8,6 +8,7 @@ import mb.completions.common.CompletionItem;
 import mb.completions.common.CompletionResult;
 import mb.log.api.Logger;
 import mb.log.api.LoggerFactory;
+import mb.nabl2.terms.IApplTerm;
 import mb.nabl2.terms.ITerm;
 import mb.nabl2.terms.ITermVar;
 import mb.nabl2.terms.ListTerms;
@@ -57,6 +58,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayDeque;
+import java.util.Comparator;
+import java.util.Deque;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -354,13 +358,51 @@ public class MinicsComplete implements TaskDef<MinicsComplete.Input, @Nullable C
      * @return the ordered proposals
      */
     private Stream<TermCompleter.CompletionSolverProposal> orderProposals(Stream<TermCompleter.CompletionSolverProposal> proposals) {
-        // We score each proposal on both its shallowness (higher score means more shallow) and its number of placeholders.
-        // for(a in b)
-        // a
-        // for(a in $Exp)
-        // for($ID in $Exp)
-        // TODO
-        return proposals;
+        return proposals.sorted(Comparator
+            // Sort expanded queries after expanded rules before leftovers
+            .<TermCompleter.CompletionSolverProposal, Integer>comparing(it -> it.getNewState().getMeta().getExpandedQueries() > 0 ? 2 : (it.getNewState().getMeta().getExpandedRules() > 0 ? 1 : 0))
+            // Sort more expanded queries after less expanded queries
+            .<Integer>thenComparing(it -> it.getNewState().getMeta().getExpandedQueries())
+            // Sort more expanded rules after less expanded rules
+            .<Integer>thenComparing(it -> it.getNewState().getMeta().getExpandedRules())
+            // Sort solutions with higher rank after solutions with lower rank
+            .<Integer>thenComparing(it -> rankTerm(it.getTerm()))
+            // Reverse the whole thing
+            .reversed()
+        );
+    }
+
+    /**
+     * Ranks the term. A higher value means a better result.
+     *
+     * Terms are ranked by how many concrete (non-placeholder) terms they have.
+     * The deeper the term, the higher the rank.
+     *
+     * @param root the term to rank
+     * @return the rank
+     */
+    private int rankTerm(ITerm root) {
+        int sum = 0;
+        int level = -1;
+        Deque<ITerm> currWorklist = new ArrayDeque<>();
+        Deque<ITerm> nextWorklist = new ArrayDeque<>();
+        nextWorklist.add(root);
+        while (!nextWorklist.isEmpty()) {
+            Deque<ITerm> tmp = currWorklist;
+            currWorklist = nextWorklist;
+            nextWorklist = tmp;
+            level += 1;
+            while(!currWorklist.isEmpty()) {
+                final ITerm term = currWorklist.remove();
+                final int addition =  (term instanceof ITermVar ? 0 : 1 << level);
+                if (Integer.MAX_VALUE - addition < sum) return Integer.MAX_VALUE;
+                sum += addition;
+                if(term instanceof IApplTerm) {
+                    nextWorklist.addAll(((IApplTerm)term).getArgs());
+                }
+            }
+        }
+        return sum;
     }
 
     /**

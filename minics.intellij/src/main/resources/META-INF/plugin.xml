@@ -20,6 +20,7 @@
     <completion.contributor
       language="Minics"
       implementationClass="mb.minics.intellij.editor.MinicsCompletionContributor"
+      order="first"
     />
   </extensions>
 </idea-plugin>
