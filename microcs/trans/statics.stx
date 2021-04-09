@@ -3,184 +3,6 @@ module statics
 imports
   signatures/microcs-sig
 
-rules programOk : Start
-  programOk(Program(classes)) :- {s}
-    new s,
-    init(s),
-    classesOk(s, classes).
-
-rules init : scope
-  init(s) :-
-      classOk(s, Class("Math", [
-        StaticMethod(IntType(), "Max",
-          [Param(IntType(), "x"), Param(IntType(), "y")],
-          [], Cond(Lt(Ref2Exp(Var("x")), Ref2Exp(Var("y"))), Ref2Exp(Var("y")), Ref2Exp(Var("x")))
-        )
-      ])
-    ).
-
-rules classOk : scope * ClassDecl
-  classesOk maps classOk(*, list(*))
-
-  classOk(globalScope, class@Class(name, members)) :- {classScope instanceScope methodScope CT IT}
-    // Static class
-    new classScope,
-    classScope -P-> globalScope,
-    CT == CLASS(name, classScope),
-    declareClass(globalScope, name, CT),
-
-    // Instance object
-    new instanceScope,
-    instanceScope -P-> globalScope,
-    IT == OBJECT(CT, instanceScope),
-
-    declareVarOccurrence(instanceScope, Var{"this"@_}, IT),
-    declareConstructor(classScope, IT),
-    membersOk(classScope, instanceScope, members).
-
-rules memberOk : scope * scope * MemberDecl
-  membersOk maps memberOk(*, *, list(*))
-
-  memberOk(classScope, instanceScope, field@InstanceField(type, name)) :- {T}
-    typeOfObjectType(classScope, type) == T,
-    declareInstanceMember(instanceScope, classScope, name, T).
-
-  memberOk(classScope, instanceScope, method@InstanceMethod(returnType, name, params, stmts, returnExp)) :- {methodScope RT ERT PTS T}
-    new methodScope,
-    methodScope -P-> instanceScope,
-    typeOfObjectType(classScope, returnType) == RT,
-    typesOfParams(methodScope, params) == PTS,
-    T == METHOD(PTS, RT),
-    declareInstanceMember(instanceScope, classScope, name, T),
-    ERT@typeOfExp(methodScope, returnExp) == RT,
-    stmtsOk(methodScope, stmts).
-
-  memberOk(classScope, _, method@StaticMethod(returnType, name, params, stmts, returnExp)) :- {methodScope RT ERT PTS T}
-    new methodScope,
-    methodScope -P-> classScope,
-    typeOfObjectType(classScope, returnType) == RT,
-    typesOfParams(methodScope, params) == PTS,
-    T == METHOD(PTS, RT),
-    declareStaticMember(classScope, name, T),
-    ERT@typeOfExp(methodScope, returnExp) == RT,
-    stmtsOk(methodScope, stmts).
-
-rules typeOfParam : scope * ParamDecl -> TYPE
-  typesOfParams maps typeOfParam(*, list(*)) = list(*)
-
-  typeOfParam(s, Param(type, name)) = T :-
-    typeOfObjectType(s, type) == T,
-    declareVar(s, name, T).
-
-rules stmtOk : scope * Stmt
-  stmtsOk maps stmtOk(*, list(*))
-
-  stmtOk(blockScope, Block(stmts)) :- {nestedBlockScope}
-    new nestedBlockScope,
-    nestedBlockScope -P-> blockScope,
-    stmtsOk(nestedBlockScope, stmts).
-
-  stmtOk(blockScope, Nop()).
-
-  stmtOk(blockScope, Exp(e)) :-
-    typeOfExp(blockScope, e) == _.
-
-  stmtOk(blockScope, DeclareTypedVar(type, name)) :- {T}
-    typeOfObjectType(blockScope, type) == T,
-    declareVar(blockScope, name, T).
-
-  stmtOk(blockScope, DeclareTypedVarInit(type, name, e)) :- {T TE}
-    typeOfObjectType(blockScope, type) == T,
-    typeOfExp(blockScope, e) == T,
-    declareVar(blockScope, name, T).
-
-  stmtOk(blockScope, DeclareVarInit(name, e)) :- {T}
-    typeOfExp(blockScope, e) == T,
-    blockScope -> Var{name@_} with type T.
-
-  stmtOk(blockScope, Assign(name, e)) :- {T}
-    typeOfExp(blockScope, e) == T,
-    typeOfVarMemberClass(blockScope, name) == T.
-
-rules typeOfExp : scope * Exp -> TYPE
-  typesOfExps maps typeOfExp(*, list(*)) = list(*)
-
-  typeOfExp(s, e@Ref2Exp(ref))  			= typeOfRef(s, ref).
-
-  typeOfExp(s, e@Call(_, _)) 				= typeOfCall(s, e).
-  typeOfExp(s, e@Call(Member(_, _), _)) 	= typeOfCall(s, e).
-  typeOfExp(s, e@Call(Ref2Exp(_), _)) 		= typeOfCall(s, e).
-
-  typeOfExp(s, e@New(_)) 					= typeOfNew(s, e).
-  typeOfExp(s, e@New(ClassType(_))) 		= typeOfNew(s, e).
-
-  typeOfExp(s, e@Member(e1, ref)) = T :- {T1 scope decl}
-    typeOfExp(s, e1) == T1,
-    getScope(T1) == scope,
-    typeOfMember(scope, ref) == T.
-
-  typeOfExp(_, e@Null())  = NULL().
-  typeOfExp(_, e@True())  = BOOL().
-  typeOfExp(_, e@False()) = BOOL().
-
-  typeOfExp(s, e@Lt(e1, e2)) = BOOL() :-
-    typeOfExp(s, e1) == INT(),
-    typeOfExp(s, e2) == INT().
-
-  typeOfExp(s, e@Eq(e1, e2)) = BOOL() :- {T1 T2}
-    typeOfExp(s, e1) == T1,
-    typeOfExp(s, e2) == T2.
-
-  typeOfExp(s, e@Neq(e1, e2)) = BOOL() :- {T1 T2}
-    typeOfExp(s, e1) == T1,
-    typeOfExp(s, e2) == T2.
-
-  typeOfExp(s, e@And(e1, e2)) = BOOL() :- {T1 T2}
-    typeOfExp(s, e1) == BOOL(),
-    typeOfExp(s, e2) == BOOL().
-
-  typeOfExp(s, e@Not(e1)) = BOOL() :- {T1}
-    typeOfExp(s, e1) == BOOL().
-
-  typeOfExp(s, e@Int(_)) = INT().
-
-  typeOfExp(s, e@Mul(e1, e2)) = INT() :- {T1 T2}
-    typeOfExp(s, e1) == INT(),
-    typeOfExp(s, e2) == INT().
-
-  typeOfExp(s, e@Add(e1, e2)) = T :- {T1 T2}
-    typeOfExp(s, e1) == INT(),
-    typeOfExp(s, e2) == INT().
-
-  typeOfExp(s, e@Cond(c, e1, e2)) = T :- {TC T1 T2}
-    typeOfExp(s, c) == BOOL(),
-    typeOfExp(s, e1) == T1,
-    typeOfExp(s, e2) == T2,
-    lub(T1, T2) == T.
-
-rules typeOfRef : scope * Ref -> TYPE
-  typesOfRefs maps typeOfRef(*, list(*)) = list(*)
-
-  typeOfRef(s, e@Var(ref)) = T :- {decl}
-    typeOfVarMemberClass(s, ref) == T.
-
-  typeOfRef(s, e@This()) = T :- {decl}
-    resolveVar(s, "this") == [(_, (decl, T))|_].
-
-rules typeOfCall : scope * Exp -> TYPE
-  typeOfCall(s, e@Call(e1, args)) = TR :- {TA}
-    typeOfExp(s, e1) == METHOD(TA, TR),
-    typesOfExps(s, args) == TA.
-
-rules typeOfNew : scope * Exp -> TYPE
-  typeOfNew(s, e@New(type)) = T :- {classScope name}
-    typeOfType(s, type) == CLASS(name, classScope),
-    typeOfConstructor(classScope, name) == T.
-
-rules getScope : TYPE -> scope
-  getScope(OBJECT(_, instanceScope)) = instanceScope.
-  getScope(CLASS(_, classScope)) = classScope.
-
 signature
   sorts TYPE constructors
     CLASS       : string * scope -> TYPE
@@ -190,29 +12,8 @@ signature
     OBJECT      : TYPE
     NULL        : TYPE
     METHOD      : list(TYPE) * TYPE -> TYPE
-
-// Static type
-rules typeOfType : scope * Type -> TYPE
-  typeOfType(s, t@IntType()) = INT().
-  typeOfType(s, t@BoolType()) = BOOL().
-  typeOfType(s, t@ObjectType()) = OBJECT().
-  typeOfType(s, t@ClassType(ref)) = typeOfClass(s, ref).
-
-// Instance type
-rules typeOfObjectType : scope * Type -> TYPE
-  typeOfObjectType(s, t@IntType()) = INT().
-  typeOfObjectType(s, t@BoolType()) = BOOL().
-  typeOfObjectType(s, t@ObjectType()) = OBJECT().
-
-  typeOfObjectType(s, t@ClassType(ref)) = T :- {classScope}
-    typeOfClass(s, ref) == CLASS(_, classScope),
-    typeOfConstructor(classScope, ref) == T.
-
-rules lub : TYPE * TYPE -> TYPE
-
-  lub(T@OBJECT(CLASS(_, _), _), NULL()) = T.
-  lub(NULL(), T@OBJECT(CLASS(_, _), _)) = T.
-  lub(T,      T)                        = T.
+  sorts
+    DECL = (path * (occurrence * TYPE))
 
 signature
   namespaces
@@ -227,35 +28,226 @@ signature
   name-resolution
     labels
       P     // lexical parent
-      E     // super class
-      I     // import (using)
       S     // static parent
+
+rules programOk : Start
+  programOk(Program(classes)) :- {s}
+    new s,
+    init(s),
+    classesOk(s, classes).
+
+rules init : scope
+  init(s) :-
+      classOk(s, Class("Math", [
+        StaticMethod(IntType(), "Max",
+          [Param(IntType(), "x"), Param(IntType(), "y")], [],
+          Cond(
+            Lt(Ref2Exp(Var("x")), Ref2Exp(Var("y"))),
+            Ref2Exp(Var("y")),
+            Ref2Exp(Var("x"))
+          )
+        )
+      ])
+    ).
+
+rules classOk : scope * ClassDecl
+  classesOk maps classOk(*, list(*))
+
+  classOk(globalScope, Class(name, members)) :- {cs is CT IT}
+    // Static class
+    new cs, cs -P-> globalScope,
+    CT == CLASS(name, cs),
+    declareClass(globalScope, name, CT),
+
+    // Instance object
+    new is, is -P-> globalScope,
+    IT == OBJECT(CT, is),
+
+    declareVarOccurrence(is, Var{"this"@name}, IT),
+    declareConstructor(cs, IT),
+    membersOk(cs, is, members).
+
+rules memberOk : scope * scope * MemberDecl
+  membersOk maps memberOk(*, *, list(*))
+
+  memberOk(cs, is, InstanceField(type, name)) :- {T}
+    typeOfObjectType(cs, type) == T,
+    declareInstanceMember(is, cs, name, T).
+
+  memberOk(cs, is,
+      InstanceMethod(returnType, name, params, stmts, returnExp)
+  ) :- {ms RT PTS T}
+    new ms, ms -P-> is,
+    typeOfObjectType(cs, returnType) == RT,
+    typesOfParams(ms, params) == PTS,
+    declareInstanceMember(is, cs, name, METHOD(PTS, RT)),
+    typeOfExp(ms, returnExp) == RT,
+    stmtsOk(ms, stmts).
+
+  memberOk(cs, _,
+      StaticMethod(returnType, name, params, stmts, returnExp)
+  ) :- {ms RT PTS T}
+    new ms, ms -P-> cs,
+    typeOfObjectType(cs, returnType) == RT,
+    typesOfParams(ms, params) == PTS,
+    declareStaticMember(cs, name, METHOD(PTS, RT)),
+    typeOfExp(ms, returnExp) == RT,
+    stmtsOk(ms, stmts).
+
+rules typeOfParam : scope * ParamDecl -> TYPE
+  typesOfParams maps typeOfParam(*, list(*)) = list(*)
+
+  typeOfParam(s, Param(type, name)) = T :-
+    typeOfObjectType(s, type) == T,
+    declareVar(s, name, T).
+
+rules stmtOk : scope * Stmt
+  stmtsOk maps stmtOk(*, list(*))
+
+  stmtOk(bs, Block(stmts)) :- {nbs}
+    new nbs, nbs -P-> bs,
+    stmtsOk(nbs, stmts).
+
+  stmtOk(_, Nop()).
+
+  stmtOk(bs, Exp(e)) :-
+    typeOfExp(bs, e) == _.
+
+  stmtOk(bs, DeclareTypedVar(type, name)) :- {T}
+    typeOfObjectType(bs, type) == T,
+    declareVar(bs, name, T).
+
+  stmtOk(bs, DeclareTypedVarInit(type, name, e)) :- {T}
+    typeOfObjectType(bs, type) == T,
+    typeOfExp(bs, e) == T,
+    declareVar(bs, name, T).
+
+  stmtOk(bs, DeclareVarInit(name, e)) :- {T}
+    typeOfExp(bs, e) == T,
+    declareVar(bs, name, T).
+
+  stmtOk(bs, Assign(name, e)) :- {T}
+    typeOfExp(bs, e) == T,
+    typeOfVarMemberClass(bs, name) == T.
+
+rules typeOfExp : scope * Exp -> TYPE
+  typesOfExps maps typeOfExp(*, list(*)) = list(*)
+
+  typeOfExp(s, Ref2Exp(ref))            = typeOfRef(s, ref).
+
+  typeOfExp(s, e@Call(_, _))            = typeOfCall(s, e).
+  typeOfExp(s, e@Call(Member(_, _), _)) = typeOfCall(s, e).
+  typeOfExp(s, e@Call(Ref2Exp(_), _))   = typeOfCall(s, e).
+
+  typeOfExp(s, e@New(_))                = typeOfNew(s, e).
+  typeOfExp(s, e@New(ClassType(_)))     = typeOfNew(s, e).
+
+  typeOfExp(s, Member(e, name)) = T :- {T1 ms}
+    typeOfExp(s, e) == T1,
+    getScope(T1) == ms,
+    typeOfMember(ms, name) == T.
+
+  typeOfExp(_, Null())  = NULL().
+  typeOfExp(_, True())  = BOOL().
+  typeOfExp(_, False()) = BOOL().
+
+  typeOfExp(s, Lt(e1, e2)) = BOOL() :-
+    typeOfExp(s, e1) == INT(),
+    typeOfExp(s, e2) == INT().
+
+  typeOfExp(s, Eq(e1, e2)) = BOOL() :-
+    typeOfExp(s, e1) == _,
+    typeOfExp(s, e2) == _.
+
+  typeOfExp(s, Neq(e1, e2)) = BOOL() :-
+    typeOfExp(s, e1) == _,
+    typeOfExp(s, e2) == _.
+
+  typeOfExp(s, And(e1, e2)) = BOOL() :-
+    typeOfExp(s, e1) == BOOL(),
+    typeOfExp(s, e2) == BOOL().
+
+  typeOfExp(s, Not(e1)) = BOOL() :-
+    typeOfExp(s, e1) == BOOL().
+
+  typeOfExp(s, Int(_)) = INT().
+
+  typeOfExp(s, Mul(e1, e2)) = INT() :-
+    typeOfExp(s, e1) == INT(),
+    typeOfExp(s, e2) == INT().
+
+  typeOfExp(s, Add(e1, e2)) = T :-
+    typeOfExp(s, e1) == INT(),
+    typeOfExp(s, e2) == INT().
+
+  typeOfExp(s, Cond(ec, e1, e2)) = T :- {T1 T2}
+    typeOfExp(s, ec) == BOOL(),
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    lub(T1, T2) == T.
+
+rules typeOfRef : scope * Ref -> TYPE
+  typesOfRefs maps typeOfRef(*, list(*)) = list(*)
+
+  typeOfRef(s, Var(name)) = T :-
+    typeOfVarMemberClass(s, name) == T.
+
+  typeOfRef(s, This()) = T :- {decl}
+    resolveVar(s, "this") == [(_, (decl, T))|_].
+
+rules typeOfCall : scope * Exp -> TYPE
+  typeOfCall(s, Call(e, args)) = TR :- {TA}
+    typeOfExp(s, e) == METHOD(TA, TR),
+    typesOfExps(s, args) == TA.
+
+rules typeOfNew : scope * Exp -> TYPE
+  typeOfNew(s, New(type)) = T :- {cs name}
+    typeOfType(s, type) == CLASS(name, cs),
+    typeOfConstructor(cs, name) == T.
+
+rules getScope : TYPE -> scope
+  getScope(OBJECT(_, is)) = is.
+  getScope(CLASS(_, cs)) = cs.
+
+// Static type
+rules typeOfType : scope * Type -> TYPE
+  typeOfType(s, t@IntType())          = INT().
+  typeOfType(s, t@BoolType())         = BOOL().
+  typeOfType(s, t@ObjectType())       = OBJECT().
+  typeOfType(s, t@ClassType(name))    = typeOfClass(s, name).
+
+// Instance type
+rules typeOfObjectType : scope * Type -> TYPE
+  typeOfObjectType(s, t@IntType())    = INT().
+  typeOfObjectType(s, t@BoolType())   = BOOL().
+  typeOfObjectType(s, t@ObjectType()) = OBJECT().
+
+  typeOfObjectType(s, t@ClassType(name)) = T :- {cs}
+    typeOfClass(s, name) == CLASS(_, cs),
+    typeOfConstructor(cs, name) == T.
+
+rules lub : TYPE * TYPE -> TYPE
+
+  lub(T@OBJECT(CLASS(_, _), _), NULL()) = T.
+  lub(NULL(), T@OBJECT(CLASS(_, _), _)) = T.
+  lub(T,      T)                        = T.
 
 // Classes
 rules declareClass : scope * ID * TYPE
   declareClass(s, decl, T) :-
-    !type[Class{decl@_}, T] in s.
+    !type[Class{decl@decl}, T] in s.
 
-rules resolveClass : scope * ID -> list((path * (occurrence * TYPE)))
-  resolveClass(s, ref) = ps :-
+rules resolveClass : scope * ID -> list(DECL)
+  resolveClass(s, name) = ps :-
     query type
-      filter P* I?                  // no transitive imports (I)
-      and { d' :- d' == Class{ref@_} }
-      min $ < P, $ < I, P < I       // prefer lexical parents (P) over imports (I)
+      filter P*
+      and { d' :- d' == Class{name@_} }
+      min $ < P
       in s |-> ps.
 
 rules typeOfClass : scope * ID -> TYPE
-  typeOfClass(s, ref) = T :- {decl}
-    resolveClass(s, ref) == [(_, (decl, T))|_].
-
-// Parents
-rules resolveParent : scope -> list((path * (occurrence * TYPE)))
-  resolveParent(s) = ps :-
-    query type
-      filter E                     // direct parent (E)
-      and { d' :- d' == Class{_@_} }
-      min $ < E
-      in s |-> ps.
+  typeOfClass(s, name) = T :- {decl}
+    resolveClass(s, name) == [(_, (decl, T))|_].
 
 // Variables
 rules declareVarOccurrence : scope * occurrence * TYPE
@@ -264,94 +256,96 @@ rules declareVarOccurrence : scope * occurrence * TYPE
 
 rules declareVar : scope * ID * TYPE
   declareVar(s, decl, T) :-
-    declareVarOccurrence(s, Var{decl@_}, T).
+    declareVarOccurrence(s, Var{decl@decl}, T).
 
-rules resolveVar : scope * ID -> list((path * (occurrence * TYPE)))
-  resolveVar(s, ref) = ps :-
+rules resolveVar : scope * ID -> list(DECL)
+  resolveVar(s, name) = ps :-
     query type
       filter P*
-      and { d' :- d' == Var{ref@_} }
+      and { d' :- d' == Var{name@_} }
       min $ < P
       in s |-> ps.
 
 rules typeOfVar : scope * ID -> TYPE
-  typeOfVar(s, ref) = T :- {decl}
-    resolveVar(s, ref) == [(_, (decl, T))|_].
+  typeOfVar(s, name) = T :- {decl}
+    resolveVar(s, name) == [(_, (decl, T))|_].
 
-rules resolveVarMemberClass : scope * ID -> list((path * (occurrence * TYPE)))
-  resolveVarMemberClass(s, ref) = unwrapVarMemberClass(s, ref, resolveVar(s, ref)).
+rules resolveVarMemberClass : scope * ID -> list(DECL)
+  resolveVarMemberClass(s, name)
+    = unwrapVarMemberClass(s, name, resolveVar(s, ref)).
 
-rules unwrapVarMemberClass : scope * ID * list((path * (occurrence * TYPE))) -> list((path * (occurrence * TYPE)))
+rules unwrapVarMemberClass : scope * ID * list(DECL) -> list(DECL)
   unwrapVarMemberClass(_, _, ps@[(_, (Var{decl@_}, T))|_]) = ps.
-  unwrapVarMemberClass(s, ref, []) = resolveMemberClass(s, ref).
+  unwrapVarMemberClass(s, name, []) = resolveMemberClass(s, name).
 
 rules typeOfVarMemberClass : scope * ID -> TYPE
-  typeOfVarMemberClass(s, ref) = T :- {decl}
+  typeOfVarMemberClass(s, name) = T :- {decl}
     // resolution order:
     // 1. variables
     // 2. member (instance or static)
     // 3. type
-    resolveVarMemberClass(s, ref) == [(_, (decl, T))|_].
+    resolveVarMemberClass(s, name) == [(_, (decl, T))|_].
 
-rules resolveMemberClass : scope * ID -> list((path * (occurrence * TYPE)))
-  resolveMemberClass(s, ref) = unwrapMemberClass(s, ref, resolveStaticOrInstanceMember(s, ref)).
+rules resolveMemberClass : scope * ID -> list(DECL)
+  resolveMemberClass(s, name)
+    = unwrapMemberClass(s, name, resolveStaticOrInstanceMember(s, ref)).
 
-rules unwrapMemberClass : scope * ID * list((path * (occurrence * TYPE))) -> list((path * (occurrence * TYPE)))
+rules unwrapMemberClass : scope * ID * list(DECL) -> list(DECL)
   unwrapMemberClass(_, _, ps@[(_, (Member{decl@_}, T))|_]) = ps.
-  unwrapMemberClass(s, ref, []) = resolveClass(s, ref).
+  unwrapMemberClass(s, name, []) = resolveClass(s, name).
 
 rules typeOfMemberClass : scope * ID -> TYPE
-  typeOfMemberClass(s, ref) = T :- {decl}
+  typeOfMemberClass(s, name) = T :- {decl}
     // resolution order:
     // 1. member (instance or static)
     // 2. type
-    resolveMemberClass(s, ref) == [(_, (decl, T))|_].
+    resolveMemberClass(s, name) == [(_, (decl, T))|_].
 
 // Constructors
 rules declareConstructor : scope * TYPE
-  declareConstructor(classScope, T) :-
-    !type[Constructor{}, T] in classScope.
+  declareConstructor(cs, T) :-
+    !type[Constructor{}, T] in cs.
 
-rules resolveConstructor : scope -> list((path * (occurrence * TYPE)))
-  resolveConstructor(classScope) = ps :-
+rules resolveConstructor : scope -> list(DECL)
+  resolveConstructor(cs) = ps :-
     query type
       filter P*
       and { d' :- d' == Constructor{} }
       min $ < P
-      in classScope |-> ps.
+      in cs |-> ps.
 
 rules typeOfConstructor : scope * ID -> TYPE
-  typeOfConstructor(classScope, name) = T :-
-    resolveConstructor(classScope) == [(_, (_, T@OBJECT(CLASS(name, _), _)))|_].
+  typeOfConstructor(cs, name) = T :-
+    resolveConstructor(cs) == [(_, (_, T@OBJECT(CLASS(name, _), _)))|_].
 
 // Members
 rules declareInstanceMember : scope * scope * ID * TYPE
-  declareInstanceMember(instanceScope, classScope, decl, T) :-
-    !type[Member{decl@_}, T] in instanceScope.
+  declareInstanceMember(is, cs, decl, T) :-
+    !type[Member{decl@decl}, T] in is.
 
 rules declareStaticMember : scope * ID * TYPE
-  declareStaticMember(classScope, decl, T) :-
-    !type[Member{decl@_}, T] in classScope.
+  declareStaticMember(cs, decl, T) :-
+    !type[Member{decl@decl}, T] in cs.
 
 rules resolveMember : scope * ID -> list((path * (occurrence * TYPE)))
   resolveMember(s, ref) = ps :-
     query type
-      filter P* E*                  // any ancestor (E)
+      filter P*
       and { d' :- d' == Member{ref@_} }
-      min $ < P, $ < E, E < P       // prefer super classes (E) over lexical parents (P)
+      min $ < P
       in s |-> ps.
 
-rules resolveStaticOrInstanceMember : scope * ID -> list((path * (occurrence * TYPE)))
+rules resolveStaticOrInstanceMember : scope * ID -> list(DECL)
   resolveStaticOrInstanceMember(s, ref) = ps :-
     query type
-      filter P* S? E*               // any ancestor (E), maybe static (S)
+      filter P* S?
       and { d' :- d' == Member{ref@_} }
-      min $ < P, $ < E, $ < S, E < P, P < S // prefer super classes (E) over lexical parents (P), prefer lexical parents (P) over static parents (S)
+      min $ < P, $ < S, P < S
       in s |-> ps.
 
 rules typeOfMember : scope * ID -> TYPE
-  typeOfMember(s, ref) = T :- {decl}
-    resolveMember(s, ref) == [(_, (decl, T))|_].
+  typeOfMember(s, name) = T :- {decl}
+    resolveMember(s, name) == [(_, (decl, T))|_].
 
 rules
   programOk(Start-Plhdr()).
