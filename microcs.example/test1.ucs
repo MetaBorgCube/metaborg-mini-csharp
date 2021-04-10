@@ -13,7 +13,7 @@ class Node {
 }
 
 class Test {
-    public static Node BuildTree() {
+    public Node BuildTree() {
 //        Node n = new Node();
 //        Test t = new Test();
       return $Exp;

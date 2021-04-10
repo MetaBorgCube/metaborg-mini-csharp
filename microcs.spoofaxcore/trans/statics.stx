@@ -13,6 +13,7 @@ signature
     OBJECT      : TYPE
     NULL        : TYPE
     VOID        : TYPE
+    BOTTOM      : TYPE
   sorts
     DECL = (path * (occurrence * TYPE))
 
@@ -75,10 +76,10 @@ rules typeOfParam : scope * ParamDecl -> TYPE
 rules finalStmtOk : scope * FinalStmt * TYPE
   finalStmtOk(s, Return(e), T) :- {TE}
     typeOfExp(s, e) == TE,
-    assignableTo(TE, T).
+    subtypeOf(TE, T).
   finalStmtOk(s, Throw(e), _) :- {T}
     typeOfExp(s, e) == T,
-    assignableTo(T, CLASS("Exception", _)).
+    subtypeOf(T, CLASS("Exception", _)).
   finalStmtOk(s, NoReturn(), VOID()).
 
 
@@ -101,7 +102,7 @@ rules stmtOk : scope * Stmt
   stmtOk(bs, DeclareTypedVarInit(type, name, e)) :- {T TE}
     typeOfType(bs, type) == T,
     typeOfExp(bs, e) == TE,
-    assignableTo(TE, T),
+    subtypeOf(TE, T),
     declareVar(bs, name, T).
 
   stmtOk(bs, DeclareVarInit(name, e)) :- {T}
@@ -111,7 +112,7 @@ rules stmtOk : scope * Stmt
   stmtOk(bs, Assign(name, e)) :- {T TE}
     typeOfVarMemberClass(bs, name) == T,
     typeOfExp(bs, e) == TE,
-    assignableTo(TE, T).
+    subtypeOf(TE, T).
 
 rules typeOfExp : scope * Exp -> TYPE
   typesOfExps maps typeOfExp(*, list(*)) = list(*)
@@ -256,9 +257,10 @@ rules lub : TYPE * TYPE -> TYPE
   lub(NULL(), T@CLASS(_, _))    = T.
   lub(T,      T)                = T.
 
-rules assignableTo : TYPE * TYPE
-  assignableTo(T, T).
-  assignableTo(NULL(),    T@CLASS(_, _)).
+rules subtypeOf : TYPE * TYPE
+  subtypeOf(T, T).
+  subtypeOf(NULL(), T@CLASS(_, _)).
+  subtypeOf(BOTTOM(), _).
 
 // Complex Resolution
 rules typeOfVarMemberClass : scope * ID -> TYPE
@@ -290,10 +292,10 @@ rules
   programOk(Start-Plhdr()).
   classOk(_, ClassDecl-Plhdr()).
   memberOk(_, MemberDecl-Plhdr()).
-  typeOfParam(_, ParamDecl-Plhdr()) = _.
+  typeOfParam(_, ParamDecl-Plhdr()) = BOTTOM().
   stmtOk(_, Stmt-Plhdr()).
-  typeOfExp(_, Exp-Plhdr()) = _.
-  typeOfRef(_, Ref-Plhdr()) = _.
-  typeOfCall(_, Exp-Plhdr()) = _.
-  typeOfNew(_, Exp-Plhdr()) = _.
-  typeOfType(_, Type-Plhdr()) = _.
+  typeOfExp(_, Exp-Plhdr()) = BOTTOM().
+  typeOfRef(_, Ref-Plhdr()) = BOTTOM().
+  typeOfCall(_, Exp-Plhdr()) = BOTTOM().
+  typeOfNew(_, Exp-Plhdr()) = BOTTOM().
+  typeOfType(_, Type-Plhdr()) = BOTTOM().
