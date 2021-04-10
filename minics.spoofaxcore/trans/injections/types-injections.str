@@ -21,13 +21,13 @@ rules
     ?Type-Plhdr()
 
   is-minics-Type-or-inj =
-    ?Int()
+    ?IntType()
 
   is-minics-Type-or-inj =
-    ?Bool()
+    ?BoolType()
 
   is-minics-Type-or-inj =
-    ?Object()
+    ?ObjectType()
 
   is-minics-Type-or-inj =
     ?ClassType(_)
@@ -49,17 +49,17 @@ rules
 
   explicate-injections-minics-Type =
     origin-track-forced(
-      \ Int(){anno*} -> Int(){anno*} \
+      \ IntType(){anno*} -> IntType(){anno*} \
     )
 
   explicate-injections-minics-Type =
     origin-track-forced(
-      \ Bool(){anno*} -> Bool(){anno*} \
+      \ BoolType(){anno*} -> BoolType(){anno*} \
     )
 
   explicate-injections-minics-Type =
     origin-track-forced(
-      \ Object(){anno*} -> Object(){anno*} \
+      \ ObjectType(){anno*} -> ObjectType(){anno*} \
     )
 
   explicate-injections-minics-Type =
@@ -87,17 +87,17 @@ rules
 
   implicate-injections-minics-Type =
     origin-track-forced(
-      \ Int(){anno*} -> Int(){anno*} \
+      \ IntType(){anno*} -> IntType(){anno*} \
     )
 
   implicate-injections-minics-Type =
     origin-track-forced(
-      \ Bool(){anno*} -> Bool(){anno*} \
+      \ BoolType(){anno*} -> BoolType(){anno*} \
     )
 
   implicate-injections-minics-Type =
     origin-track-forced(
-      \ Object(){anno*} -> Object(){anno*} \
+      \ ObjectType(){anno*} -> ObjectType(){anno*} \
     )
 
   implicate-injections-minics-Type =
@@ -125,17 +125,17 @@ rules
 
   upgrade-placeholders-minics-Type =
     origin-track-forced(
-      \ Int(){anno*} -> Int(){anno*} \
+      \ IntType(){anno*} -> IntType(){anno*} \
     )
 
   upgrade-placeholders-minics-Type =
     origin-track-forced(
-      \ Bool(){anno*} -> Bool(){anno*} \
+      \ BoolType(){anno*} -> BoolType(){anno*} \
     )
 
   upgrade-placeholders-minics-Type =
     origin-track-forced(
-      \ Object(){anno*} -> Object(){anno*} \
+      \ ObjectType(){anno*} -> ObjectType(){anno*} \
     )
 
   upgrade-placeholders-minics-Type =
@@ -164,17 +164,17 @@ rules
 
   downgrade-placeholders-minics-Type =
     origin-track-forced(
-      \ Int(){anno*} -> Int(){anno*} \
+      \ IntType(){anno*} -> IntType(){anno*} \
     )
 
   downgrade-placeholders-minics-Type =
     origin-track-forced(
-      \ Bool(){anno*} -> Bool(){anno*} \
+      \ BoolType(){anno*} -> BoolType(){anno*} \
     )
 
   downgrade-placeholders-minics-Type =
     origin-track-forced(
-      \ Object(){anno*} -> Object(){anno*} \
+      \ ObjectType(){anno*} -> ObjectType(){anno*} \
     )
 
   downgrade-placeholders-minics-Type =
