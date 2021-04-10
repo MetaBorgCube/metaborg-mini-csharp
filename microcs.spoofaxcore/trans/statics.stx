@@ -110,7 +110,7 @@ rules stmtOk : scope * Stmt
     declareVar(bs, name, T).
 
   stmtOk(bs, Assign(name, e)) :- {T TE}
-    typeOfVarMemberClass(bs, name) == T,
+    typeOfVarMember(bs, name) == T,
     typeOfExp(bs, e) == TE,
     subtypeOf(TE, T).
 
@@ -173,7 +173,7 @@ rules typeOfRef : scope * Ref -> TYPE
   typesOfRefs maps typeOfRef(*, list(*)) = list(*)
 
   typeOfRef(s, Var(name)) = T :-
-    typeOfVarMemberClass(s, name) == T.
+    typeOfVarMember(s, name) == T.
 
   typeOfRef(s, This()) = T :- {decl}
     resolveVar(s, "this") == [(_, (decl, T))|_].
@@ -268,29 +268,20 @@ rules subtypeOf : TYPE * TYPE
   subtypeOf(BOTTOM(), _).
 
 // Complex Resolution
-rules typeOfVarMemberClass : scope * ID -> TYPE
-  typeOfVarMemberClass(s, name) = T :- {decl}
+rules typeOfVarMember : scope * ID -> TYPE
+  typeOfVarMember(s, name) = T :- {decl}
     // resolution order:
     // 1. variables
     // 2. member
-    // 3. type
-    resolveVarMemberClass(s, name) == [(_, (decl, T))|_].
+    resolveVarMember(s, name) == [(_, (decl, T))|_].
 
-rules resolveVarMemberClass : scope * ID -> list(DECL)
-  resolveVarMemberClass(s, name)
-    = unwrapVarMemberClass(s, name, resolveVar(s, name)).
+rules resolveVarMember : scope * ID -> list(DECL)
+  resolveVarMember(s, name)
+    = unwrapVarMember(s, name, resolveVar(s, name)).
 
-rules unwrapVarMemberClass : scope * ID * list(DECL) -> list(DECL)
-  unwrapVarMemberClass(_, _, ps@[(_, (Var{decl@_}, T))|_]) = ps.
-  unwrapVarMemberClass(s, name, []) = resolveMemberClass(s, name).
-
-rules resolveMemberClass : scope * ID -> list(DECL)
-  resolveMemberClass(s, name)
-    = unwrapMemberClass(s, name, resolveMember(s, name)).
-
-rules unwrapMemberClass : scope * ID * list(DECL) -> list(DECL)
-  unwrapMemberClass(_, _, ps@[(_, (Member{decl@_}, T))|_]) = ps.
-  unwrapMemberClass(s, name, []) = resolveClass(s, name).
+rules unwrapVarMember : scope * ID * list(DECL) -> list(DECL)
+  unwrapVarMember(_, _, ps@[(_, (Var{decl@_}, T))|_]) = ps.
+  unwrapVarMember(s, name, []) = resolveMember(s, name).
 
 // Placeholders
 rules
