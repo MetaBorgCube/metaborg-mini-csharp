@@ -1,13 +1,10 @@
 module microcs
 
-imports
-  Common
+imports Common
 
-context-free start-symbols
-  Start
+context-free start-symbols Start
 
-context-free sorts
-  Start
+context-free sorts Start
 
 context-free syntax
   Start.Program = <
@@ -39,9 +36,7 @@ context-free syntax
   FinalStmt.Throw      = <throw <Exp>;>
   FinalStmt.NoReturn   = <>
 
-context-free sorts
-  Stmt
-
+context-free sorts Stmt
 context-free syntax
   Stmt.Block = < {
       <{Stmt "\n"}*>
@@ -55,9 +50,7 @@ context-free syntax
   Stmt.Nop    = <;>
   Stmt.Exp    = <<Exp>;>
 
-context-free sorts
-  Exp
-
+context-free sorts Exp
 context-free syntax
   Exp        = <<Ref>>
   Exp.Call   = <<Exp>(<{Exp ", "}*>)>
@@ -80,16 +73,12 @@ context-free syntax
   Exp.Cond   = <<Exp> ? <Exp> : <Exp>>
   Exp        = <(<Exp>)> {bracket}
 
-context-free sorts
-  Ref
-
+context-free sorts Ref
 context-free syntax
   Ref.Var = <<ID>>
   Ref.This = <this>
 
-context-free sorts
-  Type
-
+context-free sorts Type
 context-free syntax
   Type.VoidType   = <void>
   Type.IntType    = <int>
