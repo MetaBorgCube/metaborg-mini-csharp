@@ -1,0 +1,604 @@
+module injections/Common-injections
+
+imports
+  signatures/Common-sig
+  pp/Common-pp
+  libspoofax/term/origin
+
+
+signature
+  constructors
+    ID-Plhdr             : ID
+    INT-Plhdr            : INT
+    STRING-Plhdr         : STRING
+    STRING_CHAR-Plhdr    : STRING_CHAR
+    BACKSLASH_CHAR-Plhdr : BACKSLASH_CHAR
+    COMMENT_CHAR-Plhdr   : COMMENT_CHAR
+    INSIDE_COMMENT-Plhdr : INSIDE_COMMENT
+    NEWLINE_EOF-Plhdr    : NEWLINE_EOF
+    EOF-Plhdr            : EOF
+
+
+rules
+
+  is-microcs-ID-or-inj =
+    is-string
+
+  is-microcs-ID-or-inj =
+    ?ID-Plhdr()
+
+  is-microcs-INT-or-inj =
+    is-string
+
+  is-microcs-INT-or-inj =
+    ?INT-Plhdr()
+
+  is-microcs-STRING-or-inj =
+    is-string
+
+  is-microcs-STRING-or-inj =
+    ?STRING-Plhdr()
+
+  is-microcs-STRING_CHAR-or-inj =
+    is-string
+
+  is-microcs-STRING_CHAR-or-inj =
+    ?STRING_CHAR-Plhdr()
+
+  is-microcs-BACKSLASH_CHAR-or-inj =
+    is-string
+
+  is-microcs-BACKSLASH_CHAR-or-inj =
+    ?BACKSLASH_CHAR-Plhdr()
+
+  is-microcs-COMMENT_CHAR-or-inj =
+    is-string
+
+  is-microcs-COMMENT_CHAR-or-inj =
+    ?COMMENT_CHAR-Plhdr()
+
+  is-microcs-INSIDE_COMMENT-or-inj =
+    is-string
+
+  is-microcs-INSIDE_COMMENT-or-inj =
+    ?INSIDE_COMMENT-Plhdr()
+
+  is-microcs-NEWLINE_EOF-or-inj =
+    is-string
+
+  is-microcs-NEWLINE_EOF-or-inj =
+    ?NEWLINE_EOF-Plhdr()
+
+  is-microcs-EOF-or-inj =
+    is-string
+
+  is-microcs-EOF-or-inj =
+    ?EOF-Plhdr()
+
+
+rules
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-ID
+
+  explicate-injections-microcs-ID =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-ID-or-inj> t \
+    )
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-INT
+
+  explicate-injections-microcs-INT =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-INT-or-inj> t \
+    )
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-STRING
+
+  explicate-injections-microcs-STRING =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-STRING-or-inj> t \
+    )
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-STRING_CHAR
+
+  explicate-injections-microcs-STRING_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-STRING_CHAR-or-inj> t \
+    )
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-BACKSLASH_CHAR
+
+  explicate-injections-microcs-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-BACKSLASH_CHAR-or-inj> t \
+    )
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-COMMENT_CHAR
+
+  explicate-injections-microcs-COMMENT_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-COMMENT_CHAR-or-inj> t \
+    )
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-INSIDE_COMMENT
+
+  explicate-injections-microcs-INSIDE_COMMENT =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-INSIDE_COMMENT-or-inj> t \
+    )
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-NEWLINE_EOF
+
+  explicate-injections-microcs-NEWLINE_EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-NEWLINE_EOF-or-inj> t \
+    )
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-EOF
+
+  explicate-injections-microcs-EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-EOF-or-inj> t \
+    )
+
+
+rules
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-ID
+
+  implicate-injections-microcs-ID =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-ID-or-inj> t \
+    )
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-INT
+
+  implicate-injections-microcs-INT =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-INT-or-inj> t \
+    )
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-STRING
+
+  implicate-injections-microcs-STRING =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-STRING-or-inj> t \
+    )
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-STRING_CHAR
+
+  implicate-injections-microcs-STRING_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-STRING_CHAR-or-inj> t \
+    )
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-BACKSLASH_CHAR
+
+  implicate-injections-microcs-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-BACKSLASH_CHAR-or-inj> t \
+    )
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-COMMENT_CHAR
+
+  implicate-injections-microcs-COMMENT_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-COMMENT_CHAR-or-inj> t \
+    )
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-INSIDE_COMMENT
+
+  implicate-injections-microcs-INSIDE_COMMENT =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-INSIDE_COMMENT-or-inj> t \
+    )
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-NEWLINE_EOF
+
+  implicate-injections-microcs-NEWLINE_EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-NEWLINE_EOF-or-inj> t \
+    )
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-EOF
+
+  implicate-injections-microcs-EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-microcs-EOF-or-inj> t \
+    )
+
+
+rules
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-ID
+
+  upgrade-placeholders-microcs-ID =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-ID =
+    origin-track-forced(
+      \ ID-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "ID" \
+    )
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-INT
+
+  upgrade-placeholders-microcs-INT =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-INT =
+    origin-track-forced(
+      \ INT-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "INT" \
+    )
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-STRING
+
+  upgrade-placeholders-microcs-STRING =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-STRING =
+    origin-track-forced(
+      \ STRING-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "STRING" \
+    )
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-STRING_CHAR
+
+  upgrade-placeholders-microcs-STRING_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-STRING_CHAR =
+    origin-track-forced(
+      \ STRING_CHAR-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "STRING_CHAR" \
+    )
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-BACKSLASH_CHAR
+
+  upgrade-placeholders-microcs-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ BACKSLASH_CHAR-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "BACKSLASH_CHAR" \
+    )
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-COMMENT_CHAR
+
+  upgrade-placeholders-microcs-COMMENT_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-COMMENT_CHAR =
+    origin-track-forced(
+      \ COMMENT_CHAR-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "COMMENT_CHAR" \
+    )
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-INSIDE_COMMENT
+
+  upgrade-placeholders-microcs-INSIDE_COMMENT =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-INSIDE_COMMENT =
+    origin-track-forced(
+      \ INSIDE_COMMENT-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "INSIDE_COMMENT" \
+    )
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-NEWLINE_EOF
+
+  upgrade-placeholders-microcs-NEWLINE_EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-NEWLINE_EOF =
+    origin-track-forced(
+      \ NEWLINE_EOF-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "NEWLINE_EOF" \
+    )
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-EOF
+
+  upgrade-placeholders-microcs-EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  upgrade-placeholders-microcs-EOF =
+    origin-track-forced(
+      \ EOF-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "EOF" \
+    )
+
+
+rules
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-ID
+
+  downgrade-placeholders-microcs-ID =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-ID =
+    origin-track-forced(
+      \ p{anno*} -> ID-Plhdr(){anno*}
+        where <(is-placeholder + ?ID-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-INT
+
+  downgrade-placeholders-microcs-INT =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-INT =
+    origin-track-forced(
+      \ p{anno*} -> INT-Plhdr(){anno*}
+        where <(is-placeholder + ?INT-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-STRING
+
+  downgrade-placeholders-microcs-STRING =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-STRING =
+    origin-track-forced(
+      \ p{anno*} -> STRING-Plhdr(){anno*}
+        where <(is-placeholder + ?STRING-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-STRING_CHAR
+
+  downgrade-placeholders-microcs-STRING_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-STRING_CHAR =
+    origin-track-forced(
+      \ p{anno*} -> STRING_CHAR-Plhdr(){anno*}
+        where <(is-placeholder + ?STRING_CHAR-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-BACKSLASH_CHAR
+
+  downgrade-placeholders-microcs-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-BACKSLASH_CHAR =
+    origin-track-forced(
+      \ p{anno*} -> BACKSLASH_CHAR-Plhdr(){anno*}
+        where <(is-placeholder + ?BACKSLASH_CHAR-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-COMMENT_CHAR
+
+  downgrade-placeholders-microcs-COMMENT_CHAR =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-COMMENT_CHAR =
+    origin-track-forced(
+      \ p{anno*} -> COMMENT_CHAR-Plhdr(){anno*}
+        where <(is-placeholder + ?COMMENT_CHAR-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-INSIDE_COMMENT
+
+  downgrade-placeholders-microcs-INSIDE_COMMENT =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-INSIDE_COMMENT =
+    origin-track-forced(
+      \ p{anno*} -> INSIDE_COMMENT-Plhdr(){anno*}
+        where <(is-placeholder + ?INSIDE_COMMENT-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-NEWLINE_EOF
+
+  downgrade-placeholders-microcs-NEWLINE_EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-NEWLINE_EOF =
+    origin-track-forced(
+      \ p{anno*} -> NEWLINE_EOF-Plhdr(){anno*}
+        where <(is-placeholder + ?NEWLINE_EOF-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-EOF
+
+  downgrade-placeholders-microcs-EOF =
+    origin-track-forced(
+      \ t -> t
+        where <is-string> t \
+    )
+
+  downgrade-placeholders-microcs-EOF =
+    origin-track-forced(
+      \ p{anno*} -> EOF-Plhdr(){anno*}
+        where <(is-placeholder + ?EOF-Plhdr())> p \
+    )
+
+
+rules
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ []{anno*} -> None(){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [t]{anno*} -> Some(<s> t){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [_, _|_] -> <fatal-err(|"Cannot implicate multi-element list to option.")> \
+    )
+
+
+rules
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <is-list> l
+        with l' := <map(s)> l \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <fail> l
+        with l' := <make-placeholder> "list" \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> None(){anno*} \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> Some(<s> t){anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ p -> p'
+        where <is-placeholder> p
+        with p' := [] \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ []{anno*} -> []{anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ [e|es]{anno*} -> [e'|es']{anno*}
+        with e' := <s> e
+             ; es' := <downgrade-list(s)> es \
+    )

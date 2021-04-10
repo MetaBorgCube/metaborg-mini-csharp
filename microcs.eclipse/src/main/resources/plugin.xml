@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <!-- Context -->
+  <extension point="org.eclipse.ui.contexts">
+    <context
+      id="microcs.eclipse.context"
+      parentId="org.eclipse.ui.textEditorScope"
+      name="Editing Mini C# files"
+      description="Editing Mini C# files"
+    />
+  </extension>
+
+
+  <!-- Editor -->
+  <extension point="org.eclipse.ui.editors">
+    <editor
+      name="Mini C# editor"
+      extensions="mcs"
+      class="mb.microcs.eclipse.MicrocsEditor"
+      id="microcs.eclipse.editor"
+    />
+  </extension>
+
+
+  <!-- Markers -->
+  <!-- Base -->
+  <extension
+    point="org.eclipse.core.resources.markers"
+    id="microcs.eclipse.marker"
+    name="Mini C# marker"
+  >
+    <super type="org.eclipse.core.resources.textmarker"/>
+    <super type="org.eclipse.core.resources.problemmarker"/>
+    <persistent value="true"/>
+  </extension>
+  <!-- Info -->
+  <extension
+    point="org.eclipse.core.resources.markers"
+    id="microcs.eclipse.marker.info"
+    name="Mini C# info marker"
+  >
+    <super type="microcs.eclipse.marker"/>
+    <persistent value="true"/>
+  </extension>
+  <!-- Warning -->
+  <extension
+    point="org.eclipse.core.resources.markers"
+    id="microcs.eclipse.marker.warning"
+    name="Mini C# warning marker"
+  >
+    <super type="microcs.eclipse.marker"/>
+    <persistent value="true"/>
+  </extension>
+  <!-- Error -->
+  <extension
+    point="org.eclipse.core.resources.markers"
+    id="microcs.eclipse.marker.error"
+    name="Mini C# error marker"
+  >
+    <super type="microcs.eclipse.marker"/>
+    <persistent value="true"/>
+  </extension>
+
+
+  <!-- Annotations -->
+  <extension point="org.eclipse.ui.editors.annotationTypes">
+    <!-- Info -->
+    <type
+      markerType="microcs.eclipse.marker.info"
+      super="org.eclipse.ui.workbench.texteditor.info"
+      markerSeverity="0"
+      name="Mini C# info annotation"
+    />
+    <!-- Warning -->
+    <type
+      markerType="microcs.eclipse.marker.warning"
+      super="org.eclipse.ui.workbench.texteditor.warning"
+      markerSeverity="1"
+      name="Mini C# warning annotation"
+    />
+    <!-- Error -->
+    <type
+      markerType="microcs.eclipse.marker.error"
+      super="org.eclipse.ui.workbench.texteditor.error"
+      markerSeverity="2"
+      name="Mini C# error annotation"
+    />
+  </extension>
+
+
+  <!-- Document Provider -->
+  <extension point="org.eclipse.ui.editors.documentProviders">
+    <provider
+      extensions="mcs"
+      class="mb.microcs.eclipse.MicrocsDocumentProvider"
+      id="microcs.eclipse.documentprovider"
+    />
+  </extension>
+
+
+  <!-- Builder -->
+  <extension
+    point="org.eclipse.core.resources.builders"
+    name="Mini C# builder"
+    id="builder"
+  >
+    <builder
+      hasNature="true"
+      isConfigurable="false"
+      callOnEmptyDelta="false"
+      supportsConfigurations="false"
+    >
+      <run class="mb.microcs.eclipse.MicrocsProjectBuilder"/>
+    </builder>
+  </extension>
+
+
+  <!-- Nature -->
+  <extension
+    point="org.eclipse.core.resources.natures"
+    name="Mini C# nature"
+    id="nature"
+  >
+    <runtime>
+      <run class="mb.microcs.eclipse.MicrocsNature"/>
+    </runtime>
+    <builder id="microcs.eclipse.builder"/>
+  </extension>
+
+
+  <!-- Menus -->
+  <extension point="org.eclipse.ui.menus">
+    <!-- Project Explorer context menu -->
+    <menuContribution locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+      <dynamic id="microcs.eclipse.menu.resource.context" class="mb.microcs.eclipse.MicrocsResourceContextMenu"/>
+    </menuContribution>
+    <!-- Package Explorer context menu -->
+    <menuContribution locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?after=additions">
+      <dynamic id="microcs.eclipse.menu.resource.context" class="mb.microcs.eclipse.MicrocsResourceContextMenu"/>
+    </menuContribution>
+    <!-- Editor context menu -->
+    <menuContribution locationURI="popup:#SpoofaxEditorContext?after=additions">
+      <dynamic id="microcs.eclipse.menu.editor.context" class="mb.microcs.eclipse.MicrocsEditorContextMenu"/>
+    </menuContribution>
+    <!-- Main menu -->
+    <menuContribution locationURI="menu:org.eclipse.ui.main.menu">
+      <menu id="microcs.eclipse.menu.main" label="Mini C#">
+        <dynamic id="microcs.eclipse.menu.main.dynamic" class="mb.microcs.eclipse.MicrocsMainMenu"/>
+        <visibleWhen>
+          <with variable="activeContexts">
+            <iterate ifEmpty="false" operator="or">
+              <equals value="microcs.eclipse.context"/>
+            </iterate>
+          </with>
+        </visibleWhen>
+      </menu>
+    </menuContribution>
+  </extension>
+
+
+  <!-- Commands and Handlers -->
+  <!-- Add/Remove Nature -->
+  <extension point="org.eclipse.ui.commands">
+    <command id="microcs.eclipse.nature.add" name="Add Mini C# nature"/>
+    <command id="microcs.eclipse.nature.remove" name="Remove Mini C# nature"/>
+  </extension>
+  <extension point="org.eclipse.ui.handlers">
+    <handler
+      commandId="microcs.eclipse.nature.add"
+      class="mb.microcs.eclipse.MicrocsAddNatureHandler"
+    />
+    <handler
+      commandId="microcs.eclipse.nature.remove"
+      class="mb.microcs.eclipse.MicrocsRemoveNatureHandler"
+    />
+  </extension>
+  <!-- Observe/Unobserve -->
+  <extension point="org.eclipse.ui.commands">
+    <command id="microcs.eclipse.observe" name="Observe file(s) for Mini C#-related tasks"/>
+    <command id="microcs.eclipse.unobserve" name="Unobserve file(s) for Mini C#-related tasks"/>
+  </extension>
+  <extension point="org.eclipse.ui.handlers">
+    <handler
+      commandId="microcs.eclipse.observe"
+      class="mb.microcs.eclipse.MicrocsObserveHandler"
+    />
+    <handler
+      commandId="microcs.eclipse.unobserve"
+      class="mb.microcs.eclipse.MicrocsUnobserveHandler"
+    />
+  </extension>
+  <!-- Transform -->
+  <extension point="org.eclipse.ui.commands">
+    <command id="microcs.eclipse.runcommand" name="Run Mini C# command">
+      <commandParameter id="data" name="Data" optional="false"/>
+    </command>
+  </extension>
+  <extension point="org.eclipse.ui.handlers">
+    <handler
+      commandId="microcs.eclipse.runcommand"
+      class="mb.microcs.eclipse.MicrocsRunCommandHandler"
+    />
+  </extension>
+</plugin>

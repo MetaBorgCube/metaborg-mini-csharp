@@ -1,0 +1,5 @@
+shared.defaultArtifactId=microcs
+shared.defaultClassPrefix=Microcs
+shared.defaultGroupId=org.metaborg
+shared.defaultPackageId=mb.microcs
+shared.defaultVersion=0.1.0

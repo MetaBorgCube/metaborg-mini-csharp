@@ -1,0 +1,1819 @@
+module injections/microcs-injections
+
+imports
+  signatures/microcs-sig
+  pp/microcs-pp
+  libspoofax/term/origin
+
+
+imports
+  injections/Common-injections
+
+
+signature
+  constructors
+    Ref2Exp : Ref -> Exp
+
+
+signature
+  constructors
+    Start-Plhdr      : Start
+    ClassDecl-Plhdr  : ClassDecl
+    MemberDecl-Plhdr : MemberDecl
+    ParamDecl-Plhdr  : ParamDecl
+    FinalStmt-Plhdr  : FinalStmt
+    Stmt-Plhdr       : Stmt
+    Exp-Plhdr        : Exp
+    Ref-Plhdr        : Ref
+    Type-Plhdr       : Type
+
+
+rules
+
+  is-microcs-Start-or-inj =
+    ?Start-Plhdr()
+
+  is-microcs-ClassDecl-or-inj =
+    ?ClassDecl-Plhdr()
+
+  is-microcs-MemberDecl-or-inj =
+    ?MemberDecl-Plhdr()
+
+  is-microcs-ParamDecl-or-inj =
+    ?ParamDecl-Plhdr()
+
+  is-microcs-FinalStmt-or-inj =
+    ?FinalStmt-Plhdr()
+
+  is-microcs-Stmt-or-inj =
+    ?Stmt-Plhdr()
+
+  is-microcs-Exp-or-inj =
+    ?Exp-Plhdr()
+
+  is-microcs-Ref-or-inj =
+    ?Ref-Plhdr()
+
+  is-microcs-Type-or-inj =
+    ?Type-Plhdr()
+
+  is-microcs-Start-or-inj =
+    ?Program(_)
+
+  is-microcs-ClassDecl-or-inj =
+    ?Class(_, _)
+
+  is-microcs-MemberDecl-or-inj =
+    ?Field(_, _)
+
+  is-microcs-MemberDecl-or-inj =
+    ?Method(_, _, _, _, _)
+
+  is-microcs-ParamDecl-or-inj =
+    ?Param(_, _)
+
+  is-microcs-FinalStmt-or-inj =
+    ?Return(_)
+
+  is-microcs-FinalStmt-or-inj =
+    ?Throw(_)
+
+  is-microcs-FinalStmt-or-inj =
+    ?NoReturn()
+
+  is-microcs-Stmt-or-inj =
+    ?Block(_)
+
+  is-microcs-Stmt-or-inj =
+    ?DeclareTypedVar(_, _)
+
+  is-microcs-Stmt-or-inj =
+    ?DeclareTypedVarInit(_, _, _)
+
+  is-microcs-Stmt-or-inj =
+    ?DeclareVarInit(_, _)
+
+  is-microcs-Stmt-or-inj =
+    ?Assign(_, _)
+
+  is-microcs-Stmt-or-inj =
+    ?Nop()
+
+  is-microcs-Stmt-or-inj =
+    ?Exp(_)
+
+  is-microcs-Exp-or-inj =
+    is-microcs-Ref-or-inj
+
+  is-microcs-Exp-or-inj =
+    ?Call(_, _)
+
+  is-microcs-Exp-or-inj =
+    ?New(_)
+
+  is-microcs-Exp-or-inj =
+    ?Member(_, _)
+
+  is-microcs-Exp-or-inj =
+    ?Null()
+
+  is-microcs-Exp-or-inj =
+    ?True()
+
+  is-microcs-Exp-or-inj =
+    ?False()
+
+  is-microcs-Exp-or-inj =
+    ?Lt(_, _)
+
+  is-microcs-Exp-or-inj =
+    ?Eq(_, _)
+
+  is-microcs-Exp-or-inj =
+    ?Neq(_, _)
+
+  is-microcs-Exp-or-inj =
+    ?And(_, _)
+
+  is-microcs-Exp-or-inj =
+    ?Not(_)
+
+  is-microcs-Exp-or-inj =
+    ?Int(_)
+
+  is-microcs-Exp-or-inj =
+    ?Mul(_, _)
+
+  is-microcs-Exp-or-inj =
+    ?Add(_, _)
+
+  is-microcs-Exp-or-inj =
+    ?Cond(_, _, _)
+
+  is-microcs-Ref-or-inj =
+    ?Var(_)
+
+  is-microcs-Ref-or-inj =
+    ?This()
+
+  is-microcs-Type-or-inj =
+    ?VoidType()
+
+  is-microcs-Type-or-inj =
+    ?IntType()
+
+  is-microcs-Type-or-inj =
+    ?BoolType()
+
+  is-microcs-Type-or-inj =
+    ?ObjectType()
+
+  is-microcs-Type-or-inj =
+    ?ClassType(_)
+
+
+rules
+
+  is-microcs-inj-cons =
+    is-microcs-Start-inj-cons
+
+  is-microcs-Start-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
+    is-microcs-ClassDecl-inj-cons
+
+  is-microcs-ClassDecl-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
+    is-microcs-MemberDecl-inj-cons
+
+  is-microcs-MemberDecl-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
+    is-microcs-ParamDecl-inj-cons
+
+  is-microcs-ParamDecl-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
+    is-microcs-FinalStmt-inj-cons
+
+  is-microcs-FinalStmt-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
+    is-microcs-Stmt-inj-cons
+
+  is-microcs-Stmt-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
+    is-microcs-Exp-inj-cons
+
+  is-microcs-Exp-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
+    is-microcs-Ref-inj-cons
+
+  is-microcs-Ref-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
+    is-microcs-Type-inj-cons
+
+  is-microcs-Type-inj-cons =
+    fail
+
+  is-microcs-Ref-inj-cons =
+    ?Ref2Exp(_)
+
+
+rules
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-Start
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-ClassDecl
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-MemberDecl
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-ParamDecl
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-FinalStmt
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-Stmt
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-Exp
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-Ref
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-Type
+
+  explicate-injections-microcs-Start =
+    origin-track-forced(
+      \ Program(classDecls){anno*} -> Program(classDecls'){anno*}
+        with classDecls' := <map(explicate-injections-microcs-ClassDecl)> classDecls \
+    )
+
+  explicate-injections-microcs-ClassDecl =
+    origin-track-forced(
+      \ Class(id_, memberDecls){anno*} -> Class(id_', memberDecls'){anno*}
+        with id_' := <explicate-injections-microcs-ID> id_
+             ; memberDecls' := <map(explicate-injections-microcs-MemberDecl)> memberDecls \
+    )
+
+  explicate-injections-microcs-MemberDecl =
+    origin-track-forced(
+      \ Field(type, id_){anno*} -> Field(type', id_'){anno*}
+        with type' := <explicate-injections-microcs-Type> type
+             ; id_' := <explicate-injections-microcs-ID> id_ \
+    )
+
+  explicate-injections-microcs-MemberDecl =
+    origin-track-forced(
+      \ Method(type, id_, paramDecls, stmts, finalStmt){anno*} -> Method(type', id_', paramDecls', stmts', finalStmt'){anno*}
+        with type' := <explicate-injections-microcs-Type> type
+             ; id_' := <explicate-injections-microcs-ID> id_
+             ; paramDecls' := <map(explicate-injections-microcs-ParamDecl)> paramDecls
+             ; stmts' := <map(explicate-injections-microcs-Stmt)> stmts
+             ; finalStmt' := <explicate-injections-microcs-FinalStmt> finalStmt \
+    )
+
+  explicate-injections-microcs-ParamDecl =
+    origin-track-forced(
+      \ Param(type, id_){anno*} -> Param(type', id_'){anno*}
+        with type' := <explicate-injections-microcs-Type> type
+             ; id_' := <explicate-injections-microcs-ID> id_ \
+    )
+
+  explicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ Return(exp){anno*} -> Return(exp'){anno*}
+        with exp' := <explicate-injections-microcs-Exp> exp \
+    )
+
+  explicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ Throw(exp){anno*} -> Throw(exp'){anno*}
+        with exp' := <explicate-injections-microcs-Exp> exp \
+    )
+
+  explicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ NoReturn(){anno*} -> NoReturn(){anno*} \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Block(stmts){anno*} -> Block(stmts'){anno*}
+        with stmts' := <map(explicate-injections-microcs-Stmt)> stmts \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareTypedVar(type, id_){anno*} -> DeclareTypedVar(type', id_'){anno*}
+        with type' := <explicate-injections-microcs-Type> type
+             ; id_' := <explicate-injections-microcs-ID> id_ \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareTypedVarInit(type, id_, exp){anno*} -> DeclareTypedVarInit(type', id_', exp'){anno*}
+        with type' := <explicate-injections-microcs-Type> type
+             ; id_' := <explicate-injections-microcs-ID> id_
+             ; exp' := <explicate-injections-microcs-Exp> exp \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareVarInit(id_, exp){anno*} -> DeclareVarInit(id_', exp'){anno*}
+        with id_' := <explicate-injections-microcs-ID> id_
+             ; exp' := <explicate-injections-microcs-Exp> exp \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Assign(id_, exp){anno*} -> Assign(id_', exp'){anno*}
+        with id_' := <explicate-injections-microcs-ID> id_
+             ; exp' := <explicate-injections-microcs-Exp> exp \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Nop(){anno*} -> Nop(){anno*} \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Exp(exp){anno*} -> Exp(exp'){anno*}
+        with exp' := <explicate-injections-microcs-Exp> exp \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ ref -> Ref2Exp(<explicate-injections-microcs-Ref> ref)
+        where <is-microcs-Ref-or-inj> ref \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Call(exp, exps){anno*} -> Call(exp', exps'){anno*}
+        with exp' := <explicate-injections-microcs-Exp> exp
+             ; exps' := <map(explicate-injections-microcs-Exp)> exps \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ New(type){anno*} -> New(type'){anno*}
+        with type' := <explicate-injections-microcs-Type> type \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <explicate-injections-microcs-Exp> exp
+             ; id_' := <explicate-injections-microcs-ID> id_ \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Null(){anno*} -> Null(){anno*} \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ True(){anno*} -> True(){anno*} \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ False(){anno*} -> False(){anno*} \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-microcs-Exp> exp1
+             ; exp2' := <explicate-injections-microcs-Exp> exp2 \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Eq(exp1, exp2){anno*} -> Eq(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-microcs-Exp> exp1
+             ; exp2' := <explicate-injections-microcs-Exp> exp2 \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Neq(exp1, exp2){anno*} -> Neq(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-microcs-Exp> exp1
+             ; exp2' := <explicate-injections-microcs-Exp> exp2 \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ And(exp1, exp2){anno*} -> And(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-microcs-Exp> exp1
+             ; exp2' := <explicate-injections-microcs-Exp> exp2 \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Not(exp){anno*} -> Not(exp'){anno*}
+        with exp' := <explicate-injections-microcs-Exp> exp \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Int(int){anno*} -> Int(int'){anno*}
+        with int' := <explicate-injections-microcs-INT> int \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Mul(exp1, exp2){anno*} -> Mul(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-microcs-Exp> exp1
+             ; exp2' := <explicate-injections-microcs-Exp> exp2 \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Add(exp1, exp2){anno*} -> Add(exp1', exp2'){anno*}
+        with exp1' := <explicate-injections-microcs-Exp> exp1
+             ; exp2' := <explicate-injections-microcs-Exp> exp2 \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Cond(exp1, exp2, exp3){anno*} -> Cond(exp1', exp2', exp3'){anno*}
+        with exp1' := <explicate-injections-microcs-Exp> exp1
+             ; exp2' := <explicate-injections-microcs-Exp> exp2
+             ; exp3' := <explicate-injections-microcs-Exp> exp3 \
+    )
+
+  explicate-injections-microcs-Ref =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <explicate-injections-microcs-ID> id_ \
+    )
+
+  explicate-injections-microcs-Ref =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  explicate-injections-microcs-Type =
+    origin-track-forced(
+      \ VoidType(){anno*} -> VoidType(){anno*} \
+    )
+
+  explicate-injections-microcs-Type =
+    origin-track-forced(
+      \ IntType(){anno*} -> IntType(){anno*} \
+    )
+
+  explicate-injections-microcs-Type =
+    origin-track-forced(
+      \ BoolType(){anno*} -> BoolType(){anno*} \
+    )
+
+  explicate-injections-microcs-Type =
+    origin-track-forced(
+      \ ObjectType(){anno*} -> ObjectType(){anno*} \
+    )
+
+  explicate-injections-microcs-Type =
+    origin-track-forced(
+      \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
+        with id_' := <explicate-injections-microcs-ID> id_ \
+    )
+
+  explicate-injections-microcs-Start =
+    origin-track-forced(
+      \ Start-Plhdr(){anno*} -> Start-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-ClassDecl =
+    origin-track-forced(
+      \ ClassDecl-Plhdr(){anno*} -> ClassDecl-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-MemberDecl =
+    origin-track-forced(
+      \ MemberDecl-Plhdr(){anno*} -> MemberDecl-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-ParamDecl =
+    origin-track-forced(
+      \ ParamDecl-Plhdr(){anno*} -> ParamDecl-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ FinalStmt-Plhdr(){anno*} -> FinalStmt-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Stmt-Plhdr(){anno*} -> Stmt-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Exp-Plhdr(){anno*} -> Exp-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-Ref =
+    origin-track-forced(
+      \ Ref-Plhdr(){anno*} -> Ref-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-Type =
+    origin-track-forced(
+      \ Type-Plhdr(){anno*} -> Type-Plhdr(){anno*} \
+    )
+
+  explicate-injections-microcs-Start =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-Start)> alts \
+    )
+
+  explicate-injections-microcs-ClassDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-ClassDecl)> alts \
+    )
+
+  explicate-injections-microcs-MemberDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-MemberDecl)> alts \
+    )
+
+  explicate-injections-microcs-ParamDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-ParamDecl)> alts \
+    )
+
+  explicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-FinalStmt)> alts \
+    )
+
+  explicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-Stmt)> alts \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-Exp)> alts \
+    )
+
+  explicate-injections-microcs-Ref =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-Ref)> alts \
+    )
+
+  explicate-injections-microcs-Type =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-Type)> alts \
+    )
+
+
+rules
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-Start
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-ClassDecl
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-MemberDecl
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-ParamDecl
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-FinalStmt
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-Stmt
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-Exp
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-Ref
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-Type
+
+  implicate-injections-microcs-Start =
+    origin-track-forced(
+      \ Program(classDecls){anno*} -> Program(classDecls'){anno*}
+        with classDecls' := <map(implicate-injections-microcs-ClassDecl)> classDecls \
+    )
+
+  implicate-injections-microcs-ClassDecl =
+    origin-track-forced(
+      \ Class(id_, memberDecls){anno*} -> Class(id_', memberDecls'){anno*}
+        with id_' := <implicate-injections-microcs-ID> id_
+             ; memberDecls' := <map(implicate-injections-microcs-MemberDecl)> memberDecls \
+    )
+
+  implicate-injections-microcs-MemberDecl =
+    origin-track-forced(
+      \ Field(type, id_){anno*} -> Field(type', id_'){anno*}
+        with type' := <implicate-injections-microcs-Type> type
+             ; id_' := <implicate-injections-microcs-ID> id_ \
+    )
+
+  implicate-injections-microcs-MemberDecl =
+    origin-track-forced(
+      \ Method(type, id_, paramDecls, stmts, finalStmt){anno*} -> Method(type', id_', paramDecls', stmts', finalStmt'){anno*}
+        with type' := <implicate-injections-microcs-Type> type
+             ; id_' := <implicate-injections-microcs-ID> id_
+             ; paramDecls' := <map(implicate-injections-microcs-ParamDecl)> paramDecls
+             ; stmts' := <map(implicate-injections-microcs-Stmt)> stmts
+             ; finalStmt' := <implicate-injections-microcs-FinalStmt> finalStmt \
+    )
+
+  implicate-injections-microcs-ParamDecl =
+    origin-track-forced(
+      \ Param(type, id_){anno*} -> Param(type', id_'){anno*}
+        with type' := <implicate-injections-microcs-Type> type
+             ; id_' := <implicate-injections-microcs-ID> id_ \
+    )
+
+  implicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ Return(exp){anno*} -> Return(exp'){anno*}
+        with exp' := <implicate-injections-microcs-Exp> exp \
+    )
+
+  implicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ Throw(exp){anno*} -> Throw(exp'){anno*}
+        with exp' := <implicate-injections-microcs-Exp> exp \
+    )
+
+  implicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ NoReturn(){anno*} -> NoReturn(){anno*} \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Block(stmts){anno*} -> Block(stmts'){anno*}
+        with stmts' := <map(implicate-injections-microcs-Stmt)> stmts \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareTypedVar(type, id_){anno*} -> DeclareTypedVar(type', id_'){anno*}
+        with type' := <implicate-injections-microcs-Type> type
+             ; id_' := <implicate-injections-microcs-ID> id_ \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareTypedVarInit(type, id_, exp){anno*} -> DeclareTypedVarInit(type', id_', exp'){anno*}
+        with type' := <implicate-injections-microcs-Type> type
+             ; id_' := <implicate-injections-microcs-ID> id_
+             ; exp' := <implicate-injections-microcs-Exp> exp \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareVarInit(id_, exp){anno*} -> DeclareVarInit(id_', exp'){anno*}
+        with id_' := <implicate-injections-microcs-ID> id_
+             ; exp' := <implicate-injections-microcs-Exp> exp \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Assign(id_, exp){anno*} -> Assign(id_', exp'){anno*}
+        with id_' := <implicate-injections-microcs-ID> id_
+             ; exp' := <implicate-injections-microcs-Exp> exp \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Nop(){anno*} -> Nop(){anno*} \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Exp(exp){anno*} -> Exp(exp'){anno*}
+        with exp' := <implicate-injections-microcs-Exp> exp \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Ref2Exp(ref) -> <implicate-injections-microcs-Ref> ref \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Call(exp, exps){anno*} -> Call(exp', exps'){anno*}
+        with exp' := <implicate-injections-microcs-Exp> exp
+             ; exps' := <map(implicate-injections-microcs-Exp)> exps \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ New(type){anno*} -> New(type'){anno*}
+        with type' := <implicate-injections-microcs-Type> type \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <implicate-injections-microcs-Exp> exp
+             ; id_' := <implicate-injections-microcs-ID> id_ \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Null(){anno*} -> Null(){anno*} \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ True(){anno*} -> True(){anno*} \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ False(){anno*} -> False(){anno*} \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-microcs-Exp> exp1
+             ; exp2' := <implicate-injections-microcs-Exp> exp2 \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Eq(exp1, exp2){anno*} -> Eq(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-microcs-Exp> exp1
+             ; exp2' := <implicate-injections-microcs-Exp> exp2 \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Neq(exp1, exp2){anno*} -> Neq(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-microcs-Exp> exp1
+             ; exp2' := <implicate-injections-microcs-Exp> exp2 \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ And(exp1, exp2){anno*} -> And(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-microcs-Exp> exp1
+             ; exp2' := <implicate-injections-microcs-Exp> exp2 \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Not(exp){anno*} -> Not(exp'){anno*}
+        with exp' := <implicate-injections-microcs-Exp> exp \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Int(int){anno*} -> Int(int'){anno*}
+        with int' := <implicate-injections-microcs-INT> int \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Mul(exp1, exp2){anno*} -> Mul(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-microcs-Exp> exp1
+             ; exp2' := <implicate-injections-microcs-Exp> exp2 \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Add(exp1, exp2){anno*} -> Add(exp1', exp2'){anno*}
+        with exp1' := <implicate-injections-microcs-Exp> exp1
+             ; exp2' := <implicate-injections-microcs-Exp> exp2 \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Cond(exp1, exp2, exp3){anno*} -> Cond(exp1', exp2', exp3'){anno*}
+        with exp1' := <implicate-injections-microcs-Exp> exp1
+             ; exp2' := <implicate-injections-microcs-Exp> exp2
+             ; exp3' := <implicate-injections-microcs-Exp> exp3 \
+    )
+
+  implicate-injections-microcs-Ref =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <implicate-injections-microcs-ID> id_ \
+    )
+
+  implicate-injections-microcs-Ref =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  implicate-injections-microcs-Type =
+    origin-track-forced(
+      \ VoidType(){anno*} -> VoidType(){anno*} \
+    )
+
+  implicate-injections-microcs-Type =
+    origin-track-forced(
+      \ IntType(){anno*} -> IntType(){anno*} \
+    )
+
+  implicate-injections-microcs-Type =
+    origin-track-forced(
+      \ BoolType(){anno*} -> BoolType(){anno*} \
+    )
+
+  implicate-injections-microcs-Type =
+    origin-track-forced(
+      \ ObjectType(){anno*} -> ObjectType(){anno*} \
+    )
+
+  implicate-injections-microcs-Type =
+    origin-track-forced(
+      \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
+        with id_' := <implicate-injections-microcs-ID> id_ \
+    )
+
+  implicate-injections-microcs-Start =
+    origin-track-forced(
+      \ Start-Plhdr(){anno*} -> Start-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-ClassDecl =
+    origin-track-forced(
+      \ ClassDecl-Plhdr(){anno*} -> ClassDecl-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-MemberDecl =
+    origin-track-forced(
+      \ MemberDecl-Plhdr(){anno*} -> MemberDecl-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-ParamDecl =
+    origin-track-forced(
+      \ ParamDecl-Plhdr(){anno*} -> ParamDecl-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ FinalStmt-Plhdr(){anno*} -> FinalStmt-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ Stmt-Plhdr(){anno*} -> Stmt-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ Exp-Plhdr(){anno*} -> Exp-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-Ref =
+    origin-track-forced(
+      \ Ref-Plhdr(){anno*} -> Ref-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-Type =
+    origin-track-forced(
+      \ Type-Plhdr(){anno*} -> Type-Plhdr(){anno*} \
+    )
+
+  implicate-injections-microcs-Start =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-Start)> alts \
+    )
+
+  implicate-injections-microcs-ClassDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-ClassDecl)> alts \
+    )
+
+  implicate-injections-microcs-MemberDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-MemberDecl)> alts \
+    )
+
+  implicate-injections-microcs-ParamDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-ParamDecl)> alts \
+    )
+
+  implicate-injections-microcs-FinalStmt =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-FinalStmt)> alts \
+    )
+
+  implicate-injections-microcs-Stmt =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-Stmt)> alts \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-Exp)> alts \
+    )
+
+  implicate-injections-microcs-Ref =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-Ref)> alts \
+    )
+
+  implicate-injections-microcs-Type =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-Type)> alts \
+    )
+
+
+rules
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-Start
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-ClassDecl
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-MemberDecl
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-ParamDecl
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-FinalStmt
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-Stmt
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-Exp
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-Ref
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-Type
+
+  upgrade-placeholders-microcs-Start =
+    origin-track-forced(
+      \ Program(classDecls){anno*} -> Program(classDecls'){anno*}
+        with classDecls' := <upgrade-list(upgrade-placeholders-microcs-ClassDecl)> classDecls \
+    )
+
+  upgrade-placeholders-microcs-ClassDecl =
+    origin-track-forced(
+      \ Class(id_, memberDecls){anno*} -> Class(id_', memberDecls'){anno*}
+        with id_' := <upgrade-placeholders-microcs-ID> id_
+             ; memberDecls' := <upgrade-list(upgrade-placeholders-microcs-MemberDecl)> memberDecls \
+    )
+
+  upgrade-placeholders-microcs-MemberDecl =
+    origin-track-forced(
+      \ Field(type, id_){anno*} -> Field(type', id_'){anno*}
+        with type' := <upgrade-placeholders-microcs-Type> type
+             ; id_' := <upgrade-placeholders-microcs-ID> id_ \
+    )
+
+  upgrade-placeholders-microcs-MemberDecl =
+    origin-track-forced(
+      \ Method(type, id_, paramDecls, stmts, finalStmt){anno*} -> Method(type', id_', paramDecls', stmts', finalStmt'){anno*}
+        with type' := <upgrade-placeholders-microcs-Type> type
+             ; id_' := <upgrade-placeholders-microcs-ID> id_
+             ; paramDecls' := <upgrade-list(upgrade-placeholders-microcs-ParamDecl)> paramDecls
+             ; stmts' := <upgrade-list(upgrade-placeholders-microcs-Stmt)> stmts
+             ; finalStmt' := <upgrade-placeholders-microcs-FinalStmt> finalStmt \
+    )
+
+  upgrade-placeholders-microcs-ParamDecl =
+    origin-track-forced(
+      \ Param(type, id_){anno*} -> Param(type', id_'){anno*}
+        with type' := <upgrade-placeholders-microcs-Type> type
+             ; id_' := <upgrade-placeholders-microcs-ID> id_ \
+    )
+
+  upgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ Return(exp){anno*} -> Return(exp'){anno*}
+        with exp' := <upgrade-placeholders-microcs-Exp> exp \
+    )
+
+  upgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ Throw(exp){anno*} -> Throw(exp'){anno*}
+        with exp' := <upgrade-placeholders-microcs-Exp> exp \
+    )
+
+  upgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ NoReturn(){anno*} -> NoReturn(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Block(stmts){anno*} -> Block(stmts'){anno*}
+        with stmts' := <upgrade-list(upgrade-placeholders-microcs-Stmt)> stmts \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareTypedVar(type, id_){anno*} -> DeclareTypedVar(type', id_'){anno*}
+        with type' := <upgrade-placeholders-microcs-Type> type
+             ; id_' := <upgrade-placeholders-microcs-ID> id_ \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareTypedVarInit(type, id_, exp){anno*} -> DeclareTypedVarInit(type', id_', exp'){anno*}
+        with type' := <upgrade-placeholders-microcs-Type> type
+             ; id_' := <upgrade-placeholders-microcs-ID> id_
+             ; exp' := <upgrade-placeholders-microcs-Exp> exp \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareVarInit(id_, exp){anno*} -> DeclareVarInit(id_', exp'){anno*}
+        with id_' := <upgrade-placeholders-microcs-ID> id_
+             ; exp' := <upgrade-placeholders-microcs-Exp> exp \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Assign(id_, exp){anno*} -> Assign(id_', exp'){anno*}
+        with id_' := <upgrade-placeholders-microcs-ID> id_
+             ; exp' := <upgrade-placeholders-microcs-Exp> exp \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Nop(){anno*} -> Nop(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Exp(exp){anno*} -> Exp(exp'){anno*}
+        with exp' := <upgrade-placeholders-microcs-Exp> exp \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ ref -> <upgrade-placeholders-microcs-Ref> ref
+        where <is-microcs-Ref-or-inj> ref \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Ref2Exp(ref){anno*} -> Ref2Exp(<upgrade-placeholders-microcs-Ref> ref){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Call(exp, exps){anno*} -> Call(exp', exps'){anno*}
+        with exp' := <upgrade-placeholders-microcs-Exp> exp
+             ; exps' := <upgrade-list(upgrade-placeholders-microcs-Exp)> exps \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ New(type){anno*} -> New(type'){anno*}
+        with type' := <upgrade-placeholders-microcs-Type> type \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <upgrade-placeholders-microcs-Exp> exp
+             ; id_' := <upgrade-placeholders-microcs-ID> id_ \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Null(){anno*} -> Null(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ True(){anno*} -> True(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ False(){anno*} -> False(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <upgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Eq(exp1, exp2){anno*} -> Eq(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <upgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Neq(exp1, exp2){anno*} -> Neq(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <upgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ And(exp1, exp2){anno*} -> And(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <upgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Not(exp){anno*} -> Not(exp'){anno*}
+        with exp' := <upgrade-placeholders-microcs-Exp> exp \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Int(int){anno*} -> Int(int'){anno*}
+        with int' := <upgrade-placeholders-microcs-INT> int \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Mul(exp1, exp2){anno*} -> Mul(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <upgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Add(exp1, exp2){anno*} -> Add(exp1', exp2'){anno*}
+        with exp1' := <upgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <upgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Cond(exp1, exp2, exp3){anno*} -> Cond(exp1', exp2', exp3'){anno*}
+        with exp1' := <upgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <upgrade-placeholders-microcs-Exp> exp2
+             ; exp3' := <upgrade-placeholders-microcs-Exp> exp3 \
+    )
+
+  upgrade-placeholders-microcs-Ref =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <upgrade-placeholders-microcs-ID> id_ \
+    )
+
+  upgrade-placeholders-microcs-Ref =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ VoidType(){anno*} -> VoidType(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ IntType(){anno*} -> IntType(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ BoolType(){anno*} -> BoolType(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ ObjectType(){anno*} -> ObjectType(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
+        with id_' := <upgrade-placeholders-microcs-ID> id_ \
+    )
+
+  upgrade-placeholders-microcs-Start =
+    origin-track-forced(
+      \ Start-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "Start" \
+    )
+
+  upgrade-placeholders-microcs-ClassDecl =
+    origin-track-forced(
+      \ ClassDecl-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "ClassDecl" \
+    )
+
+  upgrade-placeholders-microcs-MemberDecl =
+    origin-track-forced(
+      \ MemberDecl-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "MemberDecl" \
+    )
+
+  upgrade-placeholders-microcs-ParamDecl =
+    origin-track-forced(
+      \ ParamDecl-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "ParamDecl" \
+    )
+
+  upgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ FinalStmt-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "FinalStmt" \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Stmt-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "Stmt" \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Exp-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "Exp" \
+    )
+
+  upgrade-placeholders-microcs-Ref =
+    origin-track-forced(
+      \ Ref-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "Ref" \
+    )
+
+  upgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ Type-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "Type" \
+    )
+
+  upgrade-placeholders-microcs-Start =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-Start)> alts \
+    )
+
+  upgrade-placeholders-microcs-ClassDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-ClassDecl)> alts \
+    )
+
+  upgrade-placeholders-microcs-MemberDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-MemberDecl)> alts \
+    )
+
+  upgrade-placeholders-microcs-ParamDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-ParamDecl)> alts \
+    )
+
+  upgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-FinalStmt)> alts \
+    )
+
+  upgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-Stmt)> alts \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-Exp)> alts \
+    )
+
+  upgrade-placeholders-microcs-Ref =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-Ref)> alts \
+    )
+
+  upgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-Type)> alts \
+    )
+
+
+rules
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-Start
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-ClassDecl
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-MemberDecl
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-ParamDecl
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-FinalStmt
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-Stmt
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-Exp
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-Ref
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-Type
+
+  downgrade-placeholders-microcs-Start =
+    origin-track-forced(
+      \ Program(classDecls){anno*} -> Program(classDecls'){anno*}
+        with classDecls' := <downgrade-list(downgrade-placeholders-microcs-ClassDecl)> classDecls \
+    )
+
+  downgrade-placeholders-microcs-ClassDecl =
+    origin-track-forced(
+      \ Class(id_, memberDecls){anno*} -> Class(id_', memberDecls'){anno*}
+        with id_' := <downgrade-placeholders-microcs-ID> id_
+             ; memberDecls' := <downgrade-list(downgrade-placeholders-microcs-MemberDecl)> memberDecls \
+    )
+
+  downgrade-placeholders-microcs-MemberDecl =
+    origin-track-forced(
+      \ Field(type, id_){anno*} -> Field(type', id_'){anno*}
+        with type' := <downgrade-placeholders-microcs-Type> type
+             ; id_' := <downgrade-placeholders-microcs-ID> id_ \
+    )
+
+  downgrade-placeholders-microcs-MemberDecl =
+    origin-track-forced(
+      \ Method(type, id_, paramDecls, stmts, finalStmt){anno*} -> Method(type', id_', paramDecls', stmts', finalStmt'){anno*}
+        with type' := <downgrade-placeholders-microcs-Type> type
+             ; id_' := <downgrade-placeholders-microcs-ID> id_
+             ; paramDecls' := <downgrade-list(downgrade-placeholders-microcs-ParamDecl)> paramDecls
+             ; stmts' := <downgrade-list(downgrade-placeholders-microcs-Stmt)> stmts
+             ; finalStmt' := <downgrade-placeholders-microcs-FinalStmt> finalStmt \
+    )
+
+  downgrade-placeholders-microcs-ParamDecl =
+    origin-track-forced(
+      \ Param(type, id_){anno*} -> Param(type', id_'){anno*}
+        with type' := <downgrade-placeholders-microcs-Type> type
+             ; id_' := <downgrade-placeholders-microcs-ID> id_ \
+    )
+
+  downgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ Return(exp){anno*} -> Return(exp'){anno*}
+        with exp' := <downgrade-placeholders-microcs-Exp> exp \
+    )
+
+  downgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ Throw(exp){anno*} -> Throw(exp'){anno*}
+        with exp' := <downgrade-placeholders-microcs-Exp> exp \
+    )
+
+  downgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ NoReturn(){anno*} -> NoReturn(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Block(stmts){anno*} -> Block(stmts'){anno*}
+        with stmts' := <downgrade-list(downgrade-placeholders-microcs-Stmt)> stmts \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareTypedVar(type, id_){anno*} -> DeclareTypedVar(type', id_'){anno*}
+        with type' := <downgrade-placeholders-microcs-Type> type
+             ; id_' := <downgrade-placeholders-microcs-ID> id_ \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareTypedVarInit(type, id_, exp){anno*} -> DeclareTypedVarInit(type', id_', exp'){anno*}
+        with type' := <downgrade-placeholders-microcs-Type> type
+             ; id_' := <downgrade-placeholders-microcs-ID> id_
+             ; exp' := <downgrade-placeholders-microcs-Exp> exp \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ DeclareVarInit(id_, exp){anno*} -> DeclareVarInit(id_', exp'){anno*}
+        with id_' := <downgrade-placeholders-microcs-ID> id_
+             ; exp' := <downgrade-placeholders-microcs-Exp> exp \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Assign(id_, exp){anno*} -> Assign(id_', exp'){anno*}
+        with id_' := <downgrade-placeholders-microcs-ID> id_
+             ; exp' := <downgrade-placeholders-microcs-Exp> exp \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Nop(){anno*} -> Nop(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ Exp(exp){anno*} -> Exp(exp'){anno*}
+        with exp' := <downgrade-placeholders-microcs-Exp> exp \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ ref -> <downgrade-placeholders-microcs-Ref> ref
+        where <is-microcs-Ref-or-inj> ref \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Ref2Exp(ref){anno*} -> Ref2Exp(<downgrade-placeholders-microcs-Ref> ref){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Call(exp, exps){anno*} -> Call(exp', exps'){anno*}
+        with exp' := <downgrade-placeholders-microcs-Exp> exp
+             ; exps' := <downgrade-list(downgrade-placeholders-microcs-Exp)> exps \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ New(type){anno*} -> New(type'){anno*}
+        with type' := <downgrade-placeholders-microcs-Type> type \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <downgrade-placeholders-microcs-Exp> exp
+             ; id_' := <downgrade-placeholders-microcs-ID> id_ \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Null(){anno*} -> Null(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ True(){anno*} -> True(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ False(){anno*} -> False(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <downgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Eq(exp1, exp2){anno*} -> Eq(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <downgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Neq(exp1, exp2){anno*} -> Neq(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <downgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ And(exp1, exp2){anno*} -> And(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <downgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Not(exp){anno*} -> Not(exp'){anno*}
+        with exp' := <downgrade-placeholders-microcs-Exp> exp \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Int(int){anno*} -> Int(int'){anno*}
+        with int' := <downgrade-placeholders-microcs-INT> int \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Mul(exp1, exp2){anno*} -> Mul(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <downgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Add(exp1, exp2){anno*} -> Add(exp1', exp2'){anno*}
+        with exp1' := <downgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <downgrade-placeholders-microcs-Exp> exp2 \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ Cond(exp1, exp2, exp3){anno*} -> Cond(exp1', exp2', exp3'){anno*}
+        with exp1' := <downgrade-placeholders-microcs-Exp> exp1
+             ; exp2' := <downgrade-placeholders-microcs-Exp> exp2
+             ; exp3' := <downgrade-placeholders-microcs-Exp> exp3 \
+    )
+
+  downgrade-placeholders-microcs-Ref =
+    origin-track-forced(
+      \ Var(id_){anno*} -> Var(id_'){anno*}
+        with id_' := <downgrade-placeholders-microcs-ID> id_ \
+    )
+
+  downgrade-placeholders-microcs-Ref =
+    origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ VoidType(){anno*} -> VoidType(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ IntType(){anno*} -> IntType(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ BoolType(){anno*} -> BoolType(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ ObjectType(){anno*} -> ObjectType(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ ClassType(id_){anno*} -> ClassType(id_'){anno*}
+        with id_' := <downgrade-placeholders-microcs-ID> id_ \
+    )
+
+  downgrade-placeholders-microcs-Start =
+    origin-track-forced(
+      \ p{anno*} -> Start-Plhdr(){anno*}
+        where <(is-placeholder + ?Start-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-ClassDecl =
+    origin-track-forced(
+      \ p{anno*} -> ClassDecl-Plhdr(){anno*}
+        where <(is-placeholder + ?ClassDecl-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-MemberDecl =
+    origin-track-forced(
+      \ p{anno*} -> MemberDecl-Plhdr(){anno*}
+        where <(is-placeholder + ?MemberDecl-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-ParamDecl =
+    origin-track-forced(
+      \ p{anno*} -> ParamDecl-Plhdr(){anno*}
+        where <(is-placeholder + ?ParamDecl-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ p{anno*} -> FinalStmt-Plhdr(){anno*}
+        where <(is-placeholder + ?FinalStmt-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ p{anno*} -> Stmt-Plhdr(){anno*}
+        where <(is-placeholder + ?Stmt-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ p{anno*} -> Exp-Plhdr(){anno*}
+        where <(is-placeholder + ?Exp-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-Ref =
+    origin-track-forced(
+      \ p{anno*} -> Ref-Plhdr(){anno*}
+        where <(is-placeholder + ?Ref-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ p{anno*} -> Type-Plhdr(){anno*}
+        where <(is-placeholder + ?Type-Plhdr())> p \
+    )
+
+  downgrade-placeholders-microcs-Start =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-Start)> alts \
+    )
+
+  downgrade-placeholders-microcs-ClassDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-ClassDecl)> alts \
+    )
+
+  downgrade-placeholders-microcs-MemberDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-MemberDecl)> alts \
+    )
+
+  downgrade-placeholders-microcs-ParamDecl =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-ParamDecl)> alts \
+    )
+
+  downgrade-placeholders-microcs-FinalStmt =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-FinalStmt)> alts \
+    )
+
+  downgrade-placeholders-microcs-Stmt =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-Stmt)> alts \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-Exp)> alts \
+    )
+
+  downgrade-placeholders-microcs-Ref =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-Ref)> alts \
+    )
+
+  downgrade-placeholders-microcs-Type =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-Type)> alts \
+    )
+
+
+rules
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  explicate-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ []{anno*} -> None(){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [t]{anno*} -> Some(<s> t){anno*} \
+    )
+
+  implicate-option(s) =
+    origin-track-forced(
+      \ [_, _|_] -> <fatal-err(|"Cannot implicate multi-element list to option.")> \
+    )
+
+
+rules
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> []{anno*} \
+    )
+
+  upgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> [<s> t]{anno*} \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <is-list> l
+        with l' := <map(s)> l \
+    )
+
+  upgrade-list(s) =
+    origin-track-forced(
+      \ l -> l'
+        where <fail> l
+        with l' := <make-placeholder> "list" \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ None(){anno*} -> None(){anno*} \
+    )
+
+  downgrade-option(s) =
+    origin-track-forced(
+      \ Some(t){anno*} -> Some(<s> t){anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ p -> p'
+        where <is-placeholder> p
+        with p' := [] \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ []{anno*} -> []{anno*} \
+    )
+
+  downgrade-list(s) =
+    origin-track-forced(
+      \ [e|es]{anno*} -> [e'|es']{anno*}
+        with e' := <s> e
+             ; es' := <downgrade-list(s)> es \
+    )
