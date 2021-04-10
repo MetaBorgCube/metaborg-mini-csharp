@@ -72,8 +72,9 @@ rules typeOfParam : scope * ParamDecl -> TYPE
     declareVar(s, name, T).
 
 rules finalStmtOk : scope * FinalStmt * TYPE
-  finalStmtOk(s, Return(e), T) :-
-    typeOfExp(s, e) == T.
+  finalStmtOk(s, Return(e), T) :- {TE}
+    typeOfExp(s, e) == TE,
+    assignableTo(TE, T).
   finalStmtOk(s, Throw(e), _) :- {T}
     typeOfExp(s, e) == T,
     assignableTo(T, CLASS("Exception", _)).
