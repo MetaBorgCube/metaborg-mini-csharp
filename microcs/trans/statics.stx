@@ -4,7 +4,8 @@ imports
   signatures/microcs-sig
 
 signature
-  sorts TYPE constructors
+  sorts TYPE 
+  constructors
     CLASS       : string * scope -> TYPE
     METHOD      : list(TYPE) * TYPE -> TYPE
     INT         : TYPE
