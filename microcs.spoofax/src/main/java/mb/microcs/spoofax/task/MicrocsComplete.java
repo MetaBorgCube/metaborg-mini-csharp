@@ -361,14 +361,10 @@ public class MicrocsComplete implements TaskDef<MicrocsComplete.Input, @Nullable
         return proposals.sorted(Comparator
             // Sort expanded queries after expanded rules before leftovers
             .<TermCompleter.CompletionSolverProposal, Integer>comparing(it -> it.getNewState().getMeta().getExpandedQueries() > 0 ? 2 : (it.getNewState().getMeta().getExpandedRules() > 0 ? 1 : 0))
-            // Sort more expanded queries after less expanded queries
-            .<Integer>thenComparing(it -> it.getNewState().getMeta().getExpandedQueries())
-            // Sort more expanded rules after less expanded rules
-            .<Integer>thenComparing(it -> it.getNewState().getMeta().getExpandedRules())
+            // Sort more expanded queries/rules after less expanded queries/rules
+            .<Integer>thenComparing(it -> it.getNewState().getMeta().getExpandedQueries() + it.getNewState().getMeta().getExpandedRules())
             // Sort solutions with higher rank after solutions with lower rank
             .<Integer>thenComparing(it -> rankTerm(it.getTerm()))
-            // Reverse the whole thing
-            .reversed()
         );
     }
 
