@@ -15,38 +15,36 @@ context-free syntax
   >
 
 context-free sorts
-  ClassDecl MemberDecl ParamDecl
+  ClassDecl MemberDecl ParamDecl FinalStmt
 
 context-free syntax
   ClassDecl.Class = <
     class <ID> {
-      <{MemberDecl "\n"}*>
+        <{MemberDecl "\n"}*>
     }
   >
 
-  MemberDecl.InstanceField = <public <Type> <ID>;>
+  MemberDecl.Field = <public <Type> <ID>;>
 
-  MemberDecl.InstanceMethod = <
+  MemberDecl.Method = <
     public <Type> <ID>(<{ParamDecl ", "}*>) {
         <{Stmt "\n"}*>
-        return <Exp>;
-    }
-  >
-  MemberDecl.StaticMethod = <
-    public static <Type> <ID>(<{ParamDecl ", "}*>) {
-        <{Stmt "\n"}*>
-        return <Exp>;
+        <FinalStmt>
     }
   >
 
   ParamDecl.Param = <<Type> <ID>>
+
+  FinalStmt.Return     = <return <Exp>;>
+  FinalStmt.Throw      = <throw <Exp>;>
+  FinalStmt.NoReturn   = <>
 
 context-free sorts
   Stmt
 
 context-free syntax
   Stmt.Block = < {
-    <{Stmt "\n"}*>
+      <{Stmt "\n"}*>
   }>
 
   Stmt.DeclareTypedVar     = <<Type> <ID>;>
@@ -56,7 +54,6 @@ context-free syntax
   Stmt.Assign = <<ID> = <Exp>;>
   Stmt.Nop    = <;>
   Stmt.Exp    = <<Exp>;>
-
 
 context-free sorts
   Exp
@@ -94,6 +91,7 @@ context-free sorts
   Type
 
 context-free syntax
+  Type.VoidType   = <void>
   Type.IntType    = <int>
   Type.BoolType   = <bool>
   Type.ObjectType = <object>

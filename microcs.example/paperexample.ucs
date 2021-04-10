@@ -10,14 +10,14 @@ class Test {
 }
 
 class Node {
-    public object Value;
+    public int Value;
     public Node Left;
     public Node Right;
 
     public int CalcHeight() {
-        return 1 + Math.Max(
-          Left != null ? Left.CalcHeight() : 0,
-          Right != null ? Right.CalcHeight() : 0
-        );
+      throw new Exception();
+    }
+
+    public void C() {
     }
 }
