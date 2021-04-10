@@ -4,7 +4,7 @@ imports
   signatures/microcs-sig
 
 signature
-  sorts TYPE 
+  sorts TYPE
   constructors
     CLASS       : string * scope -> TYPE
     METHOD      : list(TYPE) * TYPE -> TYPE
@@ -121,14 +121,14 @@ rules typeOfExp : scope * Exp -> TYPE
 
   typeOfExp(s, e@Call(_, _))            = typeOfCall(s, e).
   typeOfExp(s, e@Call(Member(_, _), _)) = typeOfCall(s, e).
+  typeOfExp(s, e@Call(Member(Ref2Exp(_), _), _)) = typeOfCall(s, e).
   typeOfExp(s, e@Call(Ref2Exp(_), _))   = typeOfCall(s, e).
 
   typeOfExp(s, e@New(_))                = typeOfNew(s, e).
   typeOfExp(s, e@New(ClassType(_)))     = typeOfNew(s, e).
 
-  typeOfExp(s, Member(e, name)) = T :- {T1 cs}
-    typeOfExp(s, e) == CLASS(_, cs),
-    typeOfMember(cs, name) == T.
+  typeOfExp(s, e@Member(_, _))          = typeOfMemberExp(s, e).
+  typeOfExp(s, e@Member(Ref2Exp(_), _)) = typeOfMemberExp(s, e).
 
   typeOfExp(_, Null())  = NULL().
   typeOfExp(_, True())  = BOOL().
@@ -186,6 +186,11 @@ rules typeOfCall : scope * Exp -> TYPE
 rules typeOfNew : scope * Exp -> TYPE
   typeOfNew(s, New(type)) = T :- {cs name}
     typeOfType(s, type) == T@CLASS(name, cs).
+
+rules typeOfMemberExp : scope * Exp -> TYPE
+  typeOfMemberExp(s, Member(e, name)) = T :- {T1 cs}
+    typeOfExp(s, e) == CLASS(_, cs),
+    typeOfMember(cs, name) == T.
 
 // Classes
 rules declareClass : scope * ID * TYPE
