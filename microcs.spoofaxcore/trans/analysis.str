@@ -19,8 +19,15 @@ rules // Analysis
   // multi-file analysis
 //  editor-analyze = stx-editor-analyze(pre-analyze, post-analyze|"statics", "projectOk", "fileOk")
 
-  pre-analyze  = origin-track-forced(explicate-injections-microcs-Start)
-  post-analyze = origin-track-forced(implicate-injections-microcs-Start)
+  pre-analyze  = origin-track-forced(explicate-injections-microcs)
+  post-analyze = origin-track-forced(implicate-injections-microcs)
+
+  get-type: exp -> <strip-annos> type
+    where <debug(!"Debug get-type: ")> exp
+    where a      := <stx-get-ast-analysis <+ fail-msg(|$[no analysis on node [<strip-annos;write-to-string> exp]])>
+        ; type   := <stx-get-ast-type(|a) <+ fail-msg(|$[no type on node [<strip-annos;write-to-string> exp]])> exp
+
+  fail-msg(|msg) = err-msg(|$[get-type: [msg]]); fail
 
 rules // Editor Services
 
@@ -44,3 +51,9 @@ rules // Debugging
   debug-show-analyzed: (selected, _, _, path, project-path) -> (filename, result)
     with filename := <guarantee-extension(|"analyzed.aterm")> path
        ; result   := selected
+
+  // Prints the type of a selection.
+  debug-show-type: (selected, _, _, path, project-path) -> (filename, result)
+    with filename := <guarantee-extension(|"type.aterm")> path
+       ; result   := <get-type> selected
+
