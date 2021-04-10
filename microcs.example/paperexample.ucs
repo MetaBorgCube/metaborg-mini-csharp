@@ -18,6 +18,9 @@ class Node {
       throw new Exception();
     }
 
-    public void C() {
+    public void C() { }
+    
+    public Node insert(Node n) {
+      return null;
     }
 }
