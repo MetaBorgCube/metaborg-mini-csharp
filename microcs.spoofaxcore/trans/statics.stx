@@ -177,8 +177,8 @@ rules typeOfLValue : scope * LValue -> TYPE
   typeOfLValue(s, Var(name)) = T :-
     typeOfVarMember(s, name) == T.
 
-  typeOfLValue(s, This()) = T :- {decl}
-    resolveVar(s, "this") == [(_, (decl, T))|_].
+  typeOfLValue(s, This()) = T :-
+    typeOfVar(s, "this") == T.
 
   typeOfLValue(s, lv@Member(_, _))             = typeOfMemberExp(s, lv).
   typeOfLValue(s, lv@Member(LValue2Exp(_), _)) = typeOfMemberExp(s, lv).
