@@ -109,26 +109,21 @@ rules stmtOk : scope * Stmt
     typeOfExp(bs, e) == T,
     declareVar(bs, name, T).
 
-  stmtOk(bs, Assign(name, e)) :- {T TE}
-    typeOfVarMember(bs, name) == T,
+  stmtOk(bs, Assign(lvalue, e)) :- {T TE}
+    typeOfLValue(bs, lvalue) == T,
     typeOfExp(bs, e) == TE,
     subtypeOf(TE, T).
 
 rules typeOfExp : scope * Exp -> TYPE
   typesOfExps maps typeOfExp(*, list(*)) = list(*)
 
-  typeOfExp(s, Ref2Exp(ref))            = typeOfRef(s, ref).
+  typeOfExp(s, LValue2Exp(lvalue))      = typeOfLValue(s, lvalue).
 
   typeOfExp(s, e@Call(_, _))            = typeOfCall(s, e).
-  typeOfExp(s, e@Call(Member(_, _), _)) = typeOfCall(s, e).
-  typeOfExp(s, e@Call(Member(Ref2Exp(_), _), _)) = typeOfCall(s, e).
-  typeOfExp(s, e@Call(Ref2Exp(_), _))   = typeOfCall(s, e).
+  typeOfExp(s, e@Call(LValue2Exp(_), _))= typeOfCall(s, e).
 
   typeOfExp(s, e@New(_))                = typeOfNew(s, e).
   typeOfExp(s, e@New(ClassType(_)))     = typeOfNew(s, e).
-
-  typeOfExp(s, e@Member(_, _))          = typeOfMemberExp(s, e).
-  typeOfExp(s, e@Member(Ref2Exp(_), _)) = typeOfMemberExp(s, e).
 
   typeOfExp(_, Null())  = NULL().
   typeOfExp(_, True())  = BOOL().
@@ -169,15 +164,6 @@ rules typeOfExp : scope * Exp -> TYPE
     typeOfExp(s, e2) == T2,
     lub(T1, T2) == T.
 
-rules typeOfRef : scope * Ref -> TYPE
-  typesOfRefs maps typeOfRef(*, list(*)) = list(*)
-
-  typeOfRef(s, Var(name)) = T :-
-    typeOfVarMember(s, name) == T.
-
-  typeOfRef(s, This()) = T :- {decl}
-    resolveVar(s, "this") == [(_, (decl, T))|_].
-
 rules typeOfCall : scope * Exp -> TYPE
   typeOfCall(s, Call(e, args)) = TR :- {TA}
     typeOfExp(s, e) == METHOD(TA, TR),
@@ -187,7 +173,17 @@ rules typeOfNew : scope * Exp -> TYPE
   typeOfNew(s, New(type)) = T :- {cs name}
     typeOfType(s, type) == T@CLASS(name, cs).
 
-rules typeOfMemberExp : scope * Exp -> TYPE
+rules typeOfLValue : scope * LValue -> TYPE
+  typeOfLValue(s, Var(name)) = T :-
+    typeOfVarMember(s, name) == T.
+
+  typeOfLValue(s, This()) = T :- {decl}
+    resolveVar(s, "this") == [(_, (decl, T))|_].
+
+  typeOfLValue(s, lv@Member(_, _))             = typeOfMemberExp(s, lv).
+  typeOfLValue(s, lv@Member(LValue2Exp(_), _)) = typeOfMemberExp(s, lv).
+
+rules typeOfMemberExp : scope * LValue -> TYPE
   typeOfMemberExp(s, Member(e, name)) = T :- {T1 cs}
     typeOfExp(s, e) == CLASS(_, cs),
     typeOfMember(cs, name) == T.
@@ -291,7 +287,7 @@ rules
   typeOfParam(_, ParamDecl-Plhdr()) = BOTTOM().
   stmtOk(_, Stmt-Plhdr()).
   typeOfExp(_, Exp-Plhdr()) = BOTTOM().
-  typeOfRef(_, Ref-Plhdr()) = BOTTOM().
+  typeOfLValue(_, LValue-Plhdr()) = BOTTOM().
   typeOfCall(_, Exp-Plhdr()) = BOTTOM().
   typeOfNew(_, Exp-Plhdr()) = BOTTOM().
   typeOfType(_, Type-Plhdr()) = BOTTOM().

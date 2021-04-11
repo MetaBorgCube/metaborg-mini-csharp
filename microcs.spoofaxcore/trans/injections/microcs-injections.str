@@ -12,7 +12,7 @@ imports
 
 signature
   constructors
-    Ref2Exp : Ref -> Exp
+    LValue2Exp : LValue -> Exp
 
 
 signature
@@ -24,7 +24,7 @@ signature
     FinalStmt-Plhdr  : FinalStmt
     Stmt-Plhdr       : Stmt
     Exp-Plhdr        : Exp
-    Ref-Plhdr        : Ref
+    LValue-Plhdr     : LValue
     Type-Plhdr       : Type
 
 
@@ -51,8 +51,8 @@ rules
   is-microcs-Exp-or-inj =
     ?Exp-Plhdr()
 
-  is-microcs-Ref-or-inj =
-    ?Ref-Plhdr()
+  is-microcs-LValue-or-inj =
+    ?LValue-Plhdr()
 
   is-microcs-Type-or-inj =
     ?Type-Plhdr()
@@ -103,16 +103,13 @@ rules
     ?Exp(_)
 
   is-microcs-Exp-or-inj =
-    is-microcs-Ref-or-inj
+    is-microcs-LValue-or-inj
 
   is-microcs-Exp-or-inj =
     ?Call(_, _)
 
   is-microcs-Exp-or-inj =
     ?New(_)
-
-  is-microcs-Exp-or-inj =
-    ?Member(_, _)
 
   is-microcs-Exp-or-inj =
     ?Null()
@@ -150,11 +147,14 @@ rules
   is-microcs-Exp-or-inj =
     ?Cond(_, _, _)
 
-  is-microcs-Ref-or-inj =
+  is-microcs-LValue-or-inj =
     ?Var(_)
 
-  is-microcs-Ref-or-inj =
+  is-microcs-LValue-or-inj =
     ?This()
+
+  is-microcs-LValue-or-inj =
+    ?Member(_, _)
 
   is-microcs-Type-or-inj =
     ?VoidType()
@@ -217,9 +217,9 @@ rules
     fail
 
   is-microcs-inj-cons =
-    is-microcs-Ref-inj-cons
+    is-microcs-LValue-inj-cons
 
-  is-microcs-Ref-inj-cons =
+  is-microcs-LValue-inj-cons =
     fail
 
   is-microcs-inj-cons =
@@ -228,8 +228,8 @@ rules
   is-microcs-Type-inj-cons =
     fail
 
-  is-microcs-Ref-inj-cons =
-    ?Ref2Exp(_)
+  is-microcs-LValue-inj-cons =
+    ?LValue2Exp(_)
 
 
 rules
@@ -256,7 +256,7 @@ rules
     explicate-injections-microcs-Exp
 
   explicate-injections-microcs =
-    explicate-injections-microcs-Ref
+    explicate-injections-microcs-LValue
 
   explicate-injections-microcs =
     explicate-injections-microcs-Type
@@ -345,8 +345,8 @@ rules
 
   explicate-injections-microcs-Stmt =
     origin-track-forced(
-      \ Assign(id_, exp){anno*} -> Assign(id_', exp'){anno*}
-        with id_' := <explicate-injections-microcs-ID> id_
+      \ Assign(lValue, exp){anno*} -> Assign(lValue', exp'){anno*}
+        with lValue' := <explicate-injections-microcs-LValue> lValue
              ; exp' := <explicate-injections-microcs-Exp> exp \
     )
 
@@ -363,8 +363,8 @@ rules
 
   explicate-injections-microcs-Exp =
     origin-track-forced(
-      \ ref -> Ref2Exp(<explicate-injections-microcs-Ref> ref)
-        where <is-microcs-Ref-or-inj> ref \
+      \ lValue -> LValue2Exp(<explicate-injections-microcs-LValue> lValue)
+        where <is-microcs-LValue-or-inj> lValue \
     )
 
   explicate-injections-microcs-Exp =
@@ -378,13 +378,6 @@ rules
     origin-track-forced(
       \ New(type){anno*} -> New(type'){anno*}
         with type' := <explicate-injections-microcs-Type> type \
-    )
-
-  explicate-injections-microcs-Exp =
-    origin-track-forced(
-      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
-        with exp' := <explicate-injections-microcs-Exp> exp
-             ; id_' := <explicate-injections-microcs-ID> id_ \
     )
 
   explicate-injections-microcs-Exp =
@@ -464,15 +457,22 @@ rules
              ; exp3' := <explicate-injections-microcs-Exp> exp3 \
     )
 
-  explicate-injections-microcs-Ref =
+  explicate-injections-microcs-LValue =
     origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <explicate-injections-microcs-ID> id_ \
     )
 
-  explicate-injections-microcs-Ref =
+  explicate-injections-microcs-LValue =
     origin-track-forced(
       \ This(){anno*} -> This(){anno*} \
+    )
+
+  explicate-injections-microcs-LValue =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <explicate-injections-microcs-Exp> exp
+             ; id_' := <explicate-injections-microcs-ID> id_ \
     )
 
   explicate-injections-microcs-Type =
@@ -536,9 +536,9 @@ rules
       \ Exp-Plhdr(){anno*} -> Exp-Plhdr(){anno*} \
     )
 
-  explicate-injections-microcs-Ref =
+  explicate-injections-microcs-LValue =
     origin-track-forced(
-      \ Ref-Plhdr(){anno*} -> Ref-Plhdr(){anno*} \
+      \ LValue-Plhdr(){anno*} -> LValue-Plhdr(){anno*} \
     )
 
   explicate-injections-microcs-Type =
@@ -588,10 +588,10 @@ rules
         with alts' := <map(explicate-injections-microcs-Exp)> alts \
     )
 
-  explicate-injections-microcs-Ref =
+  explicate-injections-microcs-LValue =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
-        with alts' := <map(explicate-injections-microcs-Ref)> alts \
+        with alts' := <map(explicate-injections-microcs-LValue)> alts \
     )
 
   explicate-injections-microcs-Type =
@@ -625,7 +625,7 @@ rules
     implicate-injections-microcs-Exp
 
   implicate-injections-microcs =
-    implicate-injections-microcs-Ref
+    implicate-injections-microcs-LValue
 
   implicate-injections-microcs =
     implicate-injections-microcs-Type
@@ -714,8 +714,8 @@ rules
 
   implicate-injections-microcs-Stmt =
     origin-track-forced(
-      \ Assign(id_, exp){anno*} -> Assign(id_', exp'){anno*}
-        with id_' := <implicate-injections-microcs-ID> id_
+      \ Assign(lValue, exp){anno*} -> Assign(lValue', exp'){anno*}
+        with lValue' := <implicate-injections-microcs-LValue> lValue
              ; exp' := <implicate-injections-microcs-Exp> exp \
     )
 
@@ -732,7 +732,7 @@ rules
 
   implicate-injections-microcs-Exp =
     origin-track-forced(
-      \ Ref2Exp(ref) -> <implicate-injections-microcs-Ref> ref \
+      \ LValue2Exp(lValue) -> <implicate-injections-microcs-LValue> lValue \
     )
 
   implicate-injections-microcs-Exp =
@@ -746,13 +746,6 @@ rules
     origin-track-forced(
       \ New(type){anno*} -> New(type'){anno*}
         with type' := <implicate-injections-microcs-Type> type \
-    )
-
-  implicate-injections-microcs-Exp =
-    origin-track-forced(
-      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
-        with exp' := <implicate-injections-microcs-Exp> exp
-             ; id_' := <implicate-injections-microcs-ID> id_ \
     )
 
   implicate-injections-microcs-Exp =
@@ -832,15 +825,22 @@ rules
              ; exp3' := <implicate-injections-microcs-Exp> exp3 \
     )
 
-  implicate-injections-microcs-Ref =
+  implicate-injections-microcs-LValue =
     origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <implicate-injections-microcs-ID> id_ \
     )
 
-  implicate-injections-microcs-Ref =
+  implicate-injections-microcs-LValue =
     origin-track-forced(
       \ This(){anno*} -> This(){anno*} \
+    )
+
+  implicate-injections-microcs-LValue =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <implicate-injections-microcs-Exp> exp
+             ; id_' := <implicate-injections-microcs-ID> id_ \
     )
 
   implicate-injections-microcs-Type =
@@ -904,9 +904,9 @@ rules
       \ Exp-Plhdr(){anno*} -> Exp-Plhdr(){anno*} \
     )
 
-  implicate-injections-microcs-Ref =
+  implicate-injections-microcs-LValue =
     origin-track-forced(
-      \ Ref-Plhdr(){anno*} -> Ref-Plhdr(){anno*} \
+      \ LValue-Plhdr(){anno*} -> LValue-Plhdr(){anno*} \
     )
 
   implicate-injections-microcs-Type =
@@ -956,10 +956,10 @@ rules
         with alts' := <map(implicate-injections-microcs-Exp)> alts \
     )
 
-  implicate-injections-microcs-Ref =
+  implicate-injections-microcs-LValue =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
-        with alts' := <map(implicate-injections-microcs-Ref)> alts \
+        with alts' := <map(implicate-injections-microcs-LValue)> alts \
     )
 
   implicate-injections-microcs-Type =
@@ -993,7 +993,7 @@ rules
     upgrade-placeholders-microcs-Exp
 
   upgrade-placeholders-microcs =
-    upgrade-placeholders-microcs-Ref
+    upgrade-placeholders-microcs-LValue
 
   upgrade-placeholders-microcs =
     upgrade-placeholders-microcs-Type
@@ -1082,8 +1082,8 @@ rules
 
   upgrade-placeholders-microcs-Stmt =
     origin-track-forced(
-      \ Assign(id_, exp){anno*} -> Assign(id_', exp'){anno*}
-        with id_' := <upgrade-placeholders-microcs-ID> id_
+      \ Assign(lValue, exp){anno*} -> Assign(lValue', exp'){anno*}
+        with lValue' := <upgrade-placeholders-microcs-LValue> lValue
              ; exp' := <upgrade-placeholders-microcs-Exp> exp \
     )
 
@@ -1100,13 +1100,13 @@ rules
 
   upgrade-placeholders-microcs-Exp =
     origin-track-forced(
-      \ ref -> <upgrade-placeholders-microcs-Ref> ref
-        where <is-microcs-Ref-or-inj> ref \
+      \ lValue -> <upgrade-placeholders-microcs-LValue> lValue
+        where <is-microcs-LValue-or-inj> lValue \
     )
 
   upgrade-placeholders-microcs-Exp =
     origin-track-forced(
-      \ Ref2Exp(ref){anno*} -> Ref2Exp(<upgrade-placeholders-microcs-Ref> ref){anno*} \
+      \ LValue2Exp(lValue){anno*} -> LValue2Exp(<upgrade-placeholders-microcs-LValue> lValue){anno*} \
     )
 
   upgrade-placeholders-microcs-Exp =
@@ -1120,13 +1120,6 @@ rules
     origin-track-forced(
       \ New(type){anno*} -> New(type'){anno*}
         with type' := <upgrade-placeholders-microcs-Type> type \
-    )
-
-  upgrade-placeholders-microcs-Exp =
-    origin-track-forced(
-      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
-        with exp' := <upgrade-placeholders-microcs-Exp> exp
-             ; id_' := <upgrade-placeholders-microcs-ID> id_ \
     )
 
   upgrade-placeholders-microcs-Exp =
@@ -1206,15 +1199,22 @@ rules
              ; exp3' := <upgrade-placeholders-microcs-Exp> exp3 \
     )
 
-  upgrade-placeholders-microcs-Ref =
+  upgrade-placeholders-microcs-LValue =
     origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <upgrade-placeholders-microcs-ID> id_ \
     )
 
-  upgrade-placeholders-microcs-Ref =
+  upgrade-placeholders-microcs-LValue =
     origin-track-forced(
       \ This(){anno*} -> This(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-LValue =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <upgrade-placeholders-microcs-Exp> exp
+             ; id_' := <upgrade-placeholders-microcs-ID> id_ \
     )
 
   upgrade-placeholders-microcs-Type =
@@ -1285,10 +1285,10 @@ rules
         with p := <make-placeholder> "Exp" \
     )
 
-  upgrade-placeholders-microcs-Ref =
+  upgrade-placeholders-microcs-LValue =
     origin-track-forced(
-      \ Ref-Plhdr(){anno*} -> p{anno*}
-        with p := <make-placeholder> "Ref" \
+      \ LValue-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "LValue" \
     )
 
   upgrade-placeholders-microcs-Type =
@@ -1339,10 +1339,10 @@ rules
         with alts' := <upgrade-list(upgrade-placeholders-microcs-Exp)> alts \
     )
 
-  upgrade-placeholders-microcs-Ref =
+  upgrade-placeholders-microcs-LValue =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
-        with alts' := <upgrade-list(upgrade-placeholders-microcs-Ref)> alts \
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-LValue)> alts \
     )
 
   upgrade-placeholders-microcs-Type =
@@ -1376,7 +1376,7 @@ rules
     downgrade-placeholders-microcs-Exp
 
   downgrade-placeholders-microcs =
-    downgrade-placeholders-microcs-Ref
+    downgrade-placeholders-microcs-LValue
 
   downgrade-placeholders-microcs =
     downgrade-placeholders-microcs-Type
@@ -1465,8 +1465,8 @@ rules
 
   downgrade-placeholders-microcs-Stmt =
     origin-track-forced(
-      \ Assign(id_, exp){anno*} -> Assign(id_', exp'){anno*}
-        with id_' := <downgrade-placeholders-microcs-ID> id_
+      \ Assign(lValue, exp){anno*} -> Assign(lValue', exp'){anno*}
+        with lValue' := <downgrade-placeholders-microcs-LValue> lValue
              ; exp' := <downgrade-placeholders-microcs-Exp> exp \
     )
 
@@ -1483,13 +1483,13 @@ rules
 
   downgrade-placeholders-microcs-Exp =
     origin-track-forced(
-      \ ref -> <downgrade-placeholders-microcs-Ref> ref
-        where <is-microcs-Ref-or-inj> ref \
+      \ lValue -> <downgrade-placeholders-microcs-LValue> lValue
+        where <is-microcs-LValue-or-inj> lValue \
     )
 
   downgrade-placeholders-microcs-Exp =
     origin-track-forced(
-      \ Ref2Exp(ref){anno*} -> Ref2Exp(<downgrade-placeholders-microcs-Ref> ref){anno*} \
+      \ LValue2Exp(lValue){anno*} -> LValue2Exp(<downgrade-placeholders-microcs-LValue> lValue){anno*} \
     )
 
   downgrade-placeholders-microcs-Exp =
@@ -1503,13 +1503,6 @@ rules
     origin-track-forced(
       \ New(type){anno*} -> New(type'){anno*}
         with type' := <downgrade-placeholders-microcs-Type> type \
-    )
-
-  downgrade-placeholders-microcs-Exp =
-    origin-track-forced(
-      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
-        with exp' := <downgrade-placeholders-microcs-Exp> exp
-             ; id_' := <downgrade-placeholders-microcs-ID> id_ \
     )
 
   downgrade-placeholders-microcs-Exp =
@@ -1589,15 +1582,22 @@ rules
              ; exp3' := <downgrade-placeholders-microcs-Exp> exp3 \
     )
 
-  downgrade-placeholders-microcs-Ref =
+  downgrade-placeholders-microcs-LValue =
     origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <downgrade-placeholders-microcs-ID> id_ \
     )
 
-  downgrade-placeholders-microcs-Ref =
+  downgrade-placeholders-microcs-LValue =
     origin-track-forced(
       \ This(){anno*} -> This(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-LValue =
+    origin-track-forced(
+      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
+        with exp' := <downgrade-placeholders-microcs-Exp> exp
+             ; id_' := <downgrade-placeholders-microcs-ID> id_ \
     )
 
   downgrade-placeholders-microcs-Type =
@@ -1668,10 +1668,10 @@ rules
         where <(is-placeholder + ?Exp-Plhdr())> p \
     )
 
-  downgrade-placeholders-microcs-Ref =
+  downgrade-placeholders-microcs-LValue =
     origin-track-forced(
-      \ p{anno*} -> Ref-Plhdr(){anno*}
-        where <(is-placeholder + ?Ref-Plhdr())> p \
+      \ p{anno*} -> LValue-Plhdr(){anno*}
+        where <(is-placeholder + ?LValue-Plhdr())> p \
     )
 
   downgrade-placeholders-microcs-Type =
@@ -1722,10 +1722,10 @@ rules
         with alts' := <downgrade-list(downgrade-placeholders-microcs-Exp)> alts \
     )
 
-  downgrade-placeholders-microcs-Ref =
+  downgrade-placeholders-microcs-LValue =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
-        with alts' := <downgrade-list(downgrade-placeholders-microcs-Ref)> alts \
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-LValue)> alts \
     )
 
   downgrade-placeholders-microcs-Type =

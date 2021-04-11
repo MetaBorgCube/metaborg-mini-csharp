@@ -46,16 +46,15 @@ context-free syntax
   Stmt.DeclareTypedVarInit = <<Type> <ID> = <Exp>;>
   Stmt.DeclareVarInit      = <var <ID> = <Exp>;>
 
-  Stmt.Assign = <<ID> = <Exp>;>
+  Stmt.Assign = <<LValue> = <Exp>;>
   Stmt.Nop    = <;>
   Stmt.Exp    = <<Exp>;>
 
 context-free sorts Exp
 context-free syntax
-  Exp        = <<Ref>>
+  Exp        = <<LValue>>
   Exp.Call   = <<Exp>(<{Exp ", "}*>)>
   Exp.New    = <new <Type>(<>)>
-  Exp.Member = <<Exp>.<ID>>
   Exp.Null   = <null>
 
   Exp.True   = <true>
@@ -73,10 +72,11 @@ context-free syntax
   Exp.Cond   = <<Exp> ? <Exp> : <Exp>>
   Exp        = <(<Exp>)> {bracket}
 
-context-free sorts Ref
+context-free sorts LValue
 context-free syntax
-  Ref.Var = <<ID>>
-  Ref.This = <this>
+  LValue.Var = <<ID>>
+  LValue.This = <this>
+  LValue.Member = <<Exp>.<ID>>
 
 context-free sorts Type
 context-free syntax
@@ -88,7 +88,7 @@ context-free syntax
 
 context-free priorities
   {
-    Exp.Member
+    LValue.Member
     Exp.Call
     Exp.New
   } > {
