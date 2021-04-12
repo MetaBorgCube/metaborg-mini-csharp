@@ -175,7 +175,7 @@ rules typeOfNew : scope * Exp -> TYPE
 
 rules typeOfLValue : scope * LValue -> TYPE
   typeOfLValue(s, Var(name)) = T :-
-    typeOfVarMember(s, name) == T.
+    typeOfVarOrMember(s, name) == T.
 
   typeOfLValue(s, This()) = T :-
     typeOfVar(s, "this") == T.
@@ -264,20 +264,20 @@ rules subtypeOf : TYPE * TYPE
   subtypeOf(BOTTOM(), _).
 
 // Complex Resolution
-rules typeOfVarMember : scope * ID -> TYPE
-  typeOfVarMember(s, name) = T :- {decl}
+rules typeOfVarOrMember : scope * ID -> TYPE
+  typeOfVarOrMember(s, name) = T :- {decl}
     // resolution order:
     // 1. variables
     // 2. member
-    resolveVarMember(s, name) == [(_, (decl, T))|_].
+    resolveVarOrMember(s, name) == [(_, (decl, T))|_].
 
-rules resolveVarMember : scope * ID -> list(DECL)
-  resolveVarMember(s, name)
-    = unwrapVarMember(s, name, resolveVar(s, name)).
+rules resolveVarOrMember : scope * ID -> list(DECL)
+  resolveVarOrMember(s, name)
+    = unwrapVarOrResolveMember(s, name, resolveVar(s, name)).
 
-rules unwrapVarMember : scope * ID * list(DECL) -> list(DECL)
-  unwrapVarMember(_, _, ps@[(_, (Var{decl@_}, T))|_]) = ps.
-  unwrapVarMember(s, name, []) = resolveMember(s, name).
+rules unwrapVarOrResolveMember : scope * ID * list(DECL) -> list(DECL)
+  unwrapVarOrResolveMember(_, _, ps@[(_, (Var{decl@_}, T))|_]) = ps.
+  unwrapVarOrResolveMember(s, name, []) = resolveMember(s, name).
 
 // Placeholders
 rules
