@@ -55,11 +55,12 @@ context-free syntax
   Exp        = LValue
   Exp.Call   = <<Exp>(<{Exp ", "}*>)>
   Exp.New    = <new <Type>(<>)>
-  Exp.Null   = <null>
-  Exp.This   = <this>
 
+  Exp.Null   = <null>
   Exp.True   = <true>
   Exp.False  = <false>
+  Exp.This   = <this>
+
   Exp.Lt     = [[Exp] < [Exp]]  {left}
   Exp.Eq     = [[Exp] == [Exp]] {left}
   Exp.Neq    = [[Exp] != [Exp]] {left}
@@ -72,8 +73,6 @@ context-free syntax
 
   Exp.Cond   = <<Exp> ? <Exp> : <Exp>>
   Exp        = <(<Exp>)> {bracket}
-context-free priorities
-  Exp.Call <0> .> Exp = LValue
 
 context-free sorts LValue
 context-free syntax
@@ -94,7 +93,7 @@ context-free syntax
   Type.ClassType  = <<ID>>
 
 context-free priorities
-  Exp.Call <1> .> LExp.Var
+  Exp.Call <0> .> Exp = LValue
 
 context-free priorities
   {

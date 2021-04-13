@@ -120,7 +120,7 @@ rules typeOfExp : scope * Exp -> TYPE
   typeOfExp(s, LValue2Exp(lvalue))      = typeOfLValue(s, lvalue).
 
   typeOfExp(s, e@Call(_, _))            = typeOfCall(s, e).
-  typeOfExp(s, e@Call(LValue2Exp(_), _))= typeOfCall(s, e).
+  //typeOfExp(s, e@Call(LValue2Exp(_), _))= typeOfCall(s, e).
 
   typeOfExp(s, e@New(_))                = typeOfNew(s, e).
   typeOfExp(s, e@New(ClassType(_)))     = typeOfNew(s, e).
@@ -128,6 +128,8 @@ rules typeOfExp : scope * Exp -> TYPE
   typeOfExp(_, Null())  = NULL().
   typeOfExp(_, True())  = BOOL().
   typeOfExp(_, False()) = BOOL().
+
+  typeOfExp(s, This()) = typeOfVar(s, "this").
 
   typeOfExp(s, Lt(e1, e2)) = BOOL() :-
     typeOfExp(s, e1) == INT(),
@@ -174,19 +176,23 @@ rules typeOfNew : scope * Exp -> TYPE
     typeOfType(s, type) == T@CLASS(name, cs).
 
 rules typeOfLValue : scope * LValue -> TYPE
-  typeOfLValue(s, Var(name)) = T :-
+
+  typeOfLValue(s, Member(le, lv)) = T :- {T1 cs}
+    typeOfLExp(s, le) == CLASS(_, cs),
+    typeOfLValue(cs, lv) == T.
+
+  typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, le).
+
+rules typeOfLExp : scope * LExp -> TYPE
+
+  typeOfLExp(s, Var(name)) = T :-
+    // FIXME: Not vars in most cases
     typeOfVarOrMember(s, name) == T.
 
-  typeOfLValue(s, This()) = T :-
-    typeOfVar(s, "this") == T.
-
-  typeOfLValue(s, lv@Member(_, _))             = typeOfMemberExp(s, lv).
-  typeOfLValue(s, lv@Member(LValue2Exp(_), _)) = typeOfMemberExp(s, lv).
-
-rules typeOfMemberExp : scope * LValue -> TYPE
-  typeOfMemberExp(s, Member(e, name)) = T :- {T1 cs}
-    typeOfExp(s, e) == CLASS(_, cs),
-    typeOfMember(cs, name) == T.
+  typeOfLExp(s, MCall(name, args)) = TR :- {TA}
+    // FIXME: Not vars in most cases
+    typeOfVarOrMember(s, name) == METHOD(TA, TR),
+    typesOfExps(s, args) == TA.
 
 // Classes
 rules declareClass : scope * ID * TYPE
