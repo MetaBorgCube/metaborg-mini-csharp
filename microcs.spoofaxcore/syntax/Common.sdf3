@@ -8,7 +8,7 @@ lexical sorts
 
 lexical syntax
 
-  ID               = [a-zA-Z] [a-zA-Z0-9]*
+  ID               = [\_a-zA-Z] [\_a-zA-Z0-9]*
   INT              = "-"? [0-9]+
   STRING           = "\"" STRING_CHAR* "\""
   STRING_CHAR      = ~[\\\"\n]
@@ -26,19 +26,19 @@ lexical syntax
 lexical restrictions
 
   // Ensure greedy matching for lexicals
-  
+
   COMMENT_CHAR    -/- [\/]
   INT             -/- [0-9]
   ID              -/- [a-zA-Z0-9\_]
-  
+
   // EOF may not be followed by any char
-  
+
   EOF             -/- ~[]
 
 context-free restrictions
 
   // Ensure greedy matching for comments
-  
+
   LAYOUT? -/- [\ \t\n\r]
   LAYOUT? -/- [\/].[\/]
   LAYOUT? -/- [\/].[\*]

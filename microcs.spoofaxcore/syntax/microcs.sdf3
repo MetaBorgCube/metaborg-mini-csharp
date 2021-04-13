@@ -52,10 +52,11 @@ context-free syntax
 
 context-free sorts Exp
 context-free syntax
-  Exp        = <<LValue>>
-  Exp.Call   = <<Exp>(<{Exp ", "}*>)>
+  Exp        = LValue
+  Exp.CallE  = <<Exp>(<{Exp ", "}*>)>
   Exp.New    = <new <Type>(<>)>
   Exp.Null   = <null>
+  Exp.This   = <this>
 
   Exp.True   = <true>
   Exp.False  = <false>
@@ -74,9 +75,13 @@ context-free syntax
 
 context-free sorts LValue
 context-free syntax
-  LValue.Var = <<ID>>
-  LValue.This = <this>
-  LValue.Member = <<Exp>.<ID>>
+  LValue.Member = <<LExp>.<LValue>> {right}
+  LValue        = LExp
+
+context-free sorts LExp
+context-free syntax
+  LExp.Var      = <<ID>>
+  LExp.Call     = <<ID>(<{Exp ", "}*>)>
 
 context-free sorts Type
 context-free syntax
@@ -87,9 +92,13 @@ context-free syntax
   Type.ClassType  = <<ID>>
 
 context-free priorities
+  Exp.CallE <1> > LExp.Var
+
+context-free priorities
   {
     LValue.Member
-    Exp.Call
+    Exp.CallE
+    LExp.Call
     Exp.New
   } > {
     Exp.Not

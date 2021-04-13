@@ -1,0 +1,8 @@
+class A
+{
+    public void M(int a)
+    {
+        int l;
+        var _ = M(1);
+    }
+}
