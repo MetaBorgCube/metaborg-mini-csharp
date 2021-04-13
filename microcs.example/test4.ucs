@@ -1,0 +1,23 @@
+class Test {
+    public Node BuildTree() {
+        Node n = new Node();
+        Test t = new Test();
+        return $Exp;
+    }
+    public Node BuildNode(int depth) {
+        return new Node();
+    }
+}
+
+class Node {
+    public object Value;
+    public Node Left;
+    public Node Right;
+
+    public Node insert() {
+        return new Node();
+    }
+    public int CalcHeight() {
+        return 1;
+    }
+}

@@ -177,11 +177,17 @@ rules typeOfNew : scope * Exp -> TYPE
 
 rules typeOfLValue : scope * LValue -> TYPE
 
-  typeOfLValue(s, Member(le, lv)) = T :- {T1 cs}
-    typeOfLExp(s, le) == CLASS(_, cs),
-    typeOfLValue(cs, lv) == T.
+  typeOfLValue(s, lv@Member(_, _))           = typeOfMemberExp(s, lv).
+  typeOfLValue(s, lv@Member(Var(_), _))      = typeOfMemberExp(s, lv).
+  typeOfLValue(s, lv@Member(MCall(_, _), _)) = typeOfMemberExp(s, lv).
 
   typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, le).
+
+rules typeOfMemberExp : scope * LValue -> TYPE
+
+  typeOfMemberExp(s, Member(le, lv)) = T :- {T1 cs}
+    typeOfLExp(s, le) == CLASS(_, cs),
+    typeOfLValue(cs, lv) == T.
 
 rules typeOfLExp : scope * LExp -> TYPE
 
