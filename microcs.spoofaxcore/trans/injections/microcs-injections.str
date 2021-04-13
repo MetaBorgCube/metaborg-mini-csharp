@@ -12,7 +12,8 @@ imports
 
 signature
   constructors
-    LValue2Exp : LValue -> Exp
+    LValue2Exp  : LValue -> Exp
+    LExp2LValue : LExp -> LValue
 
 
 signature
@@ -25,37 +26,11 @@ signature
     Stmt-Plhdr       : Stmt
     Exp-Plhdr        : Exp
     LValue-Plhdr     : LValue
+    LExp-Plhdr       : LExp
     Type-Plhdr       : Type
 
 
 rules
-
-  is-microcs-Start-or-inj =
-    ?Start-Plhdr()
-
-  is-microcs-ClassDecl-or-inj =
-    ?ClassDecl-Plhdr()
-
-  is-microcs-MemberDecl-or-inj =
-    ?MemberDecl-Plhdr()
-
-  is-microcs-ParamDecl-or-inj =
-    ?ParamDecl-Plhdr()
-
-  is-microcs-FinalStmt-or-inj =
-    ?FinalStmt-Plhdr()
-
-  is-microcs-Stmt-or-inj =
-    ?Stmt-Plhdr()
-
-  is-microcs-Exp-or-inj =
-    ?Exp-Plhdr()
-
-  is-microcs-LValue-or-inj =
-    ?LValue-Plhdr()
-
-  is-microcs-Type-or-inj =
-    ?Type-Plhdr()
 
   is-microcs-Start-or-inj =
     ?Program(_)
@@ -121,6 +96,9 @@ rules
     ?False()
 
   is-microcs-Exp-or-inj =
+    ?This()
+
+  is-microcs-Exp-or-inj =
     ?Lt(_, _)
 
   is-microcs-Exp-or-inj =
@@ -148,13 +126,16 @@ rules
     ?Cond(_, _, _)
 
   is-microcs-LValue-or-inj =
+    ?Member(_, _)
+
+  is-microcs-LValue-or-inj =
+    is-microcs-LExp-or-inj
+
+  is-microcs-LExp-or-inj =
     ?Var(_)
 
-  is-microcs-LValue-or-inj =
-    ?This()
-
-  is-microcs-LValue-or-inj =
-    ?Member(_, _)
+  is-microcs-LExp-or-inj =
+    ?MCall(_, _)
 
   is-microcs-Type-or-inj =
     ?VoidType()
@@ -223,6 +204,12 @@ rules
     fail
 
   is-microcs-inj-cons =
+    is-microcs-LExp-inj-cons
+
+  is-microcs-LExp-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
     is-microcs-Type-inj-cons
 
   is-microcs-Type-inj-cons =
@@ -230,6 +217,9 @@ rules
 
   is-microcs-LValue-inj-cons =
     ?LValue2Exp(_)
+
+  is-microcs-LExp-inj-cons =
+    ?LExp2LValue(_)
 
 
 rules
@@ -257,6 +247,9 @@ rules
 
   explicate-injections-microcs =
     explicate-injections-microcs-LValue
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-LExp
 
   explicate-injections-microcs =
     explicate-injections-microcs-Type
@@ -397,6 +390,11 @@ rules
 
   explicate-injections-microcs-Exp =
     origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  explicate-injections-microcs-Exp =
+    origin-track-forced(
       \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
         with exp1' := <explicate-injections-microcs-Exp> exp1
              ; exp2' := <explicate-injections-microcs-Exp> exp2 \
@@ -459,20 +457,28 @@ rules
 
   explicate-injections-microcs-LValue =
     origin-track-forced(
+      \ Member(lExp, lValue){anno*} -> Member(lExp', lValue'){anno*}
+        with lExp' := <explicate-injections-microcs-LExp> lExp
+             ; lValue' := <explicate-injections-microcs-LValue> lValue \
+    )
+
+  explicate-injections-microcs-LValue =
+    origin-track-forced(
+      \ lExp -> LExp2LValue(<explicate-injections-microcs-LExp> lExp)
+        where <is-microcs-LExp-or-inj> lExp \
+    )
+
+  explicate-injections-microcs-LExp =
+    origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <explicate-injections-microcs-ID> id_ \
     )
 
-  explicate-injections-microcs-LValue =
+  explicate-injections-microcs-LExp =
     origin-track-forced(
-      \ This(){anno*} -> This(){anno*} \
-    )
-
-  explicate-injections-microcs-LValue =
-    origin-track-forced(
-      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
-        with exp' := <explicate-injections-microcs-Exp> exp
-             ; id_' := <explicate-injections-microcs-ID> id_ \
+      \ MCall(id_, exps){anno*} -> MCall(id_', exps'){anno*}
+        with id_' := <explicate-injections-microcs-ID> id_
+             ; exps' := <map(explicate-injections-microcs-Exp)> exps \
     )
 
   explicate-injections-microcs-Type =
@@ -541,6 +547,11 @@ rules
       \ LValue-Plhdr(){anno*} -> LValue-Plhdr(){anno*} \
     )
 
+  explicate-injections-microcs-LExp =
+    origin-track-forced(
+      \ LExp-Plhdr(){anno*} -> LExp-Plhdr(){anno*} \
+    )
+
   explicate-injections-microcs-Type =
     origin-track-forced(
       \ Type-Plhdr(){anno*} -> Type-Plhdr(){anno*} \
@@ -594,6 +605,12 @@ rules
         with alts' := <map(explicate-injections-microcs-LValue)> alts \
     )
 
+  explicate-injections-microcs-LExp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-LExp)> alts \
+    )
+
   explicate-injections-microcs-Type =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
@@ -626,6 +643,9 @@ rules
 
   implicate-injections-microcs =
     implicate-injections-microcs-LValue
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-LExp
 
   implicate-injections-microcs =
     implicate-injections-microcs-Type
@@ -765,6 +785,11 @@ rules
 
   implicate-injections-microcs-Exp =
     origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  implicate-injections-microcs-Exp =
+    origin-track-forced(
       \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
         with exp1' := <implicate-injections-microcs-Exp> exp1
              ; exp2' := <implicate-injections-microcs-Exp> exp2 \
@@ -827,20 +852,27 @@ rules
 
   implicate-injections-microcs-LValue =
     origin-track-forced(
+      \ Member(lExp, lValue){anno*} -> Member(lExp', lValue'){anno*}
+        with lExp' := <implicate-injections-microcs-LExp> lExp
+             ; lValue' := <implicate-injections-microcs-LValue> lValue \
+    )
+
+  implicate-injections-microcs-LValue =
+    origin-track-forced(
+      \ LExp2LValue(lExp) -> <implicate-injections-microcs-LExp> lExp \
+    )
+
+  implicate-injections-microcs-LExp =
+    origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <implicate-injections-microcs-ID> id_ \
     )
 
-  implicate-injections-microcs-LValue =
+  implicate-injections-microcs-LExp =
     origin-track-forced(
-      \ This(){anno*} -> This(){anno*} \
-    )
-
-  implicate-injections-microcs-LValue =
-    origin-track-forced(
-      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
-        with exp' := <implicate-injections-microcs-Exp> exp
-             ; id_' := <implicate-injections-microcs-ID> id_ \
+      \ MCall(id_, exps){anno*} -> MCall(id_', exps'){anno*}
+        with id_' := <implicate-injections-microcs-ID> id_
+             ; exps' := <map(implicate-injections-microcs-Exp)> exps \
     )
 
   implicate-injections-microcs-Type =
@@ -909,6 +941,11 @@ rules
       \ LValue-Plhdr(){anno*} -> LValue-Plhdr(){anno*} \
     )
 
+  implicate-injections-microcs-LExp =
+    origin-track-forced(
+      \ LExp-Plhdr(){anno*} -> LExp-Plhdr(){anno*} \
+    )
+
   implicate-injections-microcs-Type =
     origin-track-forced(
       \ Type-Plhdr(){anno*} -> Type-Plhdr(){anno*} \
@@ -962,6 +999,12 @@ rules
         with alts' := <map(implicate-injections-microcs-LValue)> alts \
     )
 
+  implicate-injections-microcs-LExp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-LExp)> alts \
+    )
+
   implicate-injections-microcs-Type =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
@@ -994,6 +1037,9 @@ rules
 
   upgrade-placeholders-microcs =
     upgrade-placeholders-microcs-LValue
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-LExp
 
   upgrade-placeholders-microcs =
     upgrade-placeholders-microcs-Type
@@ -1139,6 +1185,11 @@ rules
 
   upgrade-placeholders-microcs-Exp =
     origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  upgrade-placeholders-microcs-Exp =
+    origin-track-forced(
       \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
         with exp1' := <upgrade-placeholders-microcs-Exp> exp1
              ; exp2' := <upgrade-placeholders-microcs-Exp> exp2 \
@@ -1201,20 +1252,33 @@ rules
 
   upgrade-placeholders-microcs-LValue =
     origin-track-forced(
+      \ Member(lExp, lValue){anno*} -> Member(lExp', lValue'){anno*}
+        with lExp' := <upgrade-placeholders-microcs-LExp> lExp
+             ; lValue' := <upgrade-placeholders-microcs-LValue> lValue \
+    )
+
+  upgrade-placeholders-microcs-LValue =
+    origin-track-forced(
+      \ lExp -> <upgrade-placeholders-microcs-LExp> lExp
+        where <is-microcs-LExp-or-inj> lExp \
+    )
+
+  upgrade-placeholders-microcs-LValue =
+    origin-track-forced(
+      \ LExp2LValue(lExp){anno*} -> LExp2LValue(<upgrade-placeholders-microcs-LExp> lExp){anno*} \
+    )
+
+  upgrade-placeholders-microcs-LExp =
+    origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <upgrade-placeholders-microcs-ID> id_ \
     )
 
-  upgrade-placeholders-microcs-LValue =
+  upgrade-placeholders-microcs-LExp =
     origin-track-forced(
-      \ This(){anno*} -> This(){anno*} \
-    )
-
-  upgrade-placeholders-microcs-LValue =
-    origin-track-forced(
-      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
-        with exp' := <upgrade-placeholders-microcs-Exp> exp
-             ; id_' := <upgrade-placeholders-microcs-ID> id_ \
+      \ MCall(id_, exps){anno*} -> MCall(id_', exps'){anno*}
+        with id_' := <upgrade-placeholders-microcs-ID> id_
+             ; exps' := <upgrade-list(upgrade-placeholders-microcs-Exp)> exps \
     )
 
   upgrade-placeholders-microcs-Type =
@@ -1291,6 +1355,12 @@ rules
         with p := <make-placeholder> "LValue" \
     )
 
+  upgrade-placeholders-microcs-LExp =
+    origin-track-forced(
+      \ LExp-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "LExp" \
+    )
+
   upgrade-placeholders-microcs-Type =
     origin-track-forced(
       \ Type-Plhdr(){anno*} -> p{anno*}
@@ -1345,6 +1415,12 @@ rules
         with alts' := <upgrade-list(upgrade-placeholders-microcs-LValue)> alts \
     )
 
+  upgrade-placeholders-microcs-LExp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-LExp)> alts \
+    )
+
   upgrade-placeholders-microcs-Type =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
@@ -1377,6 +1453,9 @@ rules
 
   downgrade-placeholders-microcs =
     downgrade-placeholders-microcs-LValue
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-LExp
 
   downgrade-placeholders-microcs =
     downgrade-placeholders-microcs-Type
@@ -1522,6 +1601,11 @@ rules
 
   downgrade-placeholders-microcs-Exp =
     origin-track-forced(
+      \ This(){anno*} -> This(){anno*} \
+    )
+
+  downgrade-placeholders-microcs-Exp =
+    origin-track-forced(
       \ Lt(exp1, exp2){anno*} -> Lt(exp1', exp2'){anno*}
         with exp1' := <downgrade-placeholders-microcs-Exp> exp1
              ; exp2' := <downgrade-placeholders-microcs-Exp> exp2 \
@@ -1584,20 +1668,33 @@ rules
 
   downgrade-placeholders-microcs-LValue =
     origin-track-forced(
+      \ Member(lExp, lValue){anno*} -> Member(lExp', lValue'){anno*}
+        with lExp' := <downgrade-placeholders-microcs-LExp> lExp
+             ; lValue' := <downgrade-placeholders-microcs-LValue> lValue \
+    )
+
+  downgrade-placeholders-microcs-LValue =
+    origin-track-forced(
+      \ lExp -> <downgrade-placeholders-microcs-LExp> lExp
+        where <is-microcs-LExp-or-inj> lExp \
+    )
+
+  downgrade-placeholders-microcs-LValue =
+    origin-track-forced(
+      \ LExp2LValue(lExp){anno*} -> LExp2LValue(<downgrade-placeholders-microcs-LExp> lExp){anno*} \
+    )
+
+  downgrade-placeholders-microcs-LExp =
+    origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <downgrade-placeholders-microcs-ID> id_ \
     )
 
-  downgrade-placeholders-microcs-LValue =
+  downgrade-placeholders-microcs-LExp =
     origin-track-forced(
-      \ This(){anno*} -> This(){anno*} \
-    )
-
-  downgrade-placeholders-microcs-LValue =
-    origin-track-forced(
-      \ Member(exp, id_){anno*} -> Member(exp', id_'){anno*}
-        with exp' := <downgrade-placeholders-microcs-Exp> exp
-             ; id_' := <downgrade-placeholders-microcs-ID> id_ \
+      \ MCall(id_, exps){anno*} -> MCall(id_', exps'){anno*}
+        with id_' := <downgrade-placeholders-microcs-ID> id_
+             ; exps' := <downgrade-list(downgrade-placeholders-microcs-Exp)> exps \
     )
 
   downgrade-placeholders-microcs-Type =
@@ -1674,6 +1771,12 @@ rules
         where <(is-placeholder + ?LValue-Plhdr())> p \
     )
 
+  downgrade-placeholders-microcs-LExp =
+    origin-track-forced(
+      \ p{anno*} -> LExp-Plhdr(){anno*}
+        where <(is-placeholder + ?LExp-Plhdr())> p \
+    )
+
   downgrade-placeholders-microcs-Type =
     origin-track-forced(
       \ p{anno*} -> Type-Plhdr(){anno*}
@@ -1726,6 +1829,12 @@ rules
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
         with alts' := <downgrade-list(downgrade-placeholders-microcs-LValue)> alts \
+    )
+
+  downgrade-placeholders-microcs-LExp =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-LExp)> alts \
     )
 
   downgrade-placeholders-microcs-Type =
