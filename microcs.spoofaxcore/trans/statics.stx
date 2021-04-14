@@ -176,6 +176,9 @@ rules typeOfNew : scope * Exp -> TYPE
 rules typeOfLValue : scope * LValue -> TYPE
 
   typeOfLValue(s, m@Member(_, _)) = typeOfMemberExp(s, m).
+  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Var(_)))), _)) = typeOfMemberExp(s, m).
+  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(MCall(_, _)))), _)) = typeOfMemberExp(s, m).
+
   typeOfLValue(s, LExp2LValue(MemAcc2LExp(Var(name)))) = T :-
     typeOfVarOrMember(s, name) == T.
   typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, s, le).

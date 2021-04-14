@@ -10,6 +10,6 @@ class Tree {
     public int value;
     public int sum() { return $Exp; }
     public Tree find(int value) { return $Exp; }
-    public Tree max(Tree t1, Tree t2) { return t1.$LExp < t2.value ? $Exp : $Exp; }
+    public Tree max(Tree t1, Tree t2) { return $Exp < t2.value ? $Exp : $Exp; }
     public Tree insert(int value) { return $Exp; }
 }
