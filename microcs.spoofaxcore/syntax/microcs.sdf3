@@ -53,7 +53,6 @@ context-free syntax
 context-free sorts Exp
 context-free syntax
   Exp        = LValue
-  Exp.Call   = <<Exp>(<{Exp ", "}*>)>
   Exp.New    = <new <Type>(<>)>
 
   Exp.Null   = <null>
@@ -87,8 +86,8 @@ context-free syntax
 
 context-free sorts MemAcc
 context-free syntax
-  MemAcc.Var      = <<ID>>
-  MemAcc.MCall    = <<ID>(<{Exp ", "}*>)>
+  MemAcc.Var     = <<ID>>
+  MemAcc.Call    = <<ID>(<{Exp ", "}*>)>
 
 context-free sorts Type
 context-free syntax
@@ -99,7 +98,6 @@ context-free syntax
   Type.ClassType  = <<ID>>
 
 context-free priorities
-  Exp.Call <0> .> Exp = LValue,
   LValue = LExp <0> .> LExp.Project,
   LValue.Member <0> .> {
     Exp.Not
@@ -113,12 +111,12 @@ context-free priorities
 
 context-free priorities
   {
-    Exp.Call
+//    Exp.Call
     Exp.New
     LValue.Member
     LExp.Project
     MemAcc.Var
-    MemAcc.MCall
+    MemAcc.Call
   } > {
     Exp.Not
   } > {

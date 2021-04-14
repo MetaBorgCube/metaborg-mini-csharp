@@ -119,10 +119,6 @@ rules typeOfExp : scope * Exp -> TYPE
 
   typeOfExp(s, LValue2Exp(lvalue))      = typeOfLValue(s, lvalue).
 
-  typeOfExp(s, Call(e, args)) = TR :- {TA}
-    typeOfExp(s, e) == METHOD(TA, TR),
-    typesOfExps(s, args) == TA.
-
   typeOfExp(s, e@New(_))                = typeOfNew(s, e).
   typeOfExp(s, e@New(ClassType(_)))     = typeOfNew(s, e).
 
@@ -175,7 +171,7 @@ rules typeOfLValue : scope * LValue -> TYPE
 
   typeOfLValue(s, m@Member(_, _)) = typeOfMemberExp(s, m).
   typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Var(_)))), _)) = typeOfMemberExp(s, m).
-  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(MCall(_, _)))), _)) = typeOfMemberExp(s, m).
+  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Call(_, _)))), _)) = typeOfMemberExp(s, m).
 
   typeOfLValue(s, LExp2LValue(MemAcc2LExp(Var(name)))) = T :-
     typeOfVarOrMember(s, name) == T.
@@ -191,7 +187,7 @@ rules typeOfLExp : scope * scope * LExp -> TYPE
 
   typeOfLExp(s, cs, lv@Project(_, _))           = typeOfProjectExp(s, cs, lv).
   typeOfLExp(s, cs, lv@Project(Var(_), _))      = typeOfProjectExp(s, cs, lv).
-  typeOfLExp(s, cs, lv@Project(MCall(_, _), _)) = typeOfProjectExp(s, cs, lv).
+  typeOfLExp(s, cs, lv@Project(Call(_, _), _)) = typeOfProjectExp(s, cs, lv).
 
   typeOfLExp(s, cs, MemAcc2LExp(ma)) = typeOfMemAcc(s, cs, ma).
 
@@ -206,7 +202,7 @@ rules typeOfMemAcc : scope * scope * MemAcc -> TYPE
   typeOfMemAcc(s, cs, Var(name)) = T :-
     typeOfMember(cs, name) == T.
 
-  typeOfMemAcc(s, cs, MCall(name, args)) = TR :- {TA}
+  typeOfMemAcc(s, cs, Call(name, args)) = TR :- {TA}
     typeOfMember(cs, name) == METHOD(TA, TR),
     typesOfExps(s, args) == TA.
 
