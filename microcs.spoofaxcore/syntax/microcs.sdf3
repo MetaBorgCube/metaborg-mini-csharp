@@ -101,7 +101,6 @@ context-free syntax
 context-free priorities
   Exp.Call <0> .> Exp = LValue,
   LValue = LExp <0> .> LExp.Project,
-  //LValue.Member <0> .> Exp = LValue,
   LValue.Member <0> .> {
     Exp.Not
     Exp.Mul

@@ -119,7 +119,10 @@ rules typeOfExp : scope * Exp -> TYPE
 
   typeOfExp(s, LValue2Exp(lvalue))      = typeOfLValue(s, lvalue).
 
-  typeOfExp(s, e@Call(_, _))            = typeOfCall(s, e).
+  typeOfExp(s, Call(e, args)) = TR :- {TA}
+    typeOfExp(s, e) == METHOD(TA, TR),
+    typesOfExps(s, args) == TA.
+
   typeOfExp(s, e@New(_))                = typeOfNew(s, e).
   typeOfExp(s, e@New(ClassType(_)))     = typeOfNew(s, e).
 
@@ -164,11 +167,6 @@ rules typeOfExp : scope * Exp -> TYPE
     typeOfExp(s, e2) == T2,
     lub(T1, T2) == T.
 
-rules typeOfCall : scope * Exp -> TYPE
-  typeOfCall(s, Call(e, args)) = TR :- {TA}
-    typeOfExp(s, e) == METHOD(TA, TR),
-    typesOfExps(s, args) == TA.
-
 rules typeOfNew : scope * Exp -> TYPE
   typeOfNew(s, New(type)) = T :- {cs name}
     typeOfType(s, type) == T@CLASS(name, cs).
@@ -186,8 +184,8 @@ rules typeOfLValue : scope * LValue -> TYPE
 rules typeOfMemberExp : scope * LValue -> TYPE
 
   typeOfMemberExp(s, Member(e, le)) = T :- {cs}
-      typeOfExp(s, e) == CLASS(_, cs),
-      typeOfLExp(s, cs, le) == T.
+    typeOfExp(s, e) == CLASS(_, cs),
+    typeOfLExp(s, cs, le) == T.
 
 rules typeOfLExp : scope * scope * LExp -> TYPE
 
@@ -314,6 +312,5 @@ rules
   typeOfLExp(_, _, LExp-Plhdr()) = BOTTOM().
   typeOfMemAcc(_, _, MemAcc-Plhdr()) = BOTTOM().
   typeOfLValue(_, LValue-Plhdr()) = BOTTOM().
-  typeOfCall(_, Exp-Plhdr()) = BOTTOM().
   typeOfNew(_, Exp-Plhdr()) = BOTTOM().
   typeOfType(_, Type-Plhdr()) = BOTTOM().
