@@ -19,7 +19,7 @@ class Tree {
     public Tree find(int value) { return $Exp; }
     public Tree insert(int value) {
         subterms = subterms;
-        var x = this.subterms == null ? new TreeList() : this.subterms;
+        var x = (this.subterms == null ? new TreeList() : this.subterms).insert(value);
         //this.$LExp = $Exp;
         return this;
     }

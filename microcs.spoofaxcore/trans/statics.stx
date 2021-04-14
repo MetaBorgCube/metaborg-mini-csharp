@@ -176,37 +176,37 @@ rules typeOfNew : scope * Exp -> TYPE
 rules typeOfLValue : scope * LValue -> TYPE
 
   typeOfLValue(s, m@Member(_, _)) = typeOfMemberExp(s, m).
-  typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, le).
+  typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, s, le).
 
 rules typeOfMemberExp : scope * LValue -> TYPE
 
   typeOfMemberExp(s, Member(e, le)) = T :- {cs}
       typeOfExp(s, e) == CLASS(_, cs),
-      typeOfLExp(cs, le) == T.
+      typeOfLExp(s, cs, le) == T.
 
-rules typeOfLExp : scope * LExp -> TYPE
+rules typeOfLExp : scope * scope * LExp -> TYPE
 
-  typeOfLExp(s, lv@Project(_, _))           = typeOfProjectExp(s, lv).
-  typeOfLExp(s, lv@Project(Var(_), _))      = typeOfProjectExp(s, lv).
-  typeOfLExp(s, lv@Project(MCall(_, _), _)) = typeOfProjectExp(s, lv).
+  typeOfLExp(s, cs, lv@Project(_, _))           = typeOfProjectExp(s, cs, lv).
+  typeOfLExp(s, cs, lv@Project(Var(_), _))      = typeOfProjectExp(s, cs, lv).
+  typeOfLExp(s, cs, lv@Project(MCall(_, _), _)) = typeOfProjectExp(s, cs, lv).
 
-  typeOfLExp(s, MemAcc2LExp(ma)) = typeOfMemAcc(s, ma).
+  typeOfLExp(s, cs, MemAcc2LExp(ma)) = typeOfMemAcc(s, cs, ma).
 
-rules typeOfProjectExp : scope * LExp -> TYPE
+rules typeOfProjectExp : scope * scope * LExp -> TYPE
 
-  typeOfProjectExp(s, Project(ma, le)) = T :- {T1 cs}
-    typeOfMemAcc(s, ma) == CLASS(_, cs),
-    typeOfLExp(cs, le) == T.
+  typeOfProjectExp(s, cs, Project(ma, le)) = T :- {T1 cs2}
+    typeOfMemAcc(s, cs, ma) == CLASS(_, cs2),
+    typeOfLExp(s, cs2, le) == T.
 
-rules typeOfMemAcc : scope * MemAcc -> TYPE
+rules typeOfMemAcc : scope * scope * MemAcc -> TYPE
 
-  typeOfMemAcc(s, Var(name)) = T :-
+  typeOfMemAcc(s, cs, Var(name)) = T :-
     // FIXME: Not vars in most cases
-    typeOfVarOrMember(s, name) == T.
+    typeOfVarOrMember(cs, name) == T.
 
-  typeOfMemAcc(s, MCall(name, args)) = TR :- {TA}
+  typeOfMemAcc(s, cs, MCall(name, args)) = TR :- {TA}
     // FIXME: Not vars in most cases
-    typeOfVarOrMember(s, name) == METHOD(TA, TR),
+    typeOfVarOrMember(cs, name) == METHOD(TA, TR),
     typesOfExps(s, args) == TA.
 
 // Classes
