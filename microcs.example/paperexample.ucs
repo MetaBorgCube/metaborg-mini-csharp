@@ -1,26 +1,26 @@
-class Test {
-    public Node BuildTree() {
-        Node n = new Node();
-        Test t = new Test();
-      return null;
-    }
-    public Node BuildNode(int depth) {
-        return new Node();
+class TreeList {
+    public Tree head;
+    public TreeList tail;
+    public int sum() { return $Exp; }
+    public Tree find(int value) { return $Exp; }
+    public TreeList insert(int value) {
+        /*var h = new Tree();
+        h.value = value;
+        var tl = new TreeList();
+        tl.head = h;
+        tl.tail = this;*/
+        return $Exp;
     }
 }
-
-class Node {
-    public int Value;
-    public Node Left;
-    public Node Right;
-
-    public int CalcHeight() {
-      throw new Exception();
-    }
-
-    public void C() { }
-    
-    public Node insert(Node n) {
-      return null;
+class Tree {
+    public TreeList subterms;
+    public int value;
+    public int sum() { return $Exp; }
+    public Tree find(int value) { return $Exp; }
+    public Tree insert(int value) {
+        subterms = subterms;
+        var x = this.subterms == null ? new TreeList() : this.subterms;
+        //this.$LExp = $Exp;
+        return this;
     }
 }

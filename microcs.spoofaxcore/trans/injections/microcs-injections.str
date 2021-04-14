@@ -14,6 +14,7 @@ signature
   constructors
     LValue2Exp  : LValue -> Exp
     LExp2LValue : LExp -> LValue
+    MemAcc2LExp : MemAcc -> LExp
 
 
 signature
@@ -27,6 +28,7 @@ signature
     Exp-Plhdr        : Exp
     LValue-Plhdr     : LValue
     LExp-Plhdr       : LExp
+    MemAcc-Plhdr     : MemAcc
     Type-Plhdr       : Type
 
 
@@ -132,9 +134,15 @@ rules
     is-microcs-LExp-or-inj
 
   is-microcs-LExp-or-inj =
-    ?Var(_)
+    ?Project(_, _)
 
   is-microcs-LExp-or-inj =
+    is-microcs-MemAcc-or-inj
+
+  is-microcs-MemAcc-or-inj =
+    ?Var(_)
+
+  is-microcs-MemAcc-or-inj =
     ?MCall(_, _)
 
   is-microcs-Type-or-inj =
@@ -210,6 +218,12 @@ rules
     fail
 
   is-microcs-inj-cons =
+    is-microcs-MemAcc-inj-cons
+
+  is-microcs-MemAcc-inj-cons =
+    fail
+
+  is-microcs-inj-cons =
     is-microcs-Type-inj-cons
 
   is-microcs-Type-inj-cons =
@@ -220,6 +234,9 @@ rules
 
   is-microcs-LExp-inj-cons =
     ?LExp2LValue(_)
+
+  is-microcs-MemAcc-inj-cons =
+    ?MemAcc2LExp(_)
 
 
 rules
@@ -250,6 +267,9 @@ rules
 
   explicate-injections-microcs =
     explicate-injections-microcs-LExp
+
+  explicate-injections-microcs =
+    explicate-injections-microcs-MemAcc
 
   explicate-injections-microcs =
     explicate-injections-microcs-Type
@@ -457,9 +477,9 @@ rules
 
   explicate-injections-microcs-LValue =
     origin-track-forced(
-      \ Member(lExp, lValue){anno*} -> Member(lExp', lValue'){anno*}
-        with lExp' := <explicate-injections-microcs-LExp> lExp
-             ; lValue' := <explicate-injections-microcs-LValue> lValue \
+      \ Member(exp, lExp){anno*} -> Member(exp', lExp'){anno*}
+        with exp' := <explicate-injections-microcs-Exp> exp
+             ; lExp' := <explicate-injections-microcs-LExp> lExp \
     )
 
   explicate-injections-microcs-LValue =
@@ -470,11 +490,24 @@ rules
 
   explicate-injections-microcs-LExp =
     origin-track-forced(
+      \ Project(memAcc, lExp){anno*} -> Project(memAcc', lExp'){anno*}
+        with memAcc' := <explicate-injections-microcs-MemAcc> memAcc
+             ; lExp' := <explicate-injections-microcs-LExp> lExp \
+    )
+
+  explicate-injections-microcs-LExp =
+    origin-track-forced(
+      \ memAcc -> MemAcc2LExp(<explicate-injections-microcs-MemAcc> memAcc)
+        where <is-microcs-MemAcc-or-inj> memAcc \
+    )
+
+  explicate-injections-microcs-MemAcc =
+    origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <explicate-injections-microcs-ID> id_ \
     )
 
-  explicate-injections-microcs-LExp =
+  explicate-injections-microcs-MemAcc =
     origin-track-forced(
       \ MCall(id_, exps){anno*} -> MCall(id_', exps'){anno*}
         with id_' := <explicate-injections-microcs-ID> id_
@@ -552,6 +585,11 @@ rules
       \ LExp-Plhdr(){anno*} -> LExp-Plhdr(){anno*} \
     )
 
+  explicate-injections-microcs-MemAcc =
+    origin-track-forced(
+      \ MemAcc-Plhdr(){anno*} -> MemAcc-Plhdr(){anno*} \
+    )
+
   explicate-injections-microcs-Type =
     origin-track-forced(
       \ Type-Plhdr(){anno*} -> Type-Plhdr(){anno*} \
@@ -611,6 +649,12 @@ rules
         with alts' := <map(explicate-injections-microcs-LExp)> alts \
     )
 
+  explicate-injections-microcs-MemAcc =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(explicate-injections-microcs-MemAcc)> alts \
+    )
+
   explicate-injections-microcs-Type =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
@@ -646,6 +690,9 @@ rules
 
   implicate-injections-microcs =
     implicate-injections-microcs-LExp
+
+  implicate-injections-microcs =
+    implicate-injections-microcs-MemAcc
 
   implicate-injections-microcs =
     implicate-injections-microcs-Type
@@ -852,9 +899,9 @@ rules
 
   implicate-injections-microcs-LValue =
     origin-track-forced(
-      \ Member(lExp, lValue){anno*} -> Member(lExp', lValue'){anno*}
-        with lExp' := <implicate-injections-microcs-LExp> lExp
-             ; lValue' := <implicate-injections-microcs-LValue> lValue \
+      \ Member(exp, lExp){anno*} -> Member(exp', lExp'){anno*}
+        with exp' := <implicate-injections-microcs-Exp> exp
+             ; lExp' := <implicate-injections-microcs-LExp> lExp \
     )
 
   implicate-injections-microcs-LValue =
@@ -864,11 +911,23 @@ rules
 
   implicate-injections-microcs-LExp =
     origin-track-forced(
+      \ Project(memAcc, lExp){anno*} -> Project(memAcc', lExp'){anno*}
+        with memAcc' := <implicate-injections-microcs-MemAcc> memAcc
+             ; lExp' := <implicate-injections-microcs-LExp> lExp \
+    )
+
+  implicate-injections-microcs-LExp =
+    origin-track-forced(
+      \ MemAcc2LExp(memAcc) -> <implicate-injections-microcs-MemAcc> memAcc \
+    )
+
+  implicate-injections-microcs-MemAcc =
+    origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <implicate-injections-microcs-ID> id_ \
     )
 
-  implicate-injections-microcs-LExp =
+  implicate-injections-microcs-MemAcc =
     origin-track-forced(
       \ MCall(id_, exps){anno*} -> MCall(id_', exps'){anno*}
         with id_' := <implicate-injections-microcs-ID> id_
@@ -946,6 +1005,11 @@ rules
       \ LExp-Plhdr(){anno*} -> LExp-Plhdr(){anno*} \
     )
 
+  implicate-injections-microcs-MemAcc =
+    origin-track-forced(
+      \ MemAcc-Plhdr(){anno*} -> MemAcc-Plhdr(){anno*} \
+    )
+
   implicate-injections-microcs-Type =
     origin-track-forced(
       \ Type-Plhdr(){anno*} -> Type-Plhdr(){anno*} \
@@ -1005,6 +1069,12 @@ rules
         with alts' := <map(implicate-injections-microcs-LExp)> alts \
     )
 
+  implicate-injections-microcs-MemAcc =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <map(implicate-injections-microcs-MemAcc)> alts \
+    )
+
   implicate-injections-microcs-Type =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
@@ -1040,6 +1110,9 @@ rules
 
   upgrade-placeholders-microcs =
     upgrade-placeholders-microcs-LExp
+
+  upgrade-placeholders-microcs =
+    upgrade-placeholders-microcs-MemAcc
 
   upgrade-placeholders-microcs =
     upgrade-placeholders-microcs-Type
@@ -1252,9 +1325,9 @@ rules
 
   upgrade-placeholders-microcs-LValue =
     origin-track-forced(
-      \ Member(lExp, lValue){anno*} -> Member(lExp', lValue'){anno*}
-        with lExp' := <upgrade-placeholders-microcs-LExp> lExp
-             ; lValue' := <upgrade-placeholders-microcs-LValue> lValue \
+      \ Member(exp, lExp){anno*} -> Member(exp', lExp'){anno*}
+        with exp' := <upgrade-placeholders-microcs-Exp> exp
+             ; lExp' := <upgrade-placeholders-microcs-LExp> lExp \
     )
 
   upgrade-placeholders-microcs-LValue =
@@ -1270,11 +1343,29 @@ rules
 
   upgrade-placeholders-microcs-LExp =
     origin-track-forced(
+      \ Project(memAcc, lExp){anno*} -> Project(memAcc', lExp'){anno*}
+        with memAcc' := <upgrade-placeholders-microcs-MemAcc> memAcc
+             ; lExp' := <upgrade-placeholders-microcs-LExp> lExp \
+    )
+
+  upgrade-placeholders-microcs-LExp =
+    origin-track-forced(
+      \ memAcc -> <upgrade-placeholders-microcs-MemAcc> memAcc
+        where <is-microcs-MemAcc-or-inj> memAcc \
+    )
+
+  upgrade-placeholders-microcs-LExp =
+    origin-track-forced(
+      \ MemAcc2LExp(memAcc){anno*} -> MemAcc2LExp(<upgrade-placeholders-microcs-MemAcc> memAcc){anno*} \
+    )
+
+  upgrade-placeholders-microcs-MemAcc =
+    origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <upgrade-placeholders-microcs-ID> id_ \
     )
 
-  upgrade-placeholders-microcs-LExp =
+  upgrade-placeholders-microcs-MemAcc =
     origin-track-forced(
       \ MCall(id_, exps){anno*} -> MCall(id_', exps'){anno*}
         with id_' := <upgrade-placeholders-microcs-ID> id_
@@ -1361,6 +1452,12 @@ rules
         with p := <make-placeholder> "LExp" \
     )
 
+  upgrade-placeholders-microcs-MemAcc =
+    origin-track-forced(
+      \ MemAcc-Plhdr(){anno*} -> p{anno*}
+        with p := <make-placeholder> "MemAcc" \
+    )
+
   upgrade-placeholders-microcs-Type =
     origin-track-forced(
       \ Type-Plhdr(){anno*} -> p{anno*}
@@ -1421,6 +1518,12 @@ rules
         with alts' := <upgrade-list(upgrade-placeholders-microcs-LExp)> alts \
     )
 
+  upgrade-placeholders-microcs-MemAcc =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <upgrade-list(upgrade-placeholders-microcs-MemAcc)> alts \
+    )
+
   upgrade-placeholders-microcs-Type =
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
@@ -1456,6 +1559,9 @@ rules
 
   downgrade-placeholders-microcs =
     downgrade-placeholders-microcs-LExp
+
+  downgrade-placeholders-microcs =
+    downgrade-placeholders-microcs-MemAcc
 
   downgrade-placeholders-microcs =
     downgrade-placeholders-microcs-Type
@@ -1668,9 +1774,9 @@ rules
 
   downgrade-placeholders-microcs-LValue =
     origin-track-forced(
-      \ Member(lExp, lValue){anno*} -> Member(lExp', lValue'){anno*}
-        with lExp' := <downgrade-placeholders-microcs-LExp> lExp
-             ; lValue' := <downgrade-placeholders-microcs-LValue> lValue \
+      \ Member(exp, lExp){anno*} -> Member(exp', lExp'){anno*}
+        with exp' := <downgrade-placeholders-microcs-Exp> exp
+             ; lExp' := <downgrade-placeholders-microcs-LExp> lExp \
     )
 
   downgrade-placeholders-microcs-LValue =
@@ -1686,11 +1792,29 @@ rules
 
   downgrade-placeholders-microcs-LExp =
     origin-track-forced(
+      \ Project(memAcc, lExp){anno*} -> Project(memAcc', lExp'){anno*}
+        with memAcc' := <downgrade-placeholders-microcs-MemAcc> memAcc
+             ; lExp' := <downgrade-placeholders-microcs-LExp> lExp \
+    )
+
+  downgrade-placeholders-microcs-LExp =
+    origin-track-forced(
+      \ memAcc -> <downgrade-placeholders-microcs-MemAcc> memAcc
+        where <is-microcs-MemAcc-or-inj> memAcc \
+    )
+
+  downgrade-placeholders-microcs-LExp =
+    origin-track-forced(
+      \ MemAcc2LExp(memAcc){anno*} -> MemAcc2LExp(<downgrade-placeholders-microcs-MemAcc> memAcc){anno*} \
+    )
+
+  downgrade-placeholders-microcs-MemAcc =
+    origin-track-forced(
       \ Var(id_){anno*} -> Var(id_'){anno*}
         with id_' := <downgrade-placeholders-microcs-ID> id_ \
     )
 
-  downgrade-placeholders-microcs-LExp =
+  downgrade-placeholders-microcs-MemAcc =
     origin-track-forced(
       \ MCall(id_, exps){anno*} -> MCall(id_', exps'){anno*}
         with id_' := <downgrade-placeholders-microcs-ID> id_
@@ -1777,6 +1901,12 @@ rules
         where <(is-placeholder + ?LExp-Plhdr())> p \
     )
 
+  downgrade-placeholders-microcs-MemAcc =
+    origin-track-forced(
+      \ p{anno*} -> MemAcc-Plhdr(){anno*}
+        where <(is-placeholder + ?MemAcc-Plhdr())> p \
+    )
+
   downgrade-placeholders-microcs-Type =
     origin-track-forced(
       \ p{anno*} -> Type-Plhdr(){anno*}
@@ -1835,6 +1965,12 @@ rules
     origin-track-forced(
       \ amb(alts){anno*} -> amb(alts'){anno*}
         with alts' := <downgrade-list(downgrade-placeholders-microcs-LExp)> alts \
+    )
+
+  downgrade-placeholders-microcs-MemAcc =
+    origin-track-forced(
+      \ amb(alts){anno*} -> amb(alts'){anno*}
+        with alts' := <downgrade-list(downgrade-placeholders-microcs-MemAcc)> alts \
     )
 
   downgrade-placeholders-microcs-Type =

@@ -1,0 +1,12 @@
+class A {
+  public void f() {
+    var x = F().x.M(1).$LExp;
+    var _ = x;
+    var _ = toString();
+    var _ = this.x;
+    var _ = x.y.z.toString().length();
+    var _ = (true ? a : b).toString();
+    this.$LExp = $Exp;
+    (true ? a : b).value = 10;
+  }
+}

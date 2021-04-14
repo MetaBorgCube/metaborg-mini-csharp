@@ -74,15 +74,21 @@ context-free syntax
   Exp.Cond   = <<Exp> ? <Exp> : <Exp>>
   Exp        = <(<Exp>)> {bracket}
 
+
 context-free sorts LValue
 context-free syntax
-  LValue.Member = <<LExp>.<LValue>> {right}
-  LValue        = LExp
+  LValue.Member  = <<Exp>.<LExp>>
+  LValue         = LExp
 
 context-free sorts LExp
 context-free syntax
-  LExp.Var      = <<ID>>
-  LExp.MCall    = <<ID>(<{Exp ", "}*>)>
+  LExp.Project   = <<MemAcc>.<LExp>> {right}
+  LExp           = MemAcc
+
+context-free sorts MemAcc
+context-free syntax
+  MemAcc.Var      = <<ID>>
+  MemAcc.MCall    = <<ID>(<{Exp ", "}*>)>
 
 context-free sorts Type
 context-free syntax
@@ -93,14 +99,26 @@ context-free syntax
   Type.ClassType  = <<ID>>
 
 context-free priorities
-  Exp.Call <0> .> Exp = LValue
+  Exp.Call <0> .> Exp = LValue,
+  LValue.Member <0> .> Exp = LValue,
+  LValue.Member <0> .> {
+    Exp.Not
+    Exp.Mul
+    Exp.Add
+    Exp.Eq
+    Exp.New
+    Exp.And
+    Exp.Cond
+  }
 
 context-free priorities
   {
-    LValue.Member
     Exp.Call
-    LExp.MCall
     Exp.New
+    LValue.Member
+    LExp.Project
+    MemAcc.Var
+    MemAcc.MCall
   } > {
     Exp.Not
   } > {
