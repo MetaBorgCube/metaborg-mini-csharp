@@ -101,7 +101,7 @@ rules stmtOk : scope * Stmt
 
   stmtOk(bs, DeclareTypedVarInit(type, name, e)) :- {T TE}
     typeOfType(bs, type) == T,
-    typeOfExp(bs, e) == TE,
+    subtypeOf(typeOfExp(bs, e), TE),
     subtypeOf(TE, T),
     declareVar(bs, name, T).
 
@@ -111,7 +111,7 @@ rules stmtOk : scope * Stmt
 
   stmtOk(bs, Assign(lvalue, e)) :- {T TE}
     typeOfLValue(bs, lvalue) == T,
-    typeOfExp(bs, e) == TE,
+    subtypeOf(typeOfExp(bs, e), TE),
     subtypeOf(TE, T).
 
 rules typeOfExp : scope * Exp -> TYPE
@@ -130,8 +130,8 @@ rules typeOfExp : scope * Exp -> TYPE
   typeOfExp(s, This()) = typeOfVar(s, "this").
 
   typeOfExp(s, Lt(e1, e2)) = BOOL() :-
-    typeOfExp(s, e1) == INT(),
-    typeOfExp(s, e2) == INT().
+    subtypeOf(typeOfExp(s, e1), INT()),
+    subtypeOf(typeOfExp(s, e2), INT()).
 
   typeOfExp(s, Eq(e1, e2)) = BOOL() :-
     typeOfExp(s, e1) == _,
@@ -142,24 +142,24 @@ rules typeOfExp : scope * Exp -> TYPE
     typeOfExp(s, e2) == _.
 
   typeOfExp(s, And(e1, e2)) = BOOL() :-
-    typeOfExp(s, e1) == BOOL(),
-    typeOfExp(s, e2) == BOOL().
+    subtypeOf(typeOfExp(s, e1), BOOL()),
+    subtypeOf(typeOfExp(s, e2), BOOL()).
 
   typeOfExp(s, Not(e1)) = BOOL() :-
-    typeOfExp(s, e1) == BOOL().
+    subtypeOf(typeOfExp(s, e1), BOOL()).
 
   typeOfExp(s, Int(_)) = INT().
 
   typeOfExp(s, Mul(e1, e2)) = INT() :-
-    typeOfExp(s, e1) == INT(),
-    typeOfExp(s, e2) == INT().
+    subtypeOf(typeOfExp(s, e1), INT()),
+    subtypeOf(typeOfExp(s, e2), INT()).
 
   typeOfExp(s, Add(e1, e2)) = INT() :-
-    typeOfExp(s, e1) == INT(),
-    typeOfExp(s, e2) == INT().
+    subtypeOf(typeOfExp(s, e1), INT()),
+    subtypeOf(typeOfExp(s, e2), INT()).
 
   typeOfExp(s, Cond(ec, e1, e2)) = T :- {T1 T2}
-    typeOfExp(s, ec) == BOOL(),
+    subtypeOf(typeOfExp(s, ec), BOOL()),
     typeOfExp(s, e1) == T1,
     typeOfExp(s, e2) == T2,
     lub(T1, T2) == T.
@@ -176,6 +176,8 @@ rules typeOfNew : scope * Exp -> TYPE
 rules typeOfLValue : scope * LValue -> TYPE
 
   typeOfLValue(s, m@Member(_, _)) = typeOfMemberExp(s, m).
+  typeOfLValue(s, LExp2LValue(MemAcc2LExp(Var(name)))) = T :-
+    typeOfVarOrMember(s, name) == T.
   typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, s, le).
 
 rules typeOfMemberExp : scope * LValue -> TYPE
@@ -201,12 +203,10 @@ rules typeOfProjectExp : scope * scope * LExp -> TYPE
 rules typeOfMemAcc : scope * scope * MemAcc -> TYPE
 
   typeOfMemAcc(s, cs, Var(name)) = T :-
-    // FIXME: Not vars in most cases
-    typeOfVarOrMember(cs, name) == T.
+    typeOfMember(cs, name) == T.
 
   typeOfMemAcc(s, cs, MCall(name, args)) = TR :- {TA}
-    // FIXME: Not vars in most cases
-    typeOfVarOrMember(cs, name) == METHOD(TA, TR),
+    typeOfMember(cs, name) == METHOD(TA, TR),
     typesOfExps(s, args) == TA.
 
 // Classes
@@ -308,6 +308,8 @@ rules
   typeOfParam(_, ParamDecl-Plhdr()) = BOTTOM().
   stmtOk(_, Stmt-Plhdr()).
   typeOfExp(_, Exp-Plhdr()) = BOTTOM().
+  typeOfLExp(_, _, LExp-Plhdr()) = BOTTOM().
+  typeOfMemAcc(_, _, MemAcc-Plhdr()) = BOTTOM().
   typeOfLValue(_, LValue-Plhdr()) = BOTTOM().
   typeOfCall(_, Exp-Plhdr()) = BOTTOM().
   typeOfNew(_, Exp-Plhdr()) = BOTTOM().

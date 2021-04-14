@@ -16,7 +16,9 @@ class Tree {
     public TreeList subterms;
     public int value;
     public int sum() { return $Exp; }
+    public int x() { return 10; }
     public Tree find(int value) { return $Exp; }
+    public Tree max(Tree t1, Tree t2, int x) { var _ = t1.value; return this; }
     public Tree insert(int value) {
         subterms = subterms;
         var x = (this.subterms == null ? new TreeList() : this.subterms).insert(value);

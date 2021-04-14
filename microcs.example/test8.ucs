@@ -1,0 +1,15 @@
+class TreeList {
+    public Tree head;
+    public TreeList tail;
+    public int sum() { return $Exp; }
+    //public Tree find(int value) { return head.max($Exp, $Exp).$LExp; }
+    public TreeList insert(int value) { return $Exp; }
+}
+class Tree {
+    public TreeList subterms;
+    public int value;
+    public int sum() { return $Exp; }
+    public Tree find(int value) { return $Exp; }
+    public Tree max(Tree t1, Tree t2) { return t1.$LExp < t2.value ? $Exp : $Exp; }
+    public Tree insert(int value) { return $Exp; }
+}

@@ -6,7 +6,7 @@ class Node {
     public Test t;
 
     public Test M() {
-        return t.n.t.n.t.n.t.n.M().n.t;
+        return t.n.t.n.M().n.Left.t;
     }
 
     public int CalcHeight() {

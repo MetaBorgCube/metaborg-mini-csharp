@@ -1,0 +1,12 @@
+
+class Node {
+    public Test t;
+
+    public Test M() {
+        return t.n.t;
+    }
+}
+
+class Test {
+    public Node n;
+}
