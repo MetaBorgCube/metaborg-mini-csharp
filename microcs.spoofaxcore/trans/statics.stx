@@ -164,47 +164,75 @@ rules typeOfExp : scope * Exp -> TYPE
     lub(T1, T2) == T.
 
 rules typeOfNew : scope * Exp -> TYPE
+
   typeOfNew(s, New(type)) = T :- {cs name}
     typeOfType(s, type) == T@CLASS(name, cs).
 
 rules typeOfLValue : scope * LValue -> TYPE
 
-  typeOfLValue(s, m@Member(_, _)) = typeOfMemberExp(s, m).
-  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Var(_)))), _)) = typeOfMemberExp(s, m).
-  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Call(_, _)))), _)) = typeOfMemberExp(s, m).
+  typeOfLValue(s, Dot(mas)) = T2 :- {T1}
+    typeOfMemAcc(s, s, BOTTOM(), mas) == T2.
+    
+  typeOfLValue(s, EDot(e, mas)) = T2 :- {T1 cs}
+    typeOfExp(s, e) == T1@CLASS(_, cs),
+    typeOfMemAcc(s, cs, T1, mas) == T2.
+    
+rules typeOfMemAcc : scope * scope * TYPE * list(MemAcc) -> TYPE
 
-  typeOfLValue(s, LExp2LValue(MemAcc2LExp(Var(name)))) = T :-
-    typeOfVarOrMember(s, name) == T.
-  typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, s, le).
+  typeOfMemAcc(s, cs, T, []) = T.
+  
+  typeOfMemAcc(s, cs1, _, [Var(name) | mas]) = T2 :- {T1}
+    typeOfVarOrMember(cs1, name) == T1,
+    typeOfMemAcc(s, scopeOfType(T1), T1, mas) == T2.
 
-rules typeOfMemberExp : scope * LValue -> TYPE
+  typeOfMemAcc(s, cs1, T, [Call(name, args) | mas]) = T2 :- {TA TR}
+    typeOfMember(cs1, name) == METHOD(TA, TR),
+    typesOfExps(s, args) == TA,
+    typeOfMemAcc(s, scopeOfType(TR), TR, mas) == T2.
+    
+rules  scopeOfType : TYPE -> scope 
+  
+  scopeOfType(CLASS(_, cs)) = cs.
+  scopeOfType(_) = s :- new s.
 
-  typeOfMemberExp(s, Member(e, le)) = T :- {cs}
-    typeOfExp(s, e) == CLASS(_, cs),
-    typeOfLExp(s, cs, le) == T.
+//rules typeOfLValue : scope * LValue -> TYPE
+//
+//  typeOfLValue(s, m@Member(_, _)) = typeOfMemberExp(s, m).
+//  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Var(_)))), _)) = typeOfMemberExp(s, m).
+//  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Call(_, _)))), _)) = typeOfMemberExp(s, m).
+//
+//  typeOfLValue(s, LExp2LValue(MemAcc2LExp(Var(name)))) = T :-
+//    typeOfVarOrMember(s, name) == T.
+//  typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, s, le).
+//
+//rules typeOfMemberExp : scope * LValue -> TYPE
+//
+//  typeOfMemberExp(s, Member(e, le)) = T :- {cs}
+//    typeOfExp(s, e) == CLASS(_, cs),
+//    typeOfLExp(s, cs, le) == T.
+//
+//rules typeOfLExp : scope * scope * LExp -> TYPE
+//
+//  typeOfLExp(s, cs, lv@Project(_, _))           = typeOfProjectExp(s, cs, lv).
+//  typeOfLExp(s, cs, lv@Project(Var(_), _))      = typeOfProjectExp(s, cs, lv).
+//  typeOfLExp(s, cs, lv@Project(Call(_, _), _)) = typeOfProjectExp(s, cs, lv).
+//
+//  typeOfLExp(s, cs, MemAcc2LExp(ma)) = typeOfMemAcc(s, cs, ma).
+//
+//rules typeOfProjectExp : scope * scope * LExp -> TYPE
+//
+//  typeOfProjectExp(s, cs, Project(ma, le)) = T :- {T1 cs2}
+//    typeOfMemAcc(s, cs, ma) == CLASS(_, cs2),
+//    typeOfLExp(s, cs2, le) == T.
 
-rules typeOfLExp : scope * scope * LExp -> TYPE
-
-  typeOfLExp(s, cs, lv@Project(_, _))           = typeOfProjectExp(s, cs, lv).
-  typeOfLExp(s, cs, lv@Project(Var(_), _))      = typeOfProjectExp(s, cs, lv).
-  typeOfLExp(s, cs, lv@Project(Call(_, _), _)) = typeOfProjectExp(s, cs, lv).
-
-  typeOfLExp(s, cs, MemAcc2LExp(ma)) = typeOfMemAcc(s, cs, ma).
-
-rules typeOfProjectExp : scope * scope * LExp -> TYPE
-
-  typeOfProjectExp(s, cs, Project(ma, le)) = T :- {T1 cs2}
-    typeOfMemAcc(s, cs, ma) == CLASS(_, cs2),
-    typeOfLExp(s, cs2, le) == T.
-
-rules typeOfMemAcc : scope * scope * MemAcc -> TYPE
-
-  typeOfMemAcc(s, cs, Var(name)) = T :-
-    typeOfMember(cs, name) == T.
-
-  typeOfMemAcc(s, cs, Call(name, args)) = TR :- {TA}
-    typeOfMember(cs, name) == METHOD(TA, TR),
-    typesOfExps(s, args) == TA.
+//rules typeOfMemAcc : scope * scope * MemAcc -> TYPE
+//
+//  typeOfMemAcc(s, cs, Var(name)) = T :-
+//    typeOfMember(cs, name) == T.
+//
+//  typeOfMemAcc(s, cs, Call(name, args)) = TR :- {TA}
+//    typeOfMember(cs, name) == METHOD(TA, TR),
+//    typesOfExps(s, args) == TA.
 
 // Classes
 rules declareClass : scope * ID * TYPE
@@ -305,8 +333,8 @@ rules
   typeOfParam(_, ParamDecl-Plhdr()) = BOTTOM().
   stmtOk(_, Stmt-Plhdr()).
   typeOfExp(_, Exp-Plhdr()) = BOTTOM().
-  typeOfLExp(_, _, LExp-Plhdr()) = BOTTOM().
-  typeOfMemAcc(_, _, MemAcc-Plhdr()) = BOTTOM().
+//  typeOfLExp(_, _, LExp-Plhdr()) = BOTTOM().
+//  typeOfMemAcc(_, _, MemAcc-Plhdr()) = BOTTOM().
   typeOfLValue(_, LValue-Plhdr()) = BOTTOM().
   typeOfNew(_, Exp-Plhdr()) = BOTTOM().
   typeOfType(_, Type-Plhdr()) = BOTTOM().
