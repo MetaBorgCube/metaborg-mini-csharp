@@ -48,7 +48,7 @@ Spec(
       , [Var("s"){OfSort(SCOPE())}, Op("Class", [Var("name"){OfSort(STRING())}, Var("members"){OfSort(LIST(SORT("MemberDecl")))}]){OfSort(SORT("ClassDecl"))}]
       )
     , CExists(
-        [Var("cs"){OfSort(SCOPE())}, Var("T"){OfSort(SORT("TYPE"))}, Var("astId36"){OfSort(AST_ID())}]
+        [Var("cs"){OfSort(SCOPE())}, Var("T"){OfSort(SORT("TYPE"))}, Var("astId7"){OfSort(AST_ID())}]
       , CConj(
           CNew([Var("cs"){OfSort(SCOPE())}])
         , CConj(
@@ -67,11 +67,11 @@ Spec(
                 )
               , CConj(
                   CConj(
-                    CAstId(Var("name"){OfSort(STRING())}, Var("astId36"){OfSort(AST_ID())})
+                    CAstId(Var("name"){OfSort(STRING())}, Var("astId7"){OfSort(AST_ID())})
                   , C(
                       "statics!declareVarOccurrence"
                     , [ Var("cs"){OfSort(SCOPE())}
-                      , StxOccurrence("statics!Var", [Str("this"){OfSort(STRING())}], WithId(Var("astId36"){OfSort(AST_ID())}))
+                      , StxOccurrence("statics!Var", [Str("this"){OfSort(STRING())}], WithId(Var("astId7"){OfSort(AST_ID())}))
                       , Var("T"){OfSort(SORT("TYPE"))}
                       ]
                     , NoMessage()
@@ -108,15 +108,15 @@ Spec(
       , [Var("cs"){OfSort(SCOPE())}, Op("Field", [Var("type"){OfSort(SORT("Type"))}, Var("name"){OfSort(STRING())}]){OfSort(SORT("MemberDecl"))}]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfType54"){OfSort(SORT("TYPE"))}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfType14"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfType"
-            , [Var("cs"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType54"){OfSort(SORT("TYPE"))}]
+            , [Var("cs"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType14"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfType54"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfType14"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , C(
             "statics!declareMember"
@@ -148,8 +148,8 @@ Spec(
         , Var("PTS"){OfSort(LIST(SORT("TYPE")))}
         , Var("RTE"){OfSort(CVar("trans/statics.stx", "ty-251"))}
         , Var("T"){OfSort(CVar("trans/statics.stx", "ty-253"))}
-        , Var("typeOfType55"){OfSort(SORT("TYPE"))}
-        , Var("typesOfParams18"){OfSort(LIST(SORT("TYPE")))}
+        , Var("typeOfType15"){OfSort(SORT("TYPE"))}
+        , Var("typesOfParams2"){OfSort(LIST(SORT("TYPE")))}
         ]
       , CConj(
           CNew([Var("ms"){OfSort(SCOPE())}])
@@ -159,19 +159,19 @@ Spec(
               CConj(
                 C(
                   "statics!typeOfType"
-                , [Var("cs"){OfSort(SCOPE())}, Var("returnType"){OfSort(SORT("Type"))}, Var("typeOfType55"){OfSort(SORT("TYPE"))}]
+                , [Var("cs"){OfSort(SCOPE())}, Var("returnType"){OfSort(SORT("Type"))}, Var("typeOfType15"){OfSort(SORT("TYPE"))}]
                 , NoMessage()
                 )
-              , CEqual(Var("typeOfType55"){OfSort(SORT("TYPE"))}, Var("RT"){OfSort(SORT("TYPE"))}, NoMessage())
+              , CEqual(Var("typeOfType15"){OfSort(SORT("TYPE"))}, Var("RT"){OfSort(SORT("TYPE"))}, NoMessage())
               )
             , CConj(
                 CConj(
                   C(
                     "statics!typesOfParams"
-                  , [Var("ms"){OfSort(SCOPE())}, Var("params"){OfSort(LIST(SORT("ParamDecl")))}, Var("typesOfParams18"){OfSort(LIST(SORT("TYPE")))}]
+                  , [Var("ms"){OfSort(SCOPE())}, Var("params"){OfSort(LIST(SORT("ParamDecl")))}, Var("typesOfParams2"){OfSort(LIST(SORT("TYPE")))}]
                   , NoMessage()
                   )
-                , CEqual(Var("typesOfParams18"){OfSort(LIST(SORT("TYPE")))}, Var("PTS"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
+                , CEqual(Var("typesOfParams2"){OfSort(LIST(SORT("TYPE")))}, Var("PTS"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
                 )
               , CConj(
                   C(
@@ -199,8 +199,8 @@ Spec(
     )
   , Rule(
       NoName()
-    , C("statics!typesOfParams", [Wld(){OfSort(SCOPE())}, List([]){OfSort(LIST(SORT("ParamDecl")))}, Var("out536"){OfSort(LIST(SORT("TYPE")))}])
-    , CConj(CEqual(Var("out536"){OfSort(LIST(SORT("TYPE")))}, List([]){OfSort(LIST(SORT("TYPE")))}, NoMessage()), CTrue())
+    , C("statics!typesOfParams", [Wld(){OfSort(SCOPE())}, List([]){OfSort(LIST(SORT("ParamDecl")))}, Var("out112"){OfSort(LIST(SORT("TYPE")))}])
+    , CConj(CEqual(Var("out112"){OfSort(LIST(SORT("TYPE")))}, List([]){OfSort(LIST(SORT("TYPE")))}, NoMessage()), CTrue())
     )
   , Rule(
       NoName()
@@ -208,14 +208,14 @@ Spec(
         "statics!typesOfParams"
       , [ Var("x_1"){OfSort(SCOPE())}
         , ListTail([Var("x_2"){OfSort(SORT("ParamDecl"))}], Var("xs_2"){OfSort(LIST(SORT("ParamDecl")))}){OfSort(LIST(SORT("ParamDecl")))}
-        , Var("out537"){OfSort(LIST(SORT("TYPE")))}
+        , Var("out113"){OfSort(LIST(SORT("TYPE")))}
         ]
       )
     , CExists(
-        [Var("y_1"){OfSort(SORT("TYPE"))}, Var("ys_1"){OfSort(LIST(SORT("TYPE")))}, Var("typeOfParam9"){OfSort(SORT("TYPE"))}, Var("typesOfParams19"){OfSort(LIST(SORT("TYPE")))}]
+        [Var("y_1"){OfSort(SORT("TYPE"))}, Var("ys_1"){OfSort(LIST(SORT("TYPE")))}, Var("typeOfParam1"){OfSort(SORT("TYPE"))}, Var("typesOfParams3"){OfSort(LIST(SORT("TYPE")))}]
       , CConj(
           CEqual(
-            Var("out537"){OfSort(LIST(SORT("TYPE")))}
+            Var("out113"){OfSort(LIST(SORT("TYPE")))}
           , ListTail([Var("y_1"){OfSort(SORT("TYPE"))}], Var("ys_1"){OfSort(LIST(SORT("TYPE")))}){OfSort(LIST(SORT("TYPE")))}
           , NoMessage()
           )
@@ -223,18 +223,18 @@ Spec(
             CConj(
               C(
                 "statics!typeOfParam"
-              , [Var("x_1"){OfSort(SCOPE())}, Var("x_2"){OfSort(SORT("ParamDecl"))}, Var("typeOfParam9"){OfSort(SORT("TYPE"))}]
+              , [Var("x_1"){OfSort(SCOPE())}, Var("x_2"){OfSort(SORT("ParamDecl"))}, Var("typeOfParam1"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , CEqual(Var("typeOfParam9"){OfSort(SORT("TYPE"))}, Var("y_1"){OfSort(SORT("TYPE"))}, NoMessage())
+            , CEqual(Var("typeOfParam1"){OfSort(SORT("TYPE"))}, Var("y_1"){OfSort(SORT("TYPE"))}, NoMessage())
             )
           , CConj(
               C(
                 "statics!typesOfParams"
-              , [Var("x_1"){OfSort(SCOPE())}, Var("xs_2"){OfSort(LIST(SORT("ParamDecl")))}, Var("typesOfParams19"){OfSort(LIST(SORT("TYPE")))}]
+              , [Var("x_1"){OfSort(SCOPE())}, Var("xs_2"){OfSort(LIST(SORT("ParamDecl")))}, Var("typesOfParams3"){OfSort(LIST(SORT("TYPE")))}]
               , NoMessage()
               )
-            , CEqual(Var("typesOfParams19"){OfSort(LIST(SORT("TYPE")))}, Var("ys_1"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
+            , CEqual(Var("typesOfParams3"){OfSort(LIST(SORT("TYPE")))}, Var("ys_1"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
             )
           )
         )
@@ -246,21 +246,21 @@ Spec(
         "statics!typeOfParam"
       , [ Var("s"){OfSort(SCOPE())}
         , Op("Param", [Var("type"){OfSort(SORT("Type"))}, Var("name"){OfSort(STRING())}]){OfSort(SORT("ParamDecl"))}
-        , Var("out538"){OfSort(SORT("TYPE"))}
+        , Var("out114"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfType56"){OfSort(SORT("TYPE"))}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfType16"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out538"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out114"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             CConj(
               C(
                 "statics!typeOfType"
-              , [Var("s"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType56"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType16"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , CEqual(Var("typeOfType56"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+            , CEqual(Var("typeOfType16"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
             )
           , C(
               "statics!declareVar"
@@ -278,15 +278,15 @@ Spec(
       , [Var("s"){OfSort(SCOPE())}, Op("Return", [Var("e"){OfSort(SORT("Exp"))}]){OfSort(SORT("FinalStmt"))}, Var("T"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("TE"){OfSort(SORT("TYPE"))}, Var("typeOfExp225"){OfSort(SORT("TYPE"))}]
+        [Var("TE"){OfSort(SORT("TYPE"))}, Var("typeOfExp72"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp225"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp72"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfExp225"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfExp72"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , C("statics!subtypeOf", [Var("TE"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}], NoMessage())
         )
@@ -299,19 +299,19 @@ Spec(
       , [Var("s"){OfSort(SCOPE())}, Op("Throw", [Var("e"){OfSort(SORT("Exp"))}]){OfSort(SORT("FinalStmt"))}, Wld(){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfExp226"){OfSort(SORT("TYPE"))}, Var("wld192"){OfSort(SCOPE())}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfExp73"){OfSort(SORT("TYPE"))}, Var("wld41"){OfSort(SCOPE())}]
       , CConj(
           CConj(
             C(
               "statics!typeOfExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp226"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp73"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfExp226"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfExp73"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , C(
             "statics!subtypeOf"
-          , [Var("T"){OfSort(SORT("TYPE"))}, Op("CLASS", [Str("Exception"){OfSort(STRING())}, Var("wld192"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}]
+          , [Var("T"){OfSort(SORT("TYPE"))}, Op("CLASS", [Str("Exception"){OfSort(STRING())}, Var("wld41"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}]
           , NoMessage()
           )
         )
@@ -370,14 +370,14 @@ Spec(
       , [Var("bs"){OfSort(SCOPE())}, Op("Exp", [Var("e"){OfSort(SORT("Exp"))}]){OfSort(SORT("Stmt"))}]
       )
     , CExists(
-        [Var("typeOfExp227"){OfSort(SORT("TYPE"))}, Var("wld193"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfExp74"){OfSort(SORT("TYPE"))}, Var("wld42"){OfSort(SORT("TYPE"))}]
       , CConj(
           C(
             "statics!typeOfExp"
-          , [Var("bs"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp227"){OfSort(SORT("TYPE"))}]
+          , [Var("bs"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp74"){OfSort(SORT("TYPE"))}]
           , NoMessage()
           )
-        , CEqual(Var("typeOfExp227"){OfSort(SORT("TYPE"))}, Var("wld193"){OfSort(SORT("TYPE"))}, NoMessage())
+        , CEqual(Var("typeOfExp74"){OfSort(SORT("TYPE"))}, Var("wld42"){OfSort(SORT("TYPE"))}, NoMessage())
         )
       )
     )
@@ -388,15 +388,15 @@ Spec(
       , [Var("bs"){OfSort(SCOPE())}, Op("DeclareTypedVar", [Var("type"){OfSort(SORT("Type"))}, Var("name"){OfSort(STRING())}]){OfSort(SORT("Stmt"))}]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfType57"){OfSort(SORT("TYPE"))}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfType17"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfType"
-            , [Var("bs"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType57"){OfSort(SORT("TYPE"))}]
+            , [Var("bs"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType17"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfType57"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfType17"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , C(
             "statics!declareVar"
@@ -418,24 +418,24 @@ Spec(
         ]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}, Var("typeOfType58"){OfSort(SORT("TYPE"))}, Var("typeOfExp228"){OfSort(SORT("TYPE"))}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}, Var("typeOfType18"){OfSort(SORT("TYPE"))}, Var("typeOfExp75"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfType"
-            , [Var("bs"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType58"){OfSort(SORT("TYPE"))}]
+            , [Var("bs"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType18"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfType58"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfType18"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CConj(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("bs"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp228"){OfSort(SORT("TYPE"))}]
+              , [Var("bs"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp75"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , C("statics!subtypeOf", [Var("typeOfExp228"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}], NoMessage())
+            , C("statics!subtypeOf", [Var("typeOfExp75"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}], NoMessage())
             )
           , CConj(
               C("statics!subtypeOf", [Var("TE"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}], NoMessage())
@@ -456,15 +456,15 @@ Spec(
       , [Var("bs"){OfSort(SCOPE())}, Op("DeclareVarInit", [Var("name"){OfSort(STRING())}, Var("e"){OfSort(SORT("Exp"))}]){OfSort(SORT("Stmt"))}]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfExp229"){OfSort(SORT("TYPE"))}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfExp76"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfExp"
-            , [Var("bs"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp229"){OfSort(SORT("TYPE"))}]
+            , [Var("bs"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp76"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfExp229"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfExp76"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , C(
             "statics!declareVar"
@@ -481,24 +481,24 @@ Spec(
       , [Var("bs"){OfSort(SCOPE())}, Op("Assign", [Var("lvalue"){OfSort(SORT("LValue"))}, Var("e"){OfSort(SORT("Exp"))}]){OfSort(SORT("Stmt"))}]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}, Var("typeOfLValue20"){OfSort(SORT("TYPE"))}, Var("typeOfExp230"){OfSort(SORT("TYPE"))}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}, Var("typeOfLValue2"){OfSort(SORT("TYPE"))}, Var("typeOfExp77"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfLValue"
-            , [Var("bs"){OfSort(SCOPE())}, Var("lvalue"){OfSort(SORT("LValue"))}, Var("typeOfLValue20"){OfSort(SORT("TYPE"))}]
+            , [Var("bs"){OfSort(SCOPE())}, Var("lvalue"){OfSort(SORT("LValue"))}, Var("typeOfLValue2"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfLValue20"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfLValue2"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CConj(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("bs"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp230"){OfSort(SORT("TYPE"))}]
+              , [Var("bs"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp77"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , C("statics!subtypeOf", [Var("typeOfExp230"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}], NoMessage())
+            , C("statics!subtypeOf", [Var("typeOfExp77"){OfSort(SORT("TYPE"))}, Var("TE"){OfSort(SORT("TYPE"))}], NoMessage())
             )
           , C("statics!subtypeOf", [Var("TE"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}], NoMessage())
           )
@@ -507,8 +507,8 @@ Spec(
     )
   , Rule(
       NoName()
-    , C("statics!typesOfExps", [Wld(){OfSort(SCOPE())}, List([]){OfSort(LIST(SORT("Exp")))}, Var("out539"){OfSort(LIST(SORT("TYPE")))}])
-    , CConj(CEqual(Var("out539"){OfSort(LIST(SORT("TYPE")))}, List([]){OfSort(LIST(SORT("TYPE")))}, NoMessage()), CTrue())
+    , C("statics!typesOfExps", [Wld(){OfSort(SCOPE())}, List([]){OfSort(LIST(SORT("Exp")))}, Var("out115"){OfSort(LIST(SORT("TYPE")))}])
+    , CConj(CEqual(Var("out115"){OfSort(LIST(SORT("TYPE")))}, List([]){OfSort(LIST(SORT("TYPE")))}, NoMessage()), CTrue())
     )
   , Rule(
       NoName()
@@ -516,14 +516,14 @@ Spec(
         "statics!typesOfExps"
       , [ Var("x_1"){OfSort(SCOPE())}
         , ListTail([Var("x_2"){OfSort(SORT("Exp"))}], Var("xs_2"){OfSort(LIST(SORT("Exp")))}){OfSort(LIST(SORT("Exp")))}
-        , Var("out540"){OfSort(LIST(SORT("TYPE")))}
+        , Var("out116"){OfSort(LIST(SORT("TYPE")))}
         ]
       )
     , CExists(
-        [Var("y_1"){OfSort(SORT("TYPE"))}, Var("ys_1"){OfSort(LIST(SORT("TYPE")))}, Var("typeOfExp231"){OfSort(SORT("TYPE"))}, Var("typesOfExps27"){OfSort(LIST(SORT("TYPE")))}]
+        [Var("y_1"){OfSort(SORT("TYPE"))}, Var("ys_1"){OfSort(LIST(SORT("TYPE")))}, Var("typeOfExp78"){OfSort(SORT("TYPE"))}, Var("typesOfExps2"){OfSort(LIST(SORT("TYPE")))}]
       , CConj(
           CEqual(
-            Var("out540"){OfSort(LIST(SORT("TYPE")))}
+            Var("out116"){OfSort(LIST(SORT("TYPE")))}
           , ListTail([Var("y_1"){OfSort(SORT("TYPE"))}], Var("ys_1"){OfSort(LIST(SORT("TYPE")))}){OfSort(LIST(SORT("TYPE")))}
           , NoMessage()
           )
@@ -531,18 +531,18 @@ Spec(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("x_1"){OfSort(SCOPE())}, Var("x_2"){OfSort(SORT("Exp"))}, Var("typeOfExp231"){OfSort(SORT("TYPE"))}]
+              , [Var("x_1"){OfSort(SCOPE())}, Var("x_2"){OfSort(SORT("Exp"))}, Var("typeOfExp78"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , CEqual(Var("typeOfExp231"){OfSort(SORT("TYPE"))}, Var("y_1"){OfSort(SORT("TYPE"))}, NoMessage())
+            , CEqual(Var("typeOfExp78"){OfSort(SORT("TYPE"))}, Var("y_1"){OfSort(SORT("TYPE"))}, NoMessage())
             )
           , CConj(
               C(
                 "statics!typesOfExps"
-              , [Var("x_1"){OfSort(SCOPE())}, Var("xs_2"){OfSort(LIST(SORT("Exp")))}, Var("typesOfExps27"){OfSort(LIST(SORT("TYPE")))}]
+              , [Var("x_1"){OfSort(SCOPE())}, Var("xs_2"){OfSort(LIST(SORT("Exp")))}, Var("typesOfExps2"){OfSort(LIST(SORT("TYPE")))}]
               , NoMessage()
               )
-            , CEqual(Var("typesOfExps27"){OfSort(LIST(SORT("TYPE")))}, Var("ys_1"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
+            , CEqual(Var("typesOfExps2"){OfSort(LIST(SORT("TYPE")))}, Var("ys_1"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
             )
           )
         )
@@ -552,42 +552,18 @@ Spec(
       NoName()
     , C(
         "statics!typeOfExp"
-      , [Var("s"){OfSort(SCOPE())}, Op("LValue2Exp", [Var("lvalue"){OfSort(SORT("LValue"))}]){OfSort(SORT("Exp"))}, Var("out541"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Op("LValue2Exp", [Var("lvalue"){OfSort(SORT("LValue"))}]){OfSort(SORT("Exp"))}, Var("out117"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("typeOfLValue21"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfLValue3"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfLValue"
-            , [Var("s"){OfSort(SCOPE())}, Var("lvalue"){OfSort(SORT("LValue"))}, Var("typeOfLValue21"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("lvalue"){OfSort(SORT("LValue"))}, Var("typeOfLValue3"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out541"){OfSort(SORT("TYPE"))}, Var("typeOfLValue21"){OfSort(SORT("TYPE"))}, NoMessage())
-          )
-        , CTrue()
-        )
-      )
-    )
-  , Rule(
-      NoName()
-    , C(
-        "statics!typeOfExp"
-      , [ Var("s"){OfSort(SCOPE())}
-        , As(Var("e"){OfSort(SORT("Exp"))}, Op("Call", [Wld(){OfSort(SORT("Exp"))}, Wld(){OfSort(LIST(SORT("Exp")))}]){OfSort(SORT("Exp"))}){OfSort(SORT("Exp"))}
-        , Var("out542"){OfSort(SORT("TYPE"))}
-        ]
-      )
-    , CExists(
-        [Var("typeOfCall9"){OfSort(SORT("TYPE"))}]
-      , CConj(
-          CConj(
-            C(
-              "statics!typeOfCall"
-            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfCall9"){OfSort(SORT("TYPE"))}]
-            , NoMessage()
-            )
-          , CEqual(Var("out542"){OfSort(SORT("TYPE"))}, Var("typeOfCall9"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out117"){OfSort(SORT("TYPE"))}, Var("typeOfLValue3"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -599,19 +575,19 @@ Spec(
         "statics!typeOfExp"
       , [ Var("s"){OfSort(SCOPE())}
         , As(Var("e"){OfSort(SORT("Exp"))}, Op("New", [Wld(){OfSort(SORT("Type"))}]){OfSort(SORT("Exp"))}){OfSort(SORT("Exp"))}
-        , Var("out543"){OfSort(SORT("TYPE"))}
+        , Var("out118"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfNew18"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfNew2"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfNew"
-            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfNew18"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfNew2"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out543"){OfSort(SORT("TYPE"))}, Var("typeOfNew18"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out118"){OfSort(SORT("TYPE"))}, Var("typeOfNew2"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -626,19 +602,19 @@ Spec(
             Var("e"){OfSort(SORT("Exp"))}
           , Op("New", [Op("ClassType", [Wld(){OfSort(STRING())}]){OfSort(SORT("Type"))}]){OfSort(SORT("Exp"))}
           ){OfSort(SORT("Exp"))}
-        , Var("out544"){OfSort(SORT("TYPE"))}
+        , Var("out119"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfNew19"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfNew3"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfNew"
-            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfNew19"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfNew3"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out544"){OfSort(SORT("TYPE"))}, Var("typeOfNew19"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out119"){OfSort(SORT("TYPE"))}, Var("typeOfNew3"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -648,10 +624,10 @@ Spec(
       NoName()
     , C(
         "statics!typeOfExp"
-      , [Wld(){OfSort(SCOPE())}, Op("Null", []){OfSort(SORT("Exp"))}, Var("out545"){OfSort(SORT("TYPE"))}]
+      , [Wld(){OfSort(SCOPE())}, Op("Null", []){OfSort(SORT("Exp"))}, Var("out120"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out545"){OfSort(SORT("TYPE"))}, Op("NULL", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out120"){OfSort(SORT("TYPE"))}, Op("NULL", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -659,10 +635,10 @@ Spec(
       NoName()
     , C(
         "statics!typeOfExp"
-      , [Wld(){OfSort(SCOPE())}, Op("True", []){OfSort(SORT("Exp"))}, Var("out546"){OfSort(SORT("TYPE"))}]
+      , [Wld(){OfSort(SCOPE())}, Op("True", []){OfSort(SORT("Exp"))}, Var("out121"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out546"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out121"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -670,10 +646,10 @@ Spec(
       NoName()
     , C(
         "statics!typeOfExp"
-      , [Wld(){OfSort(SCOPE())}, Op("False", []){OfSort(SORT("Exp"))}, Var("out547"){OfSort(SORT("TYPE"))}]
+      , [Wld(){OfSort(SCOPE())}, Op("False", []){OfSort(SORT("Exp"))}, Var("out122"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out547"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out122"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -681,18 +657,18 @@ Spec(
       NoName()
     , C(
         "statics!typeOfExp"
-      , [Var("s"){OfSort(SCOPE())}, Op("This", []){OfSort(SORT("Exp"))}, Var("out548"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Op("This", []){OfSort(SORT("Exp"))}, Var("out123"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("typeOfVar9"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfVar1"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfVar"
-            , [Var("s"){OfSort(SCOPE())}, Str("this"){OfSort(STRING())}, Var("typeOfVar9"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Str("this"){OfSort(STRING())}, Var("typeOfVar1"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out548"){OfSort(SORT("TYPE"))}, Var("typeOfVar9"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out123"){OfSort(SORT("TYPE"))}, Var("typeOfVar1"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -704,35 +680,35 @@ Spec(
         "statics!typeOfExp"
       , [ Var("s"){OfSort(SCOPE())}
         , Op("Lt", [Var("e1"){OfSort(SORT("Exp"))}, Var("e2"){OfSort(SORT("Exp"))}]){OfSort(SORT("Exp"))}
-        , Var("out549"){OfSort(SORT("TYPE"))}
+        , Var("out124"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfExp232"){OfSort(SORT("TYPE"))}, Var("typeOfExp233"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfExp79"){OfSort(SORT("TYPE"))}, Var("typeOfExp80"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out549"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out124"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp232"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp79"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , C(
                 "statics!subtypeOf"
-              , [Var("typeOfExp232"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
+              , [Var("typeOfExp79"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             )
           , CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp233"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp80"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , C(
                 "statics!subtypeOf"
-              , [Var("typeOfExp233"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
+              , [Var("typeOfExp80"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             )
@@ -746,29 +722,29 @@ Spec(
         "statics!typeOfExp"
       , [ Var("s"){OfSort(SCOPE())}
         , Op("Eq", [Var("e1"){OfSort(SORT("Exp"))}, Var("e2"){OfSort(SORT("Exp"))}]){OfSort(SORT("Exp"))}
-        , Var("out550"){OfSort(SORT("TYPE"))}
+        , Var("out125"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfExp234"){OfSort(SORT("TYPE"))}, Var("typeOfExp235"){OfSort(SORT("TYPE"))}, Var("wld194"){OfSort(SORT("TYPE"))}, Var("wld195"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfExp81"){OfSort(SORT("TYPE"))}, Var("typeOfExp82"){OfSort(SORT("TYPE"))}, Var("wld43"){OfSort(SORT("TYPE"))}, Var("wld44"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out550"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out125"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp234"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp81"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , CEqual(Var("typeOfExp234"){OfSort(SORT("TYPE"))}, Var("wld194"){OfSort(SORT("TYPE"))}, NoMessage())
+            , CEqual(Var("typeOfExp81"){OfSort(SORT("TYPE"))}, Var("wld43"){OfSort(SORT("TYPE"))}, NoMessage())
             )
           , CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp235"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp82"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , CEqual(Var("typeOfExp235"){OfSort(SORT("TYPE"))}, Var("wld195"){OfSort(SORT("TYPE"))}, NoMessage())
+            , CEqual(Var("typeOfExp82"){OfSort(SORT("TYPE"))}, Var("wld44"){OfSort(SORT("TYPE"))}, NoMessage())
             )
           )
         )
@@ -780,29 +756,29 @@ Spec(
         "statics!typeOfExp"
       , [ Var("s"){OfSort(SCOPE())}
         , Op("Neq", [Var("e1"){OfSort(SORT("Exp"))}, Var("e2"){OfSort(SORT("Exp"))}]){OfSort(SORT("Exp"))}
-        , Var("out551"){OfSort(SORT("TYPE"))}
+        , Var("out126"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfExp236"){OfSort(SORT("TYPE"))}, Var("typeOfExp237"){OfSort(SORT("TYPE"))}, Var("wld196"){OfSort(SORT("TYPE"))}, Var("wld197"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfExp83"){OfSort(SORT("TYPE"))}, Var("typeOfExp84"){OfSort(SORT("TYPE"))}, Var("wld45"){OfSort(SORT("TYPE"))}, Var("wld46"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out551"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out126"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp236"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp83"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , CEqual(Var("typeOfExp236"){OfSort(SORT("TYPE"))}, Var("wld196"){OfSort(SORT("TYPE"))}, NoMessage())
+            , CEqual(Var("typeOfExp83"){OfSort(SORT("TYPE"))}, Var("wld45"){OfSort(SORT("TYPE"))}, NoMessage())
             )
           , CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp237"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp84"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
-            , CEqual(Var("typeOfExp237"){OfSort(SORT("TYPE"))}, Var("wld197"){OfSort(SORT("TYPE"))}, NoMessage())
+            , CEqual(Var("typeOfExp84"){OfSort(SORT("TYPE"))}, Var("wld46"){OfSort(SORT("TYPE"))}, NoMessage())
             )
           )
         )
@@ -814,35 +790,35 @@ Spec(
         "statics!typeOfExp"
       , [ Var("s"){OfSort(SCOPE())}
         , Op("And", [Var("e1"){OfSort(SORT("Exp"))}, Var("e2"){OfSort(SORT("Exp"))}]){OfSort(SORT("Exp"))}
-        , Var("out552"){OfSort(SORT("TYPE"))}
+        , Var("out127"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfExp238"){OfSort(SORT("TYPE"))}, Var("typeOfExp239"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfExp85"){OfSort(SORT("TYPE"))}, Var("typeOfExp86"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out552"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out127"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp238"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp85"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , C(
                 "statics!subtypeOf"
-              , [Var("typeOfExp238"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}]
+              , [Var("typeOfExp85"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             )
           , CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp239"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp86"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , C(
                 "statics!subtypeOf"
-              , [Var("typeOfExp239"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}]
+              , [Var("typeOfExp86"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             )
@@ -854,21 +830,21 @@ Spec(
       NoName()
     , C(
         "statics!typeOfExp"
-      , [Var("s"){OfSort(SCOPE())}, Op("Not", [Var("e1"){OfSort(SORT("Exp"))}]){OfSort(SORT("Exp"))}, Var("out553"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Op("Not", [Var("e1"){OfSort(SORT("Exp"))}]){OfSort(SORT("Exp"))}, Var("out128"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("typeOfExp240"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfExp87"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out553"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out128"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             C(
               "statics!typeOfExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp240"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp87"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
           , C(
               "statics!subtypeOf"
-            , [Var("typeOfExp240"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}]
+            , [Var("typeOfExp87"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
           )
@@ -879,10 +855,10 @@ Spec(
       NoName()
     , C(
         "statics!typeOfExp"
-      , [Var("s"){OfSort(SCOPE())}, Op("Int", [Wld(){OfSort(STRING())}]){OfSort(SORT("Exp"))}, Var("out554"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Op("Int", [Wld(){OfSort(STRING())}]){OfSort(SORT("Exp"))}, Var("out129"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out554"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out129"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -892,35 +868,35 @@ Spec(
         "statics!typeOfExp"
       , [ Var("s"){OfSort(SCOPE())}
         , Op("Mul", [Var("e1"){OfSort(SORT("Exp"))}, Var("e2"){OfSort(SORT("Exp"))}]){OfSort(SORT("Exp"))}
-        , Var("out555"){OfSort(SORT("TYPE"))}
+        , Var("out130"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfExp241"){OfSort(SORT("TYPE"))}, Var("typeOfExp242"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfExp88"){OfSort(SORT("TYPE"))}, Var("typeOfExp89"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out555"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out130"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp241"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp88"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , C(
                 "statics!subtypeOf"
-              , [Var("typeOfExp241"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
+              , [Var("typeOfExp88"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             )
           , CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp242"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp89"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , C(
                 "statics!subtypeOf"
-              , [Var("typeOfExp242"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
+              , [Var("typeOfExp89"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             )
@@ -934,35 +910,35 @@ Spec(
         "statics!typeOfExp"
       , [ Var("s"){OfSort(SCOPE())}
         , Op("Add", [Var("e1"){OfSort(SORT("Exp"))}, Var("e2"){OfSort(SORT("Exp"))}]){OfSort(SORT("Exp"))}
-        , Var("out556"){OfSort(SORT("TYPE"))}
+        , Var("out131"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfExp243"){OfSort(SORT("TYPE"))}, Var("typeOfExp244"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfExp90"){OfSort(SORT("TYPE"))}, Var("typeOfExp91"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out556"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out131"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp243"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp90"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , C(
                 "statics!subtypeOf"
-              , [Var("typeOfExp243"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
+              , [Var("typeOfExp90"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             )
           , CConj(
               C(
                 "statics!typeOfExp"
-              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp244"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp91"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , C(
                 "statics!subtypeOf"
-              , [Var("typeOfExp244"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
+              , [Var("typeOfExp91"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             )
@@ -979,31 +955,31 @@ Spec(
             "Cond"
           , [Var("ec"){OfSort(SORT("Exp"))}, Var("e1"){OfSort(SORT("Exp"))}, Var("e2"){OfSort(SORT("Exp"))}]
           ){OfSort(SORT("Exp"))}
-        , Var("out557"){OfSort(SORT("TYPE"))}
+        , Var("out132"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
         [Var("T"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out557"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out132"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
             [ Var("T1"){OfSort(SORT("TYPE"))}
             , Var("T2"){OfSort(SORT("TYPE"))}
-            , Var("typeOfExp245"){OfSort(SORT("TYPE"))}
-            , Var("typeOfExp246"){OfSort(SORT("TYPE"))}
-            , Var("typeOfExp247"){OfSort(SORT("TYPE"))}
-            , Var("lub9"){OfSort(SORT("TYPE"))}
+            , Var("typeOfExp92"){OfSort(SORT("TYPE"))}
+            , Var("typeOfExp93"){OfSort(SORT("TYPE"))}
+            , Var("typeOfExp94"){OfSort(SORT("TYPE"))}
+            , Var("lub2"){OfSort(SORT("TYPE"))}
             ]
           , CConj(
               CConj(
                 C(
                   "statics!typeOfExp"
-                , [Var("s"){OfSort(SCOPE())}, Var("ec"){OfSort(SORT("Exp"))}, Var("typeOfExp245"){OfSort(SORT("TYPE"))}]
+                , [Var("s"){OfSort(SCOPE())}, Var("ec"){OfSort(SORT("Exp"))}, Var("typeOfExp92"){OfSort(SORT("TYPE"))}]
                 , NoMessage()
                 )
               , C(
                   "statics!subtypeOf"
-                , [Var("typeOfExp245"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}]
+                , [Var("typeOfExp92"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}]
                 , NoMessage()
                 )
               )
@@ -1011,70 +987,29 @@ Spec(
                 CConj(
                   C(
                     "statics!typeOfExp"
-                  , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp246"){OfSort(SORT("TYPE"))}]
+                  , [Var("s"){OfSort(SCOPE())}, Var("e1"){OfSort(SORT("Exp"))}, Var("typeOfExp93"){OfSort(SORT("TYPE"))}]
                   , NoMessage()
                   )
-                , CEqual(Var("typeOfExp246"){OfSort(SORT("TYPE"))}, Var("T1"){OfSort(SORT("TYPE"))}, NoMessage())
+                , CEqual(Var("typeOfExp93"){OfSort(SORT("TYPE"))}, Var("T1"){OfSort(SORT("TYPE"))}, NoMessage())
                 )
               , CConj(
                   CConj(
                     C(
                       "statics!typeOfExp"
-                    , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp247"){OfSort(SORT("TYPE"))}]
+                    , [Var("s"){OfSort(SCOPE())}, Var("e2"){OfSort(SORT("Exp"))}, Var("typeOfExp94"){OfSort(SORT("TYPE"))}]
                     , NoMessage()
                     )
-                  , CEqual(Var("typeOfExp247"){OfSort(SORT("TYPE"))}, Var("T2"){OfSort(SORT("TYPE"))}, NoMessage())
+                  , CEqual(Var("typeOfExp94"){OfSort(SORT("TYPE"))}, Var("T2"){OfSort(SORT("TYPE"))}, NoMessage())
                   )
                 , CConj(
                     C(
                       "statics!lub"
-                    , [Var("T1"){OfSort(SORT("TYPE"))}, Var("T2"){OfSort(SORT("TYPE"))}, Var("lub9"){OfSort(SORT("TYPE"))}]
+                    , [Var("T1"){OfSort(SORT("TYPE"))}, Var("T2"){OfSort(SORT("TYPE"))}, Var("lub2"){OfSort(SORT("TYPE"))}]
                     , NoMessage()
                     )
-                  , CEqual(Var("lub9"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+                  , CEqual(Var("lub2"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
                   )
                 )
-              )
-            )
-          )
-        )
-      )
-    )
-  , Rule(
-      NoName()
-    , C(
-        "statics!typeOfCall"
-      , [ Var("s"){OfSort(SCOPE())}
-        , Op("Call", [Var("e"){OfSort(SORT("Exp"))}, Var("args"){OfSort(LIST(SORT("Exp")))}]){OfSort(SORT("Exp"))}
-        , Var("out558"){OfSort(SORT("TYPE"))}
-        ]
-      )
-    , CExists(
-        [Var("TR"){OfSort(SORT("TYPE"))}]
-      , CConj(
-          CEqual(Var("out558"){OfSort(SORT("TYPE"))}, Var("TR"){OfSort(SORT("TYPE"))}, NoMessage())
-        , CExists(
-            [Var("TA"){OfSort(LIST(SORT("TYPE")))}, Var("typeOfExp248"){OfSort(SORT("TYPE"))}, Var("typesOfExps28"){OfSort(LIST(SORT("TYPE")))}]
-          , CConj(
-              CConj(
-                C(
-                  "statics!typeOfExp"
-                , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp248"){OfSort(SORT("TYPE"))}]
-                , NoMessage()
-                )
-              , CEqual(
-                  Var("typeOfExp248"){OfSort(SORT("TYPE"))}
-                , Op("METHOD", [Var("TA"){OfSort(LIST(SORT("TYPE")))}, Var("TR"){OfSort(SORT("TYPE"))}]){OfSort(SORT("TYPE"))}
-                , NoMessage()
-                )
-              )
-            , CConj(
-                C(
-                  "statics!typesOfExps"
-                , [Var("s"){OfSort(SCOPE())}, Var("args"){OfSort(LIST(SORT("Exp")))}, Var("typesOfExps28"){OfSort(LIST(SORT("TYPE")))}]
-                , NoMessage()
-                )
-              , CEqual(Var("typesOfExps28"){OfSort(LIST(SORT("TYPE")))}, Var("TA"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
               )
             )
           )
@@ -1085,18 +1020,18 @@ Spec(
       NoName()
     , C(
         "statics!typeOfNew"
-      , [Var("s"){OfSort(SCOPE())}, Op("New", [Var("type"){OfSort(SORT("Type"))}]){OfSort(SORT("Exp"))}, Var("out559"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Op("New", [Var("type"){OfSort(SORT("Type"))}]){OfSort(SORT("Exp"))}, Var("out133"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
         [Var("T"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out559"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out133"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
-            [Var("cs"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfType59"){OfSort(SORT("TYPE"))}]
+            [Var("cs"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfType19"){OfSort(SORT("TYPE"))}]
           , CConj(
               C(
                 "statics!typeOfType"
-              , [Var("s"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType59"){OfSort(SORT("TYPE"))}]
+              , [Var("s"){OfSort(SCOPE())}, Var("type"){OfSort(SORT("Type"))}, Var("typeOfType19"){OfSort(SORT("TYPE"))}]
               , NoMessage()
               )
             , CConj(
@@ -1105,7 +1040,7 @@ Spec(
                 , Op("CLASS", [Var("name"){OfSort(STRING())}, Var("cs"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}
                 , NoMessage()
                 )
-              , CEqual(Var("typeOfType59"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+              , CEqual(Var("typeOfType19"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
               )
             )
           )
@@ -1118,97 +1053,19 @@ Spec(
         "statics!typeOfLValue"
       , [ Var("s"){OfSort(SCOPE())}
         , As(Var("m"){OfSort(SORT("LValue"))}, Op("Member", [Wld(){OfSort(SORT("Exp"))}, Wld(){OfSort(SORT("LExp"))}]){OfSort(SORT("LValue"))}){OfSort(SORT("LValue"))}
-        , Var("out560"){OfSort(SORT("TYPE"))}
+        , Var("out134"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfMemberExp10"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfMemberExp1"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfMemberExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("m"){OfSort(SORT("LValue"))}, Var("typeOfMemberExp10"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("m"){OfSort(SORT("LValue"))}, Var("typeOfMemberExp1"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out560"){OfSort(SORT("TYPE"))}, Var("typeOfMemberExp10"){OfSort(SORT("TYPE"))}, NoMessage())
-          )
-        , CTrue()
-        )
-      )
-    )
-  , Rule(
-      NoName()
-    , C(
-        "statics!typeOfLValue"
-      , [ Var("s"){OfSort(SCOPE())}
-        , As(
-            Var("m"){OfSort(SORT("LValue"))}
-          , Op(
-              "Member"
-            , [ Op(
-                  "LValue2Exp"
-                , [ Op(
-                      "LExp2LValue"
-                    , [Op("MemAcc2LExp", [Op("Var", [Wld(){OfSort(STRING())}]){OfSort(SORT("MemAcc"))}]){OfSort(SORT("LExp"))}]
-                    ){OfSort(SORT("LValue"))}
-                  ]
-                ){OfSort(SORT("Exp"))}
-              , Wld(){OfSort(SORT("LExp"))}
-              ]
-            ){OfSort(SORT("LValue"))}
-          ){OfSort(SORT("LValue"))}
-        , Var("out561"){OfSort(SORT("TYPE"))}
-        ]
-      )
-    , CExists(
-        [Var("typeOfMemberExp11"){OfSort(SORT("TYPE"))}]
-      , CConj(
-          CConj(
-            C(
-              "statics!typeOfMemberExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("m"){OfSort(SORT("LValue"))}, Var("typeOfMemberExp11"){OfSort(SORT("TYPE"))}]
-            , NoMessage()
-            )
-          , CEqual(Var("out561"){OfSort(SORT("TYPE"))}, Var("typeOfMemberExp11"){OfSort(SORT("TYPE"))}, NoMessage())
-          )
-        , CTrue()
-        )
-      )
-    )
-  , Rule(
-      NoName()
-    , C(
-        "statics!typeOfLValue"
-      , [ Var("s"){OfSort(SCOPE())}
-        , As(
-            Var("m"){OfSort(SORT("LValue"))}
-          , Op(
-              "Member"
-            , [ Op(
-                  "LValue2Exp"
-                , [ Op(
-                      "LExp2LValue"
-                    , [Op("MemAcc2LExp", [Op("MCall", [Wld(){OfSort(STRING())}, Wld(){OfSort(LIST(SORT("Exp")))}]){OfSort(SORT("MemAcc"))}]){OfSort(SORT("LExp"))}]
-                    ){OfSort(SORT("LValue"))}
-                  ]
-                ){OfSort(SORT("Exp"))}
-              , Wld(){OfSort(SORT("LExp"))}
-              ]
-            ){OfSort(SORT("LValue"))}
-          ){OfSort(SORT("LValue"))}
-        , Var("out562"){OfSort(SORT("TYPE"))}
-        ]
-      )
-    , CExists(
-        [Var("typeOfMemberExp12"){OfSort(SORT("TYPE"))}]
-      , CConj(
-          CConj(
-            C(
-              "statics!typeOfMemberExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("m"){OfSort(SORT("LValue"))}, Var("typeOfMemberExp12"){OfSort(SORT("TYPE"))}]
-            , NoMessage()
-            )
-          , CEqual(Var("out562"){OfSort(SORT("TYPE"))}, Var("typeOfMemberExp12"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out134"){OfSort(SORT("TYPE"))}, Var("typeOfMemberExp1"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -1223,20 +1080,20 @@ Spec(
             "LExp2LValue"
           , [Op("MemAcc2LExp", [Op("Var", [Var("name"){OfSort(STRING())}]){OfSort(SORT("MemAcc"))}]){OfSort(SORT("LExp"))}]
           ){OfSort(SORT("LValue"))}
-        , Var("out563"){OfSort(SORT("TYPE"))}
+        , Var("out135"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfVarOrMember13"){OfSort(SORT("TYPE"))}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfVarOrMember1"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out563"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out135"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             C(
               "statics!typeOfVarOrMember"
-            , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfVarOrMember13"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfVarOrMember1"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfVarOrMember13"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfVarOrMember1"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         )
       )
@@ -1245,18 +1102,18 @@ Spec(
       NoName()
     , C(
         "statics!typeOfLValue"
-      , [Var("s"){OfSort(SCOPE())}, Op("LExp2LValue", [Var("le"){OfSort(SORT("LExp"))}]){OfSort(SORT("LValue"))}, Var("out564"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Op("LExp2LValue", [Var("le"){OfSort(SORT("LExp"))}]){OfSort(SORT("LValue"))}, Var("out136"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("typeOfLExp25"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfLExp3"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfLExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("s"){OfSort(SCOPE())}, Var("le"){OfSort(SORT("LExp"))}, Var("typeOfLExp25"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("s"){OfSort(SCOPE())}, Var("le"){OfSort(SORT("LExp"))}, Var("typeOfLExp3"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out564"){OfSort(SORT("TYPE"))}, Var("typeOfLExp25"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out136"){OfSort(SORT("TYPE"))}, Var("typeOfLExp3"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -1268,35 +1125,35 @@ Spec(
         "statics!typeOfMemberExp"
       , [ Var("s"){OfSort(SCOPE())}
         , Op("Member", [Var("e"){OfSort(SORT("Exp"))}, Var("le"){OfSort(SORT("LExp"))}]){OfSort(SORT("LValue"))}
-        , Var("out565"){OfSort(SORT("TYPE"))}
+        , Var("out137"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
         [Var("T"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out565"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out137"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
-            [Var("cs"){OfSort(SCOPE())}, Var("typeOfExp249"){OfSort(SORT("TYPE"))}, Var("typeOfLExp26"){OfSort(SORT("TYPE"))}, Var("wld198"){OfSort(STRING())}]
+            [Var("cs"){OfSort(SCOPE())}, Var("typeOfExp95"){OfSort(SORT("TYPE"))}, Var("typeOfLExp4"){OfSort(SORT("TYPE"))}, Var("wld47"){OfSort(STRING())}]
           , CConj(
               CConj(
                 C(
                   "statics!typeOfExp"
-                , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp249"){OfSort(SORT("TYPE"))}]
+                , [Var("s"){OfSort(SCOPE())}, Var("e"){OfSort(SORT("Exp"))}, Var("typeOfExp95"){OfSort(SORT("TYPE"))}]
                 , NoMessage()
                 )
               , CEqual(
-                  Var("typeOfExp249"){OfSort(SORT("TYPE"))}
-                , Op("CLASS", [Var("wld198"){OfSort(STRING())}, Var("cs"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}
+                  Var("typeOfExp95"){OfSort(SORT("TYPE"))}
+                , Op("CLASS", [Var("wld47"){OfSort(STRING())}, Var("cs"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}
                 , NoMessage()
                 )
               )
             , CConj(
                 C(
                   "statics!typeOfLExp"
-                , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("le"){OfSort(SORT("LExp"))}, Var("typeOfLExp26"){OfSort(SORT("TYPE"))}]
+                , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("le"){OfSort(SORT("LExp"))}, Var("typeOfLExp4"){OfSort(SORT("TYPE"))}]
                 , NoMessage()
                 )
-              , CEqual(Var("typeOfLExp26"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+              , CEqual(Var("typeOfLExp4"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
               )
             )
           )
@@ -1309,20 +1166,45 @@ Spec(
         "statics!typeOfLExp"
       , [ Var("s"){OfSort(SCOPE())}
         , Var("cs"){OfSort(SCOPE())}
-        , As(Var("lv"){OfSort(SORT("LExp"))}, Op("Project", [Wld(){OfSort(SORT("MemAcc"))}, Wld(){OfSort(SORT("LExp"))}]){OfSort(SORT("LExp"))}){OfSort(SORT("LExp"))}
-        , Var("out566"){OfSort(SORT("TYPE"))}
+        , Op("MemAcc2LExp", [Var("ma"){OfSort(SORT("MemAcc"))}]){OfSort(SORT("LExp"))}
+        , Var("out138"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfProjectExp27"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfMemAcc2"){OfSort(SORT("TYPE"))}]
+      , CConj(
+          CConj(
+            C(
+              "statics!typeOfMemAcc"
+            , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("ma"){OfSort(SORT("MemAcc"))}, Var("typeOfMemAcc2"){OfSort(SORT("TYPE"))}]
+            , NoMessage()
+            )
+          , CEqual(Var("out138"){OfSort(SORT("TYPE"))}, Var("typeOfMemAcc2"){OfSort(SORT("TYPE"))}, NoMessage())
+          )
+        , CTrue()
+        )
+      )
+    )
+  , Rule(
+      NoName()
+    , C(
+        "statics!typeOfLExp"
+      , [ Var("s"){OfSort(SCOPE())}
+        , Var("cs"){OfSort(SCOPE())}
+        , As(Var("lv"){OfSort(SORT("LExp"))}, Op("Project", [Wld(){OfSort(SORT("MemAcc"))}, Wld(){OfSort(SORT("LExp"))}]){OfSort(SORT("LExp"))}){OfSort(SORT("LExp"))}
+        , Var("out139"){OfSort(SORT("TYPE"))}
+        ]
+      )
+    , CExists(
+        [Var("typeOfProjectExp3"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfProjectExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("lv"){OfSort(SORT("LExp"))}, Var("typeOfProjectExp27"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("lv"){OfSort(SORT("LExp"))}, Var("typeOfProjectExp3"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out566"){OfSort(SORT("TYPE"))}, Var("typeOfProjectExp27"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out139"){OfSort(SORT("TYPE"))}, Var("typeOfProjectExp3"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -1338,19 +1220,19 @@ Spec(
             Var("lv"){OfSort(SORT("LExp"))}
           , Op("Project", [Op("Var", [Wld(){OfSort(STRING())}]){OfSort(SORT("MemAcc"))}, Wld(){OfSort(SORT("LExp"))}]){OfSort(SORT("LExp"))}
           ){OfSort(SORT("LExp"))}
-        , Var("out567"){OfSort(SORT("TYPE"))}
+        , Var("out140"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfProjectExp28"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfProjectExp4"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfProjectExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("lv"){OfSort(SORT("LExp"))}, Var("typeOfProjectExp28"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("lv"){OfSort(SORT("LExp"))}, Var("typeOfProjectExp4"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out567"){OfSort(SORT("TYPE"))}, Var("typeOfProjectExp28"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out140"){OfSort(SORT("TYPE"))}, Var("typeOfProjectExp4"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -1366,47 +1248,22 @@ Spec(
             Var("lv"){OfSort(SORT("LExp"))}
           , Op(
               "Project"
-            , [Op("MCall", [Wld(){OfSort(STRING())}, Wld(){OfSort(LIST(SORT("Exp")))}]){OfSort(SORT("MemAcc"))}, Wld(){OfSort(SORT("LExp"))}]
+            , [Op("Call", [Wld(){OfSort(STRING())}, Wld(){OfSort(LIST(SORT("Exp")))}]){OfSort(SORT("MemAcc"))}, Wld(){OfSort(SORT("LExp"))}]
             ){OfSort(SORT("LExp"))}
           ){OfSort(SORT("LExp"))}
-        , Var("out568"){OfSort(SORT("TYPE"))}
+        , Var("out141"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("typeOfProjectExp29"){OfSort(SORT("TYPE"))}]
+        [Var("typeOfProjectExp5"){OfSort(SORT("TYPE"))}]
       , CConj(
           CConj(
             C(
               "statics!typeOfProjectExp"
-            , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("lv"){OfSort(SORT("LExp"))}, Var("typeOfProjectExp29"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("lv"){OfSort(SORT("LExp"))}, Var("typeOfProjectExp5"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("out568"){OfSort(SORT("TYPE"))}, Var("typeOfProjectExp29"){OfSort(SORT("TYPE"))}, NoMessage())
-          )
-        , CTrue()
-        )
-      )
-    )
-  , Rule(
-      NoName()
-    , C(
-        "statics!typeOfLExp"
-      , [ Var("s"){OfSort(SCOPE())}
-        , Var("cs"){OfSort(SCOPE())}
-        , Op("MemAcc2LExp", [Var("ma"){OfSort(SORT("MemAcc"))}]){OfSort(SORT("LExp"))}
-        , Var("out569"){OfSort(SORT("TYPE"))}
-        ]
-      )
-    , CExists(
-        [Var("typeOfMemAcc16"){OfSort(SORT("TYPE"))}]
-      , CConj(
-          CConj(
-            C(
-              "statics!typeOfMemAcc"
-            , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("ma"){OfSort(SORT("MemAcc"))}, Var("typeOfMemAcc16"){OfSort(SORT("TYPE"))}]
-            , NoMessage()
-            )
-          , CEqual(Var("out569"){OfSort(SORT("TYPE"))}, Var("typeOfMemAcc16"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("out141"){OfSort(SORT("TYPE"))}, Var("typeOfProjectExp5"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         , CTrue()
         )
@@ -1419,40 +1276,40 @@ Spec(
       , [ Var("s"){OfSort(SCOPE())}
         , Var("cs"){OfSort(SCOPE())}
         , Op("Project", [Var("ma"){OfSort(SORT("MemAcc"))}, Var("le"){OfSort(SORT("LExp"))}]){OfSort(SORT("LExp"))}
-        , Var("out570"){OfSort(SORT("TYPE"))}
+        , Var("out142"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
         [Var("T"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out570"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out142"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
-            [ Var("T1"){OfSort(CVar("trans/statics.stx", "ty-1665"))}
+            [ Var("T1"){OfSort(CVar("trans/statics.stx", "ty-1528"))}
             , Var("cs2"){OfSort(SCOPE())}
-            , Var("typeOfMemAcc17"){OfSort(SORT("TYPE"))}
-            , Var("typeOfLExp27"){OfSort(SORT("TYPE"))}
-            , Var("wld199"){OfSort(STRING())}
+            , Var("typeOfMemAcc3"){OfSort(SORT("TYPE"))}
+            , Var("typeOfLExp5"){OfSort(SORT("TYPE"))}
+            , Var("wld48"){OfSort(STRING())}
             ]
           , CConj(
               CConj(
                 C(
                   "statics!typeOfMemAcc"
-                , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("ma"){OfSort(SORT("MemAcc"))}, Var("typeOfMemAcc17"){OfSort(SORT("TYPE"))}]
+                , [Var("s"){OfSort(SCOPE())}, Var("cs"){OfSort(SCOPE())}, Var("ma"){OfSort(SORT("MemAcc"))}, Var("typeOfMemAcc3"){OfSort(SORT("TYPE"))}]
                 , NoMessage()
                 )
               , CEqual(
-                  Var("typeOfMemAcc17"){OfSort(SORT("TYPE"))}
-                , Op("CLASS", [Var("wld199"){OfSort(STRING())}, Var("cs2"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}
+                  Var("typeOfMemAcc3"){OfSort(SORT("TYPE"))}
+                , Op("CLASS", [Var("wld48"){OfSort(STRING())}, Var("cs2"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}
                 , NoMessage()
                 )
               )
             , CConj(
                 C(
                   "statics!typeOfLExp"
-                , [Var("s"){OfSort(SCOPE())}, Var("cs2"){OfSort(SCOPE())}, Var("le"){OfSort(SORT("LExp"))}, Var("typeOfLExp27"){OfSort(SORT("TYPE"))}]
+                , [Var("s"){OfSort(SCOPE())}, Var("cs2"){OfSort(SCOPE())}, Var("le"){OfSort(SORT("LExp"))}, Var("typeOfLExp5"){OfSort(SORT("TYPE"))}]
                 , NoMessage()
                 )
-              , CEqual(Var("typeOfLExp27"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+              , CEqual(Var("typeOfLExp5"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
               )
             )
           )
@@ -1466,20 +1323,20 @@ Spec(
       , [ Var("s"){OfSort(SCOPE())}
         , Var("cs"){OfSort(SCOPE())}
         , Op("Var", [Var("name"){OfSort(STRING())}]){OfSort(SORT("MemAcc"))}
-        , Var("out571"){OfSort(SORT("TYPE"))}
+        , Var("out143"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfMember10"){OfSort(SORT("TYPE"))}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfMember2"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out571"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out143"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             C(
               "statics!typeOfMember"
-            , [Var("cs"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfMember10"){OfSort(SORT("TYPE"))}]
+            , [Var("cs"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfMember2"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
-          , CEqual(Var("typeOfMember10"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          , CEqual(Var("typeOfMember2"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
           )
         )
       )
@@ -1490,25 +1347,25 @@ Spec(
         "statics!typeOfMemAcc"
       , [ Var("s"){OfSort(SCOPE())}
         , Var("cs"){OfSort(SCOPE())}
-        , Op("MCall", [Var("name"){OfSort(STRING())}, Var("args"){OfSort(LIST(SORT("Exp")))}]){OfSort(SORT("MemAcc"))}
-        , Var("out572"){OfSort(SORT("TYPE"))}
+        , Op("Call", [Var("name"){OfSort(STRING())}, Var("args"){OfSort(LIST(SORT("Exp")))}]){OfSort(SORT("MemAcc"))}
+        , Var("out144"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
         [Var("TR"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out572"){OfSort(SORT("TYPE"))}, Var("TR"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out144"){OfSort(SORT("TYPE"))}, Var("TR"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
-            [Var("TA"){OfSort(LIST(SORT("TYPE")))}, Var("typeOfMember11"){OfSort(SORT("TYPE"))}, Var("typesOfExps29"){OfSort(LIST(SORT("TYPE")))}]
+            [Var("TA"){OfSort(LIST(SORT("TYPE")))}, Var("typeOfMember3"){OfSort(SORT("TYPE"))}, Var("typesOfExps3"){OfSort(LIST(SORT("TYPE")))}]
           , CConj(
               CConj(
                 C(
                   "statics!typeOfMember"
-                , [Var("cs"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfMember11"){OfSort(SORT("TYPE"))}]
+                , [Var("cs"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfMember3"){OfSort(SORT("TYPE"))}]
                 , NoMessage()
                 )
               , CEqual(
-                  Var("typeOfMember11"){OfSort(SORT("TYPE"))}
+                  Var("typeOfMember3"){OfSort(SORT("TYPE"))}
                 , Op("METHOD", [Var("TA"){OfSort(LIST(SORT("TYPE")))}, Var("TR"){OfSort(SORT("TYPE"))}]){OfSort(SORT("TYPE"))}
                 , NoMessage()
                 )
@@ -1516,10 +1373,10 @@ Spec(
             , CConj(
                 C(
                   "statics!typesOfExps"
-                , [Var("s"){OfSort(SCOPE())}, Var("args"){OfSort(LIST(SORT("Exp")))}, Var("typesOfExps29"){OfSort(LIST(SORT("TYPE")))}]
+                , [Var("s"){OfSort(SCOPE())}, Var("args"){OfSort(LIST(SORT("Exp")))}, Var("typesOfExps3"){OfSort(LIST(SORT("TYPE")))}]
                 , NoMessage()
                 )
-              , CEqual(Var("typesOfExps29"){OfSort(LIST(SORT("TYPE")))}, Var("TA"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
+              , CEqual(Var("typesOfExps3"){OfSort(LIST(SORT("TYPE")))}, Var("TA"){OfSort(LIST(SORT("TYPE")))}, NoMessage())
               )
             )
           )
@@ -1533,12 +1390,12 @@ Spec(
       , [Var("s"){OfSort(SCOPE())}, Var("decl"){OfSort(STRING())}, Var("T"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("astId37"){OfSort(AST_ID())}]
+        [Var("astId8"){OfSort(AST_ID())}]
       , CConj(
-          CAstId(Var("decl"){OfSort(STRING())}, Var("astId37"){OfSort(AST_ID())})
+          CAstId(Var("decl"){OfSort(STRING())}, Var("astId8"){OfSort(AST_ID())})
         , CTellRel(
             Label("statics!type")
-          , [ StxOccurrence("statics!Class", [Var("decl"){OfSort(STRING())}], WithId(Var("astId37"){OfSort(AST_ID())}))
+          , [ StxOccurrence("statics!Class", [Var("decl"){OfSort(STRING())}], WithId(Var("astId8"){OfSort(AST_ID())}))
             , Var("T"){OfSort(SORT("TYPE"))}
             ]
           , Var("s"){OfSort(SCOPE())}
@@ -1550,7 +1407,7 @@ Spec(
       NoName()
     , C(
         "statics!resolveClass"
-      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out573"){ OfSort(
+      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out145"){ OfSort(
                                                                                     LIST(
                                                                                       TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                     )
@@ -1565,7 +1422,7 @@ Spec(
                     )
                   }]
       , CConj(
-          CEqual(Var("out573"){ OfSort(
+          CEqual(Var("out145"){ OfSort(
                                   LIST(
                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                   )
@@ -1583,10 +1440,10 @@ Spec(
             , LLam(
                 [Tuple([Var("d'"){OfSort(OCCURRENCE())}, Wld(){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
               , CExists(
-                  [Var("wld200"){OfSort(CVar("trans/statics.stx", "ty-1861"))}]
+                  [Var("wld49"){OfSort(CVar("trans/statics.stx", "ty-1724"))}]
                 , CEqual(
                     Var("d'"){OfSort(OCCURRENCE())}
-                  , StxOccurrence("statics!Class", [Var("name"){OfSort(STRING())}], WithId(Var("wld200"){OfSort(CVar("trans/statics.stx", "ty-1861"))}))
+                  , StxOccurrence("statics!Class", [Var("name"){OfSort(STRING())}], WithId(Var("wld49"){OfSort(CVar("trans/statics.stx", "ty-1724"))}))
                   , NoMessage()
                   )
                 )
@@ -1612,28 +1469,28 @@ Spec(
       NoName()
     , C(
         "statics!typeOfClass"
-      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out574"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out146"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
         [Var("T"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out574"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out146"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
-            [Var("decl"){OfSort(OCCURRENCE())}, Var("resolveClass9"){ OfSort(
+            [Var("decl"){OfSort(OCCURRENCE())}, Var("resolveClass1"){ OfSort(
                                                                         LIST(
                                                                           TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                         )
                                                                       )
-                                                                    }, Var("wld201"){OfSort(PATH())}, Var("wld202"){ OfSort(
-                                                                                                                       LIST(
-                                                                                                                         TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                                       )
+                                                                    }, Var("wld50"){OfSort(PATH())}, Var("wld51"){ OfSort(
+                                                                                                                     LIST(
+                                                                                                                       TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                                                      )
-                                                                                                                   }]
+                                                                                                                   )
+                                                                                                                 }]
           , CConj(
               C(
                 "statics!resolveClass"
-              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveClass9"){ OfSort(
+              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveClass1"){ OfSort(
                                                                                                    LIST(
                                                                                                      TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                                    )
@@ -1642,7 +1499,7 @@ Spec(
               , NoMessage()
               )
             , CEqual(
-                Var("resolveClass9"){ OfSort(
+                Var("resolveClass1"){ OfSort(
                                         LIST(
                                           TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                         )
@@ -1650,17 +1507,17 @@ Spec(
                                     }
               , ListTail(
                   [ Tuple(
-                      [Var("wld201"){OfSort(PATH())}, Tuple([Var("decl"){OfSort(OCCURRENCE())}, Var("T"){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
+                      [Var("wld50"){OfSort(PATH())}, Tuple([Var("decl"){OfSort(OCCURRENCE())}, Var("T"){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
                     ){OfSort(
                         TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                       )}
                   ]
-                , Var("wld202"){ OfSort(
-                                   LIST(
-                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                   )
-                                 )
-                               }
+                , Var("wld51"){ OfSort(
+                                  LIST(
+                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                  )
+                                )
+                              }
                 ){ OfSort(
                      LIST(
                        TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
@@ -1681,12 +1538,12 @@ Spec(
       , [Var("cs"){OfSort(SCOPE())}, Var("decl"){OfSort(STRING())}, Var("T"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("astId38"){OfSort(AST_ID())}]
+        [Var("astId9"){OfSort(AST_ID())}]
       , CConj(
-          CAstId(Var("decl"){OfSort(STRING())}, Var("astId38"){OfSort(AST_ID())})
+          CAstId(Var("decl"){OfSort(STRING())}, Var("astId9"){OfSort(AST_ID())})
         , CTellRel(
             Label("statics!type")
-          , [ StxOccurrence("statics!Member", [Var("decl"){OfSort(STRING())}], WithId(Var("astId38"){OfSort(AST_ID())}))
+          , [ StxOccurrence("statics!Member", [Var("decl"){OfSort(STRING())}], WithId(Var("astId9"){OfSort(AST_ID())}))
             , Var("T"){OfSort(SORT("TYPE"))}
             ]
           , Var("cs"){OfSort(SCOPE())}
@@ -1698,7 +1555,7 @@ Spec(
       NoName()
     , C(
         "statics!resolveMember"
-      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out575"){ OfSort(
+      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out147"){ OfSort(
                                                                                     LIST(
                                                                                       TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                     )
@@ -1713,7 +1570,7 @@ Spec(
                     )
                   }]
       , CConj(
-          CEqual(Var("out575"){ OfSort(
+          CEqual(Var("out147"){ OfSort(
                                   LIST(
                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                   )
@@ -1731,10 +1588,10 @@ Spec(
             , LLam(
                 [Tuple([Var("d'"){OfSort(OCCURRENCE())}, Wld(){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
               , CExists(
-                  [Var("wld203"){OfSort(CVar("trans/statics.stx", "ty-1984"))}]
+                  [Var("wld52"){OfSort(CVar("trans/statics.stx", "ty-1847"))}]
                 , CEqual(
                     Var("d'"){OfSort(OCCURRENCE())}
-                  , StxOccurrence("statics!Member", [Var("name"){OfSort(STRING())}], WithId(Var("wld203"){OfSort(CVar("trans/statics.stx", "ty-1984"))}))
+                  , StxOccurrence("statics!Member", [Var("name"){OfSort(STRING())}], WithId(Var("wld52"){OfSort(CVar("trans/statics.stx", "ty-1847"))}))
                   , NoMessage()
                   )
                 )
@@ -1760,55 +1617,55 @@ Spec(
       NoName()
     , C(
         "statics!typeOfMember"
-      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out576"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out148"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
         [Var("T"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out576"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out148"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
-            [Var("decl"){OfSort(OCCURRENCE())}, Var("resolveMember18"){ OfSort(
-                                                                          LIST(
-                                                                            TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                          )
-                                                                        )
-                                                                      }, Var("wld204"){OfSort(PATH())}, Var("wld205"){ OfSort(
-                                                                                                                         LIST(
-                                                                                                                           TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                                         )
-                                                                                                                       )
-                                                                                                                     }]
+            [Var("decl"){OfSort(OCCURRENCE())}, Var("resolveMember2"){ OfSort(
+                                                                         LIST(
+                                                                           TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                         )
+                                                                       )
+                                                                     }, Var("wld53"){OfSort(PATH())}, Var("wld54"){ OfSort(
+                                                                                                                      LIST(
+                                                                                                                        TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                                                                      )
+                                                                                                                    )
+                                                                                                                  }]
           , CConj(
               C(
                 "statics!resolveMember"
-              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveMember18"){ OfSort(
-                                                                                                     LIST(
-                                                                                                       TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                     )
-                                                                                                   )
-                                                                                                 }]
+              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveMember2"){ OfSort(
+                                                                                                    LIST(
+                                                                                                      TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                                                    )
+                                                                                                  )
+                                                                                                }]
               , NoMessage()
               )
             , CEqual(
-                Var("resolveMember18"){ OfSort(
-                                          LIST(
-                                            TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                          )
-                                        )
-                                      }
+                Var("resolveMember2"){ OfSort(
+                                         LIST(
+                                           TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                         )
+                                       )
+                                     }
               , ListTail(
                   [ Tuple(
-                      [Var("wld204"){OfSort(PATH())}, Tuple([Var("decl"){OfSort(OCCURRENCE())}, Var("T"){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
+                      [Var("wld53"){OfSort(PATH())}, Tuple([Var("decl"){OfSort(OCCURRENCE())}, Var("T"){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
                     ){OfSort(
                         TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                       )}
                   ]
-                , Var("wld205"){ OfSort(
-                                   LIST(
-                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                   )
-                                 )
-                               }
+                , Var("wld54"){ OfSort(
+                                  LIST(
+                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                  )
+                                )
+                              }
                 ){ OfSort(
                      LIST(
                        TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
@@ -1829,7 +1686,7 @@ Spec(
       , [ Var("s"){OfSort(SCOPE())}
         , As(
             Var("occ"){OfSort(OCCURRENCE())}
-          , StxOccurrence("statics!Var", [Var("name"){OfSort(STRING())}], WithId(Wld(){OfSort(CVar("trans/statics.stx", "ty-2051"))}))
+          , StxOccurrence("statics!Var", [Var("name"){OfSort(STRING())}], WithId(Wld(){OfSort(CVar("trans/statics.stx", "ty-1914"))}))
           ){OfSort(OCCURRENCE())}
         , Var("T"){OfSort(SORT("TYPE"))}
         ]
@@ -1847,13 +1704,13 @@ Spec(
       , [Var("s"){OfSort(SCOPE())}, Var("decl"){OfSort(STRING())}, Var("T"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
-        [Var("astId39"){OfSort(AST_ID())}]
+        [Var("astId10"){OfSort(AST_ID())}]
       , CConj(
-          CAstId(Var("decl"){OfSort(STRING())}, Var("astId39"){OfSort(AST_ID())})
+          CAstId(Var("decl"){OfSort(STRING())}, Var("astId10"){OfSort(AST_ID())})
         , C(
             "statics!declareVarOccurrence"
           , [ Var("s"){OfSort(SCOPE())}
-            , StxOccurrence("statics!Var", [Var("decl"){OfSort(STRING())}], WithId(Var("astId39"){OfSort(AST_ID())}))
+            , StxOccurrence("statics!Var", [Var("decl"){OfSort(STRING())}], WithId(Var("astId10"){OfSort(AST_ID())}))
             , Var("T"){OfSort(SORT("TYPE"))}
             ]
           , NoMessage()
@@ -1865,7 +1722,7 @@ Spec(
       NoName()
     , C(
         "statics!resolveVar"
-      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out577"){ OfSort(
+      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out149"){ OfSort(
                                                                                     LIST(
                                                                                       TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                     )
@@ -1880,7 +1737,7 @@ Spec(
                     )
                   }]
       , CConj(
-          CEqual(Var("out577"){ OfSort(
+          CEqual(Var("out149"){ OfSort(
                                   LIST(
                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                   )
@@ -1898,10 +1755,10 @@ Spec(
             , LLam(
                 [Tuple([Var("d'"){OfSort(OCCURRENCE())}, Wld(){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
               , CExists(
-                  [Var("wld206"){OfSort(CVar("trans/statics.stx", "ty-2140"))}]
+                  [Var("wld55"){OfSort(CVar("trans/statics.stx", "ty-2003"))}]
                 , CEqual(
                     Var("d'"){OfSort(OCCURRENCE())}
-                  , StxOccurrence("statics!Var", [Var("name"){OfSort(STRING())}], WithId(Var("wld206"){OfSort(CVar("trans/statics.stx", "ty-2140"))}))
+                  , StxOccurrence("statics!Var", [Var("name"){OfSort(STRING())}], WithId(Var("wld55"){OfSort(CVar("trans/statics.stx", "ty-2003"))}))
                   , NoMessage()
                   )
                 )
@@ -1927,55 +1784,55 @@ Spec(
       NoName()
     , C(
         "statics!typeOfVar"
-      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out578"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out150"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
         [Var("T"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out578"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out150"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
-            [Var("decl"){OfSort(OCCURRENCE())}, Var("resolveVar18"){ OfSort(
-                                                                       LIST(
-                                                                         TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                       )
-                                                                     )
-                                                                   }, Var("wld207"){OfSort(PATH())}, Var("wld208"){ OfSort(
-                                                                                                                      LIST(
-                                                                                                                        TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                                      )
-                                                                                                                    )
-                                                                                                                  }]
+            [Var("decl"){OfSort(OCCURRENCE())}, Var("resolveVar2"){ OfSort(
+                                                                      LIST(
+                                                                        TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                      )
+                                                                    )
+                                                                  }, Var("wld56"){OfSort(PATH())}, Var("wld57"){ OfSort(
+                                                                                                                   LIST(
+                                                                                                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                                                                   )
+                                                                                                                 )
+                                                                                                               }]
           , CConj(
               C(
                 "statics!resolveVar"
-              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveVar18"){ OfSort(
-                                                                                                  LIST(
-                                                                                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                  )
-                                                                                                )
-                                                                                              }]
+              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveVar2"){ OfSort(
+                                                                                                 LIST(
+                                                                                                   TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                                                 )
+                                                                                               )
+                                                                                             }]
               , NoMessage()
               )
             , CEqual(
-                Var("resolveVar18"){ OfSort(
-                                       LIST(
-                                         TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                       )
-                                     )
-                                   }
+                Var("resolveVar2"){ OfSort(
+                                      LIST(
+                                        TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                      )
+                                    )
+                                  }
               , ListTail(
                   [ Tuple(
-                      [Var("wld207"){OfSort(PATH())}, Tuple([Var("decl"){OfSort(OCCURRENCE())}, Var("T"){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
+                      [Var("wld56"){OfSort(PATH())}, Tuple([Var("decl"){OfSort(OCCURRENCE())}, Var("T"){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
                     ){OfSort(
                         TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                       )}
                   ]
-                , Var("wld208"){ OfSort(
-                                   LIST(
-                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                   )
-                                 )
-                               }
+                , Var("wld57"){ OfSort(
+                                  LIST(
+                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                  )
+                                )
+                              }
                 ){ OfSort(
                      LIST(
                        TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
@@ -1995,11 +1852,11 @@ Spec(
         "statics!typeOfType"
       , [ Var("s"){OfSort(SCOPE())}
         , As(Var("t"){OfSort(SORT("Type"))}, Op("IntType", []){OfSort(SORT("Type"))}){OfSort(SORT("Type"))}
-        , Var("out579"){OfSort(SORT("TYPE"))}
+        , Var("out151"){OfSort(SORT("TYPE"))}
         ]
       )
     , CConj(
-        CEqual(Var("out579"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out151"){OfSort(SORT("TYPE"))}, Op("INT", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -2009,11 +1866,11 @@ Spec(
         "statics!typeOfType"
       , [ Var("s"){OfSort(SCOPE())}
         , As(Var("t"){OfSort(SORT("Type"))}, Op("BoolType", []){OfSort(SORT("Type"))}){OfSort(SORT("Type"))}
-        , Var("out580"){OfSort(SORT("TYPE"))}
+        , Var("out152"){OfSort(SORT("TYPE"))}
         ]
       )
     , CConj(
-        CEqual(Var("out580"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out152"){OfSort(SORT("TYPE"))}, Op("BOOL", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -2023,11 +1880,11 @@ Spec(
         "statics!typeOfType"
       , [ Var("s"){OfSort(SCOPE())}
         , As(Var("t"){OfSort(SORT("Type"))}, Op("ObjectType", []){OfSort(SORT("Type"))}){OfSort(SORT("Type"))}
-        , Var("out581"){OfSort(SORT("TYPE"))}
+        , Var("out153"){OfSort(SORT("TYPE"))}
         ]
       )
     , CConj(
-        CEqual(Var("out581"){OfSort(SORT("TYPE"))}, Op("OBJECT", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out153"){OfSort(SORT("TYPE"))}, Op("OBJECT", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -2037,11 +1894,11 @@ Spec(
         "statics!typeOfType"
       , [ Var("s"){OfSort(SCOPE())}
         , As(Var("t"){OfSort(SORT("Type"))}, Op("VoidType", []){OfSort(SORT("Type"))}){OfSort(SORT("Type"))}
-        , Var("out582"){OfSort(SORT("TYPE"))}
+        , Var("out154"){OfSort(SORT("TYPE"))}
         ]
       )
     , CConj(
-        CEqual(Var("out582"){OfSort(SORT("TYPE"))}, Op("VOID", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out154"){OfSort(SORT("TYPE"))}, Op("VOID", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -2051,26 +1908,26 @@ Spec(
         "statics!typeOfType"
       , [ Var("s"){OfSort(SCOPE())}
         , As(Var("t"){OfSort(SORT("Type"))}, Op("ClassType", [Var("name"){OfSort(STRING())}]){OfSort(SORT("Type"))}){OfSort(SORT("Type"))}
-        , Var("out583"){OfSort(SORT("TYPE"))}
+        , Var("out155"){OfSort(SORT("TYPE"))}
         ]
       )
     , CExists(
-        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfClass9"){OfSort(SORT("TYPE"))}, Var("wld209"){OfSort(STRING())}, Var("wld210"){OfSort(SCOPE())}]
+        [Var("T"){OfSort(SORT("TYPE"))}, Var("typeOfClass1"){OfSort(SORT("TYPE"))}, Var("wld58"){OfSort(STRING())}, Var("wld59"){OfSort(SCOPE())}]
       , CConj(
-          CEqual(Var("out583"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out155"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CConj(
             C(
               "statics!typeOfClass"
-            , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfClass9"){OfSort(SORT("TYPE"))}]
+            , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("typeOfClass1"){OfSort(SORT("TYPE"))}]
             , NoMessage()
             )
           , CConj(
               CEqual(
                 Var("T"){OfSort(SORT("TYPE"))}
-              , Op("CLASS", [Var("wld209"){OfSort(STRING())}, Var("wld210"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}
+              , Op("CLASS", [Var("wld58"){OfSort(STRING())}, Var("wld59"){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}
               , NoMessage()
               )
-            , CEqual(Var("typeOfClass9"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+            , CEqual(Var("typeOfClass1"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
             )
           )
         )
@@ -2082,10 +1939,10 @@ Spec(
         "statics!lub"
       , [ As(Var("T"){OfSort(SORT("TYPE"))}, Op("CLASS", [Wld(){OfSort(STRING())}, Wld(){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}){OfSort(SORT("TYPE"))}
         , Op("NULL", []){OfSort(SORT("TYPE"))}
-        , Var("out584"){OfSort(SORT("TYPE"))}
+        , Var("out156"){OfSort(SORT("TYPE"))}
         ]
       )
-    , CConj(CEqual(Var("out584"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage()), CTrue())
+    , CConj(CEqual(Var("out156"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage()), CTrue())
     )
   , Rule(
       NoName()
@@ -2093,18 +1950,18 @@ Spec(
         "statics!lub"
       , [ Op("NULL", []){OfSort(SORT("TYPE"))}
         , As(Var("T"){OfSort(SORT("TYPE"))}, Op("CLASS", [Wld(){OfSort(STRING())}, Wld(){OfSort(SCOPE())}]){OfSort(SORT("TYPE"))}){OfSort(SORT("TYPE"))}
-        , Var("out585"){OfSort(SORT("TYPE"))}
+        , Var("out157"){OfSort(SORT("TYPE"))}
         ]
       )
-    , CConj(CEqual(Var("out585"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage()), CTrue())
+    , CConj(CEqual(Var("out157"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage()), CTrue())
     )
   , Rule(
       NoName()
     , C(
         "statics!lub"
-      , [Var("T"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, Var("out586"){OfSort(SORT("TYPE"))}]
+      , [Var("T"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, Var("out158"){OfSort(SORT("TYPE"))}]
       )
-    , CConj(CEqual(Var("out586"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage()), CTrue())
+    , CConj(CEqual(Var("out158"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage()), CTrue())
     )
   , Rule(
       NoName()
@@ -2130,28 +1987,28 @@ Spec(
       NoName()
     , C(
         "statics!typeOfVarOrMember"
-      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out587"){OfSort(SORT("TYPE"))}]
+      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out159"){OfSort(SORT("TYPE"))}]
       )
     , CExists(
         [Var("T"){OfSort(SORT("TYPE"))}]
       , CConj(
-          CEqual(Var("out587"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
+          CEqual(Var("out159"){OfSort(SORT("TYPE"))}, Var("T"){OfSort(SORT("TYPE"))}, NoMessage())
         , CExists(
-            [Var("decl"){OfSort(OCCURRENCE())}, Var("resolveVarOrMember9"){ OfSort(
+            [Var("decl"){OfSort(OCCURRENCE())}, Var("resolveVarOrMember1"){ OfSort(
                                                                               LIST(
                                                                                 TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                               )
                                                                             )
-                                                                          }, Var("wld211"){OfSort(PATH())}, Var("wld212"){ OfSort(
-                                                                                                                             LIST(
-                                                                                                                               TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                                             )
+                                                                          }, Var("wld60"){OfSort(PATH())}, Var("wld61"){ OfSort(
+                                                                                                                           LIST(
+                                                                                                                             TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                                                            )
-                                                                                                                         }]
+                                                                                                                         )
+                                                                                                                       }]
           , CConj(
               C(
                 "statics!resolveVarOrMember"
-              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveVarOrMember9"){ OfSort(
+              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveVarOrMember1"){ OfSort(
                                                                                                          LIST(
                                                                                                            TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                                          )
@@ -2160,7 +2017,7 @@ Spec(
               , NoMessage()
               )
             , CEqual(
-                Var("resolveVarOrMember9"){ OfSort(
+                Var("resolveVarOrMember1"){ OfSort(
                                               LIST(
                                                 TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                               )
@@ -2168,17 +2025,17 @@ Spec(
                                           }
               , ListTail(
                   [ Tuple(
-                      [Var("wld211"){OfSort(PATH())}, Tuple([Var("decl"){OfSort(OCCURRENCE())}, Var("T"){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
+                      [Var("wld60"){OfSort(PATH())}, Tuple([Var("decl"){OfSort(OCCURRENCE())}, Var("T"){OfSort(SORT("TYPE"))}]){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}]
                     ){OfSort(
                         TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                       )}
                   ]
-                , Var("wld212"){ OfSort(
-                                   LIST(
-                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                   )
-                                 )
-                               }
+                , Var("wld61"){ OfSort(
+                                  LIST(
+                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                  )
+                                )
+                              }
                 ){ OfSort(
                      LIST(
                        TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
@@ -2196,7 +2053,7 @@ Spec(
       NoName()
     , C(
         "statics!resolveVarOrMember"
-      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out588"){ OfSort(
+      , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("out160"){ OfSort(
                                                                                     LIST(
                                                                                       TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                     )
@@ -2204,51 +2061,51 @@ Spec(
                                                                                 }]
       )
     , CExists(
-        [Var("unwrapVarOrResolveMember9"){ OfSort(
+        [Var("unwrapVarOrResolveMember1"){ OfSort(
                                              LIST(
                                                TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                              )
                                            )
-                                         }, Var("resolveVar19"){ OfSort(
-                                                                   LIST(
-                                                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                   )
-                                                                 )
-                                                               }]
+                                         }, Var("resolveVar3"){ OfSort(
+                                                                  LIST(
+                                                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                  )
+                                                                )
+                                                              }]
       , CConj(
           CConj(
             C(
               "statics!unwrapVarOrResolveMember"
-            , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveVar19"){ OfSort(
-                                                                                                LIST(
-                                                                                                  TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                )
-                                                                                              )
-                                                                                            }, Var("unwrapVarOrResolveMember9"){ OfSort(
-                                                                                                                                   LIST(
-                                                                                                                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                                                   )
-                                                                                                                                 )
-                                                                                                                               }]
+            , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveVar3"){ OfSort(
+                                                                                               LIST(
+                                                                                                 TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                                               )
+                                                                                             )
+                                                                                           }, Var("unwrapVarOrResolveMember1"){ OfSort(
+                                                                                                                                  LIST(
+                                                                                                                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                                                                                  )
+                                                                                                                                )
+                                                                                                                              }]
             , NoMessage()
             )
           , CConj(
               C(
                 "statics!resolveVar"
-              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveVar19"){ OfSort(
-                                                                                                  LIST(
-                                                                                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                  )
-                                                                                                )
-                                                                                              }]
+              , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveVar3"){ OfSort(
+                                                                                                 LIST(
+                                                                                                   TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                                                 )
+                                                                                               )
+                                                                                             }]
               , NoMessage()
               )
-            , CEqual(Var("out588"){ OfSort(
+            , CEqual(Var("out160"){ OfSort(
                                       LIST(
                                         TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                       )
                                     )
-                                  }, Var("unwrapVarOrResolveMember9"){ OfSort(
+                                  }, Var("unwrapVarOrResolveMember1"){ OfSort(
                                                                          LIST(
                                                                            TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                          )
@@ -2277,7 +2134,7 @@ Spec(
               [ Tuple(
                   [ Wld(){OfSort(PATH())}
                   , Tuple(
-                      [StxOccurrence("statics!Var", [Var("decl"){OfSort(STRING())}], WithId(Wld(){OfSort(CVar("trans/statics.stx", "ty-2461"))})), Var("T"){OfSort(SORT("TYPE"))}]
+                      [StxOccurrence("statics!Var", [Var("decl"){OfSort(STRING())}], WithId(Wld(){OfSort(CVar("trans/statics.stx", "ty-2324"))})), Var("T"){OfSort(SORT("TYPE"))}]
                     ){OfSort(TUPLE([OCCURRENCE(), SORT("TYPE")]))}
                   ]
                 ){OfSort(
@@ -2302,7 +2159,7 @@ Spec(
                )
              )
            }
-        , Var("out589"){ OfSort(
+        , Var("out161"){ OfSort(
                            LIST(
                              TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                            )
@@ -2310,7 +2167,7 @@ Spec(
                        }
         ]
       )
-    , CConj(CEqual(Var("out589"){ OfSort(
+    , CConj(CEqual(Var("out161"){ OfSort(
                                     LIST(
                                       TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                     )
@@ -2331,7 +2188,7 @@ Spec(
                                                                                  TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                )
                                                                              )
-                                                                           }, Var("out590"){ OfSort(
+                                                                           }, Var("out162"){ OfSort(
                                                                                                LIST(
                                                                                                  TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                                                                                )
@@ -2339,35 +2196,35 @@ Spec(
                                                                                            }]
       )
     , CExists(
-        [Var("resolveMember19"){ OfSort(
-                                   LIST(
-                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                   )
-                                 )
-                               }]
+        [Var("resolveMember3"){ OfSort(
+                                  LIST(
+                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                  )
+                                )
+                              }]
       , CConj(
           CConj(
             C(
               "statics!resolveMember"
-            , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveMember19"){ OfSort(
-                                                                                                   LIST(
-                                                                                                     TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                                                                   )
-                                                                                                 )
-                                                                                               }]
+            , [Var("s"){OfSort(SCOPE())}, Var("name"){OfSort(STRING())}, Var("resolveMember3"){ OfSort(
+                                                                                                  LIST(
+                                                                                                    TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                                                                  )
+                                                                                                )
+                                                                                              }]
             , NoMessage()
             )
-          , CEqual(Var("out590"){ OfSort(
+          , CEqual(Var("out162"){ OfSort(
                                     LIST(
                                       TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
                                     )
                                   )
-                                }, Var("resolveMember19"){ OfSort(
-                                                             LIST(
-                                                               TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
-                                                             )
-                                                           )
-                                                         }, NoMessage())
+                                }, Var("resolveMember3"){ OfSort(
+                                                            LIST(
+                                                              TUPLE([PATH(), TUPLE([OCCURRENCE(), SORT("TYPE")])])
+                                                            )
+                                                          )
+                                                        }, NoMessage())
           )
         , CTrue()
         )
@@ -2392,10 +2249,10 @@ Spec(
       NoName()
     , C(
         "statics!typeOfParam"
-      , [Wld(){OfSort(SCOPE())}, Op("ParamDecl-Plhdr", []){OfSort(SORT("ParamDecl"))}, Var("out591"){OfSort(SORT("TYPE"))}]
+      , [Wld(){OfSort(SCOPE())}, Op("ParamDecl-Plhdr", []){OfSort(SORT("ParamDecl"))}, Var("out163"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out591"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out163"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -2408,32 +2265,10 @@ Spec(
       NoName()
     , C(
         "statics!typeOfExp"
-      , [Wld(){OfSort(SCOPE())}, Op("Exp-Plhdr", []){OfSort(SORT("Exp"))}, Var("out592"){OfSort(SORT("TYPE"))}]
+      , [Wld(){OfSort(SCOPE())}, Op("Exp-Plhdr", []){OfSort(SORT("Exp"))}, Var("out164"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out592"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
-      , CTrue()
-      )
-    )
-  , Rule(
-      NoName()
-    , C(
-        "statics!typeOfLExp"
-      , [Wld(){OfSort(SCOPE())}, Wld(){OfSort(SCOPE())}, Op("LExp-Plhdr", []){OfSort(SORT("LExp"))}, Var("out593"){OfSort(SORT("TYPE"))}]
-      )
-    , CConj(
-        CEqual(Var("out593"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
-      , CTrue()
-      )
-    )
-  , Rule(
-      NoName()
-    , C(
-        "statics!typeOfMemAcc"
-      , [Wld(){OfSort(SCOPE())}, Wld(){OfSort(SCOPE())}, Op("MemAcc-Plhdr", []){OfSort(SORT("MemAcc"))}, Var("out594"){OfSort(SORT("TYPE"))}]
-      )
-    , CConj(
-        CEqual(Var("out594"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out164"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -2441,21 +2276,10 @@ Spec(
       NoName()
     , C(
         "statics!typeOfLValue"
-      , [Wld(){OfSort(SCOPE())}, Op("LValue-Plhdr", []){OfSort(SORT("LValue"))}, Var("out595"){OfSort(SORT("TYPE"))}]
+      , [Wld(){OfSort(SCOPE())}, Op("LValue-Plhdr", []){OfSort(SORT("LValue"))}, Var("out165"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out595"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
-      , CTrue()
-      )
-    )
-  , Rule(
-      NoName()
-    , C(
-        "statics!typeOfCall"
-      , [Wld(){OfSort(SCOPE())}, Op("Exp-Plhdr", []){OfSort(SORT("Exp"))}, Var("out596"){OfSort(SORT("TYPE"))}]
-      )
-    , CConj(
-        CEqual(Var("out596"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out165"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -2463,10 +2287,10 @@ Spec(
       NoName()
     , C(
         "statics!typeOfNew"
-      , [Wld(){OfSort(SCOPE())}, Op("Exp-Plhdr", []){OfSort(SORT("Exp"))}, Var("out597"){OfSort(SORT("TYPE"))}]
+      , [Wld(){OfSort(SCOPE())}, Op("Exp-Plhdr", []){OfSort(SORT("Exp"))}, Var("out166"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out597"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out166"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
@@ -2474,26 +2298,26 @@ Spec(
       NoName()
     , C(
         "statics!typeOfType"
-      , [Wld(){OfSort(SCOPE())}, Op("Type-Plhdr", []){OfSort(SORT("Type"))}, Var("out598"){OfSort(SORT("TYPE"))}]
+      , [Wld(){OfSort(SCOPE())}, Op("Type-Plhdr", []){OfSort(SORT("Type"))}, Var("out167"){OfSort(SORT("TYPE"))}]
       )
     , CConj(
-        CEqual(Var("out598"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
+        CEqual(Var("out167"){OfSort(SORT("TYPE"))}, Op("BOTTOM", []){OfSort(SORT("TYPE"))}, NoMessage())
       , CTrue()
       )
     )
   ]
 , [ ("statics!declareVarOccurrence", 1, Label("statics!type"))
-  , ("statics!declareClass", 1, Label("statics!type"))
   , ("statics!typeOfParam", 1, Label("statics!type"))
+  , ("statics!declareClass", 1, Label("statics!type"))
   , ("statics!membersOk", 1, Label("statics!type"))
-  , ("statics!declareMember", 1, Label("statics!type"))
   , ("statics!stmtsOk", 1, Label("statics!type"))
+  , ("statics!declareMember", 1, Label("statics!type"))
   , ("statics!typesOfParams", 1, Label("statics!type"))
+  , ("statics!declareVar", 1, Label("statics!type"))
   , ("statics!memberOk", 1, Label("statics!type"))
   , ("statics!stmtOk", 1, Label("statics!type"))
   , ("statics!classesOk", 1, Label("statics!type"))
   , ("statics!classOk", 1, Label("statics!type"))
   , ("statics!init", 1, Label("statics!type"))
-  , ("statics!declareVar", 1, Label("statics!type"))
   ]
 )
