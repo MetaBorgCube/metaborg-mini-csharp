@@ -5,8 +5,11 @@ class Node {
     public Node Right;
     public Test t;
 
-    public Test M() {
-        return t.n.t.n.M().n.Left.t;
+    public Node N() {
+        return t.n.t.n.T().n.N().t.n;
+    }
+    public Test T() {
+        return t.n.t.n.T().n.Left.t;
     }
 
     public int CalcHeight() {

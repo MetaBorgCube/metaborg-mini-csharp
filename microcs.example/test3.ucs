@@ -3,6 +3,7 @@ class A
     public void M(int a)
     {
         int l;
-        var _ = M(1);
+        var _ = l;
+        var _ = this.M(1);
     }
 }

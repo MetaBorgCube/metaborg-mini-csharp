@@ -74,56 +74,56 @@ context-free syntax
   Exp        = <(<Exp>)> {bracket}
 
 
-context-free sorts LValue
-context-free syntax
-  
-  LValue.EDot = <<Exp>.<{MemAcc "."}+>> {right}
-  LValue.Dot  = {MemAcc "."}+
-
-context-free sorts MemAcc
-context-free syntax
-  MemAcc.Var     = <<ID>>
-  MemAcc.Call    = <<ID>(<{Exp ", "}*>)>
-  
-context-free priorities
-//  LValue = LExp <0> .> LExp.Project,
-  LValue.EDot <0> .> Exp = LValue,
-  LValue.EDot <0> .> {
-    Exp.Not
-    Exp.Mul
-    Exp.Add
-    Exp.Eq
-    Exp.New
-    Exp.And
-    Exp.Cond   
-  }
-  
 //context-free sorts LValue
 //context-free syntax
-//  LValue.Member  = <<Exp>.<LExp>> {right}
-//  LValue         = LExp
-//
-//context-free sorts LExp
-//context-free syntax
-//  LExp.Project   = <<MemAcc>.<LExp>> {right}
-//  LExp           = MemAcc
+//  
+//  LValue.EDot = <<Exp>.<{MemAcc "."}+>> {right}
+//  LValue.Dot  = {MemAcc "."}+
 //
 //context-free sorts MemAcc
 //context-free syntax
 //  MemAcc.Var     = <<ID>>
 //  MemAcc.Call    = <<ID>(<{Exp ", "}*>)>
-
+//  
 //context-free priorities
-//  LValue = LExp <0> .> LExp.Project,
-//  LValue.Member <0> .> {
+////  LValue = LExp <0> .> LExp.Project,
+//  LValue.EDot <0> .> Exp = LValue,
+//  LValue.EDot <0> .> {
 //    Exp.Not
 //    Exp.Mul
 //    Exp.Add
 //    Exp.Eq
 //    Exp.New
 //    Exp.And
-//    Exp.Cond
+//    Exp.Cond   
 //  }
+  
+context-free sorts LValue
+context-free syntax
+  LValue.Member  = <<Exp>.<LExp>> {right}
+  LValue         = LExp
+
+context-free sorts LExp
+context-free syntax
+  LExp.Project   = <<MemAcc>.<LExp>> {right}
+  LExp           = MemAcc
+
+context-free sorts MemAcc
+context-free syntax
+  MemAcc.Var     = <<ID>>
+  MemAcc.Call    = <<ID>(<{Exp ", "}*>)>
+
+context-free priorities
+  LValue.Member <0> .> Exp = LValue,
+  LValue.Member <0> .> {
+    Exp.Not
+    Exp.Mul
+    Exp.Add
+    Exp.Eq
+    Exp.New
+    Exp.And
+    Exp.Cond
+  }
   
 context-free sorts Type
 context-free syntax
@@ -137,10 +137,8 @@ context-free syntax
 
 context-free priorities
   {
-//    Exp.Call
     Exp.New
-    LValue.EDot
-//    LExp.Project
+    LExp.Project
     MemAcc.Var
     MemAcc.Call
   } > {
