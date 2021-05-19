@@ -175,7 +175,7 @@ public class MinicsComplete implements TaskDef<MinicsComplete.Input, @Nullable C
         //    TODO: What to do when the file is semantically incorrect? Recovery?
 
         List<IStrategoTerm> completionTerms;
-        final Path debugPath = Paths.get("/Users/daniel/repos/spoofax3/devenv/debug.yml");
+        final Path debugPath = Paths.get("/Users/daniel/repos/spoofax3/devenv-cc/debug.yml");
         System.out.println("DEBUG path: " + debugPath.toAbsolutePath());
         try(final StrategyEventHandler eventHandler = new EventHandler(debugPath)) {
             SolverContext ctx = analyzer.createContext(eventHandler, null);//placeholderVar);

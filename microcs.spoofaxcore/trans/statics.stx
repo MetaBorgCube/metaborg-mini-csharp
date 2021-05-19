@@ -172,15 +172,15 @@ rules typeOfNew : scope * Exp -> TYPE
 //
 //  typeOfLValue(s, Dot(mas)) = T2 :- {T1}
 //    typeOfMemAcc(s, s, BOTTOM(), mas) == T2.
-//    
+//
 //  typeOfLValue(s, EDot(e, mas)) = T2 :- {T1 cs}
 //    typeOfExp(s, e) == T1@CLASS(_, cs),
 //    typeOfMemAcc(s, cs, T1, mas) == T2.
-//    
+//
 //rules typeOfMemAcc : scope * scope * TYPE * list(MemAcc) -> TYPE
 //
 //  typeOfMemAcc(s, cs, T, []) = T.
-//  
+//
 //  typeOfMemAcc(s, cs1, _, [Var(name) | mas]) = T2 :- {T1}
 //    typeOfVarOrMember(cs1, name) == T1,
 //    typeOfMemAcc(s, scopeOfType(T1), T1, mas) == T2.
@@ -189,9 +189,9 @@ rules typeOfNew : scope * Exp -> TYPE
 //    typeOfMember(cs1, name) == METHOD(TA, TR),
 //    typesOfExps(s, args) == TA,
 //    typeOfMemAcc(s, scopeOfType(TR), TR, mas) == T2.
-//    
-//rules  scopeOfType : TYPE -> scope 
-//  
+//
+//rules  scopeOfType : TYPE -> scope
+//
 //  scopeOfType(CLASS(_, cs)) = cs.
 //  scopeOfType(_) = s :- new s.
 
@@ -214,7 +214,7 @@ rules typeOfMemberExp : scope * LValue -> TYPE
 rules typeOfLExp : scope * scope * LExp -> TYPE
 
   typeOfLExp(s, cs, MemAcc2LExp(ma)) = typeOfMemAcc(s, cs, ma).
-  
+
   typeOfLExp(s, cs, lv@Project(_, _))          = typeOfProjectExp(s, cs, lv).
   typeOfLExp(s, cs, lv@Project(Var(_), _))     = typeOfProjectExp(s, cs, lv).
   typeOfLExp(s, cs, lv@Project(Call(_, _), _)) = typeOfProjectExp(s, cs, lv).

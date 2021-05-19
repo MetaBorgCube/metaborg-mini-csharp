@@ -175,9 +175,11 @@ public class MicrocsComplete implements TaskDef<MicrocsComplete.Input, @Nullable
         //    TODO: What to do when the file is semantically incorrect? Recovery?
 
         List<IStrategoTerm> completionTerms;
-        final Path debugPath = Paths.get("/Users/daniel/repos/spoofax3/devenv/debug.yml");
-        System.out.println("DEBUG path: " + debugPath.toAbsolutePath());
-        try(final StrategyEventHandler eventHandler = new EventHandler(debugPath)) {
+        // FIXME: Remove this!
+//        final Path debugPath = Paths.get("/Users/daniel/repos/spoofax3/devenv-cc/debug.yml");
+//        System.out.println("DEBUG path: " + debugPath.toAbsolutePath());
+        try(final StrategyEventHandler eventHandler = StrategyEventHandler.none()) {
+//        try(final StrategyEventHandler eventHandler = new EventHandler(debugPath)) {
             SolverContext ctx = analyzer.createContext(eventHandler, null);//placeholderVar);
             // TODO: Specify spec name and root rule name somewhere
             SolverState startState = analyzer.createStartState(statixAst, "statics", "programOk")
