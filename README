@@ -1,0 +1,15 @@
+# Mini C# Documentation
+To auto-build and view the documentation locally at <http://localhost:8000>,
+invoke:
+
+```bash
+make
+```
+
+To deploy the documentation to GitHub pages at <https://metaborgcube.github.io/metaborg-mini-csharp/>, invoke:
+
+```bash
+make deploy
+```
+
+For this repo, documentation is automatically deployed using a Github workflow.
