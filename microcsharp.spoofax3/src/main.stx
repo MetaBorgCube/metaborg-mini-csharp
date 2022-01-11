@@ -1,0 +1,342 @@
+module main
+
+imports
+
+  signatures/start-sig
+  signatures/common-sig
+
+signature
+  sorts TYPE
+  constructors
+    CLASS       : string * scope -> TYPE
+    METHOD      : list(TYPE) * TYPE -> TYPE
+    INT         : TYPE
+    BOOL        : TYPE
+    OBJECT      : TYPE
+    NULL        : TYPE
+    VOID        : TYPE
+    BOTTOM      : TYPE
+  sorts
+    DECL = (path * (occurrence * TYPE))
+
+signature
+  namespaces
+    Class       : ID
+    Member      : ID
+    Var         : ID
+
+  relations
+    type        : occurrence -> TYPE
+
+  name-resolution
+    labels
+      P     // lexical parent
+
+rules programOk : Start
+  programOk(Program(classes)) :- {s}
+    new s,
+    init(s),
+    classesOk(s, classes).
+
+rules init : scope
+  init(s) :-
+    classOk(s, Class("Exception", [])).
+
+rules classOk : scope * ClassDecl
+  classesOk maps classOk(*, list(*))
+
+  classOk(s, Class(name, members)) :- {cs T}
+    new cs, cs -P-> s,
+    T == CLASS(name, cs),
+    declareClass(s, name, T),
+
+    declareVarOccurrence(cs, Var{"this"@name}, T),
+    membersOk(cs, members).
+
+rules memberOk : scope * MemberDecl
+  membersOk maps memberOk(*, list(*))
+
+  memberOk(cs, Field(type, name)) :- {T}
+    typeOfType(cs, type) == T,
+    declareMember(cs, name, T).
+
+  memberOk(cs, Method(returnType, name, params, stmts, finalStmt)) :- {ms RT PTS RTE T}
+    new ms, ms -P-> cs,
+    typeOfType(cs, returnType) == RT,
+    typesOfParams(ms, params) == PTS,
+    declareMember(cs, name, METHOD(PTS, RT)),
+    finalStmtOk(ms, finalStmt, RT),
+    stmtsOk(ms, stmts).
+
+rules typeOfParam : scope * ParamDecl -> TYPE
+  typesOfParams maps typeOfParam(*, list(*)) = list(*)
+
+  typeOfParam(s, Param(type, name)) = T :-
+    typeOfType(s, type) == T,
+    declareVar(s, name, T).
+
+rules finalStmtOk : scope * FinalStmt * TYPE
+  finalStmtOk(s, Return(e), T) :- {TE}
+    typeOfExp(s, e) == TE,
+    subtypeOf(TE, T).
+  finalStmtOk(s, Throw(e), _) :- {T}
+    typeOfExp(s, e) == T,
+    subtypeOf(T, CLASS("Exception", _)).
+  finalStmtOk(s, NoReturn(), VOID()).
+
+
+rules stmtOk : scope * Stmt
+  stmtsOk maps stmtOk(*, list(*))
+
+  stmtOk(bs, Block(stmts)) :- {nbs}
+    new nbs, nbs -P-> bs,
+    stmtsOk(nbs, stmts).
+
+  stmtOk(_, Nop()).
+
+  stmtOk(bs, Exp(e)) :-
+    typeOfExp(bs, e) == _.
+
+  stmtOk(bs, DeclareTypedVar(type, name)) :- {T}
+    typeOfType(bs, type) == T,
+    declareVar(bs, name, T).
+
+  stmtOk(bs, DeclareTypedVarInit(type, name, e)) :- {T TE}
+    typeOfType(bs, type) == T,
+    subtypeOf(typeOfExp(bs, e), TE),
+    subtypeOf(TE, T),
+    declareVar(bs, name, T).
+
+  stmtOk(bs, DeclareVarInit(name, e)) :- {T}
+    typeOfExp(bs, e) == T,
+    declareVar(bs, name, T).
+
+  stmtOk(bs, Assign(lvalue, e)) :- {T TE}
+    typeOfLValue(bs, lvalue) == T,
+    subtypeOf(typeOfExp(bs, e), TE),
+    subtypeOf(TE, T).
+
+rules typeOfExp : scope * Exp -> TYPE
+  typesOfExps maps typeOfExp(*, list(*)) = list(*)
+
+  typeOfExp(s, LValue2Exp(lvalue))      = typeOfLValue(s, lvalue).
+
+  typeOfExp(s, e@New(_))                = typeOfNew(s, e).
+  typeOfExp(s, e@New(ClassType(_)))     = typeOfNew(s, e).
+
+  typeOfExp(_, Null())  = NULL().
+  typeOfExp(_, True())  = BOOL().
+  typeOfExp(_, False()) = BOOL().
+
+  typeOfExp(s, This()) = typeOfVar(s, "this").
+
+  typeOfExp(s, Lt(e1, e2)) = BOOL() :-
+    subtypeOf(typeOfExp(s, e1), INT()),
+    subtypeOf(typeOfExp(s, e2), INT()).
+
+  typeOfExp(s, Eq(e1, e2)) = BOOL() :-
+    typeOfExp(s, e1) == _,
+    typeOfExp(s, e2) == _.
+
+  typeOfExp(s, Neq(e1, e2)) = BOOL() :-
+    typeOfExp(s, e1) == _,
+    typeOfExp(s, e2) == _.
+
+  typeOfExp(s, And(e1, e2)) = BOOL() :-
+    subtypeOf(typeOfExp(s, e1), BOOL()),
+    subtypeOf(typeOfExp(s, e2), BOOL()).
+
+  typeOfExp(s, Not(e1)) = BOOL() :-
+    subtypeOf(typeOfExp(s, e1), BOOL()).
+
+  typeOfExp(s, Int(_)) = INT().
+
+  typeOfExp(s, Mul(e1, e2)) = INT() :-
+    subtypeOf(typeOfExp(s, e1), INT()),
+    subtypeOf(typeOfExp(s, e2), INT()).
+
+  typeOfExp(s, Add(e1, e2)) = INT() :-
+    subtypeOf(typeOfExp(s, e1), INT()),
+    subtypeOf(typeOfExp(s, e2), INT()).
+
+  typeOfExp(s, Cond(ec, e1, e2)) = T :- {T1 T2}
+    subtypeOf(typeOfExp(s, ec), BOOL()),
+    typeOfExp(s, e1) == T1,
+    typeOfExp(s, e2) == T2,
+    lub(T1, T2) == T.
+
+rules typeOfNew : scope * Exp -> TYPE
+
+  typeOfNew(s, New(type)) = T :- {cs name}
+    typeOfType(s, type) == T@CLASS(name, cs).
+
+//rules typeOfLValue : scope * LValue -> TYPE
+//
+//  typeOfLValue(s, Dot(mas)) = T2 :- {T1}
+//    typeOfMemAcc(s, s, BOTTOM(), mas) == T2.
+//
+//  typeOfLValue(s, EDot(e, mas)) = T2 :- {T1 cs}
+//    typeOfExp(s, e) == T1@CLASS(_, cs),
+//    typeOfMemAcc(s, cs, T1, mas) == T2.
+//
+//rules typeOfMemAcc : scope * scope * TYPE * list(MemAcc) -> TYPE
+//
+//  typeOfMemAcc(s, cs, T, []) = T.
+//
+//  typeOfMemAcc(s, cs1, _, [Var(name) | mas]) = T2 :- {T1}
+//    typeOfVarOrMember(cs1, name) == T1,
+//    typeOfMemAcc(s, scopeOfType(T1), T1, mas) == T2.
+//
+//  typeOfMemAcc(s, cs1, T, [Call(name, args) | mas]) = T2 :- {TA TR}
+//    typeOfMember(cs1, name) == METHOD(TA, TR),
+//    typesOfExps(s, args) == TA,
+//    typeOfMemAcc(s, scopeOfType(TR), TR, mas) == T2.
+//
+//rules  scopeOfType : TYPE -> scope
+//
+//  scopeOfType(CLASS(_, cs)) = cs.
+//  scopeOfType(_) = s :- new s.
+
+rules typeOfLValue : scope * LValue -> TYPE
+
+  typeOfLValue(s, m@Member(_, _)) = typeOfMemberExp(s, m).
+//  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Var(_)))), _)) = typeOfMemberExp(s, m).
+//  typeOfLValue(s, m@Member(LValue2Exp(LExp2LValue(MemAcc2LExp(Call(_, _)))), _)) = typeOfMemberExp(s, m).
+
+  typeOfLValue(s, LExp2LValue(MemAcc2LExp(Var(name)))) = T :-
+    typeOfVarOrMember(s, name) == T.
+  typeOfLValue(s, LExp2LValue(le)) = typeOfLExp(s, s, le).
+
+rules typeOfMemberExp : scope * LValue -> TYPE
+
+  typeOfMemberExp(s, Member(e, le)) = T :- {cs}
+    typeOfExp(s, e) == CLASS(_, cs),
+    typeOfLExp(s, cs, le) == T.
+
+rules typeOfLExp : scope * scope * LExp -> TYPE
+
+  typeOfLExp(s, cs, MemAcc2LExp(ma)) = typeOfMemAcc(s, cs, ma).
+
+  typeOfLExp(s, cs, lv@Project(_, _))          = typeOfProjectExp(s, cs, lv).
+  typeOfLExp(s, cs, lv@Project(Var(_), _))     = typeOfProjectExp(s, cs, lv).
+  typeOfLExp(s, cs, lv@Project(Call(_, _), _)) = typeOfProjectExp(s, cs, lv).
+
+rules typeOfProjectExp : scope * scope * LExp -> TYPE
+
+  typeOfProjectExp(s, cs, Project(ma, le)) = T :- {T1 cs2}
+    typeOfMemAcc(s, cs, ma) == CLASS(_, cs2),
+    typeOfLExp(s, cs2, le) == T.
+
+rules typeOfMemAcc : scope * scope * MemAcc -> TYPE
+
+  typeOfMemAcc(s, cs, Var(name)) = T :-
+    typeOfMember(cs, name) == T.
+
+  typeOfMemAcc(s, cs, Call(name, args)) = TR :- {TA}
+    typeOfMember(cs, name) == METHOD(TA, TR),
+    typesOfExps(s, args) == TA.
+
+// Classes
+rules declareClass : scope * ID * TYPE
+  declareClass(s, decl, T) :-
+    !type[Class{decl@decl}, T] in s.
+
+rules resolveClass : scope * ID -> list(DECL)
+  resolveClass(s, name) = ps :-
+    query type
+      filter P*
+      and { d' :- d' == Class{name@_} }
+      min $ < P
+      in s |-> ps.
+
+rules typeOfClass : scope * ID -> TYPE
+  typeOfClass(s, name) = T :- {decl}
+    resolveClass(s, name) == [(_, (decl, T))|_].
+
+// Members
+rules declareMember : scope * ID * TYPE
+  declareMember(cs, decl, T) :-
+    !type[Member{decl@decl}, T] in cs.
+
+rules resolveMember : scope * ID -> list((path * (occurrence * TYPE)))
+  resolveMember(s, name) = ps :-
+    query type
+      filter P*
+      and { d' :- d' == Member{name@_} }
+      min $ < P
+      in s |-> ps.
+
+rules typeOfMember : scope * ID -> TYPE
+  typeOfMember(s, name) = T :- {decl}
+    resolveMember(s, name) == [(_, (decl, T))|_].
+
+// Variables
+rules declareVarOccurrence : scope * occurrence * TYPE
+  declareVarOccurrence(s, occ@Var{name@_}, T) :-
+    !type[occ, T] in s.
+
+rules declareVar : scope * ID * TYPE
+  declareVar(s, decl, T) :-
+    declareVarOccurrence(s, Var{decl@decl}, T).
+
+rules resolveVar : scope * ID -> list(DECL)
+  resolveVar(s, name) = ps :-
+    query type
+      filter P*
+      and { d' :- d' == Var{name@_} }
+      min $ < P
+      in s |-> ps.
+
+rules typeOfVar : scope * ID -> TYPE
+  typeOfVar(s, name) = T :- {decl}
+    resolveVar(s, name) == [(_, (decl, T))|_].
+
+// Types
+rules typeOfType : scope * Type -> TYPE
+  typeOfType(s, t@IntType())    = INT().
+  typeOfType(s, t@BoolType())   = BOOL().
+  typeOfType(s, t@ObjectType()) = OBJECT().
+  typeOfType(s, t@VoidType())   = VOID().
+
+  typeOfType(s, t@ClassType(name)) = T :-
+    typeOfClass(s, name) == T@CLASS(_, _).
+
+rules lub : TYPE * TYPE -> TYPE
+  lub(T@CLASS(_, _), NULL())    = T.
+  lub(NULL(), T@CLASS(_, _))    = T.
+  lub(T,      T)                = T.
+
+rules subtypeOf : TYPE * TYPE
+  subtypeOf(T, T).
+  subtypeOf(NULL(), T@CLASS(_, _)).
+  subtypeOf(BOTTOM(), _).
+
+// Complex Resolution
+rules typeOfVarOrMember : scope * ID -> TYPE
+  typeOfVarOrMember(s, name) = T :- {decl}
+    // resolution order:
+    // 1. variables
+    // 2. member
+    resolveVarOrMember(s, name) == [(_, (decl, T))|_].
+
+rules resolveVarOrMember : scope * ID -> list(DECL)
+  resolveVarOrMember(s, name)
+    = unwrapVarOrResolveMember(s, name, resolveVar(s, name)).
+
+rules unwrapVarOrResolveMember : scope * ID * list(DECL) -> list(DECL)
+  unwrapVarOrResolveMember(_, _, ps@[(_, (Var{decl@_}, T))|_]) = ps.
+  unwrapVarOrResolveMember(s, name, []) = resolveMember(s, name).
+
+// Placeholders
+rules
+  programOk(Start-Plhdr()).
+  classOk(_, ClassDecl-Plhdr()).
+  memberOk(_, MemberDecl-Plhdr()).
+  typeOfParam(_, ParamDecl-Plhdr()) = BOTTOM().
+  stmtOk(_, Stmt-Plhdr()).
+  typeOfExp(_, Exp-Plhdr()) = BOTTOM().
+//  typeOfLExp(_, _, LExp-Plhdr()) = BOTTOM().
+//  typeOfMemAcc(_, _, MemAcc-Plhdr()) = BOTTOM().
+  typeOfLValue(_, LValue-Plhdr()) = BOTTOM().
+  typeOfNew(_, Exp-Plhdr()) = BOTTOM().
+  typeOfType(_, Type-Plhdr()) = BOTTOM().

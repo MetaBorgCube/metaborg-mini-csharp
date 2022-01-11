@@ -1,0 +1,141 @@
+module start
+
+imports
+	common
+
+context-free start-symbols Start
+
+context-free sorts Start
+
+context-free syntax
+  Start.Program = <
+    <{ClassDecl "\n"}*>
+  >
+
+context-free sorts
+  ClassDecl MemberDecl ParamDecl FinalStmt
+
+context-free syntax
+  ClassDecl.Class = <
+    class <ID> {
+        <{MemberDecl "\n"}*>
+    }
+  >
+
+  MemberDecl.Field = <public <Type> <ID>;>
+
+  MemberDecl.Method = <
+    public <Type> <ID>(<{ParamDecl ", "}*>) {
+        <{Stmt "\n"}*>
+        <FinalStmt>
+    }
+  >
+
+  ParamDecl.Param = <<Type> <ID>>
+
+  FinalStmt.Return     = <return <Exp>;>
+  FinalStmt.Throw      = <throw <Exp>;>
+  FinalStmt.NoReturn   = <>
+
+context-free sorts Stmt
+context-free syntax
+  Stmt.Block = < {
+      <{Stmt "\n"}*>
+  }>
+
+  Stmt.DeclareTypedVar     = <<Type> <ID>;>
+  Stmt.DeclareTypedVarInit = <<Type> <ID> = <Exp>;>
+  Stmt.DeclareVarInit      = <var <ID> = <Exp>;>
+
+  Stmt.Assign = <<LValue> = <Exp>;>
+  Stmt.Nop    = <;>
+  Stmt.Exp    = <<Exp>;>
+
+context-free sorts Exp
+context-free syntax
+  Exp        = LValue
+  Exp.New    = <new <Type>(<>)>
+
+  Exp.Null   = <null>
+  Exp.True   = <true>
+  Exp.False  = <false>
+  Exp.This   = <this>
+
+  Exp.Lt     = [[Exp] < [Exp]]  {left}
+  Exp.Eq     = [[Exp] == [Exp]] {left}
+  Exp.Neq    = [[Exp] != [Exp]] {left}
+  Exp.And    = <<Exp> && <Exp>> {left}
+  Exp.Not    = <!<Exp>>
+
+  Exp.Int    = <<INT>>
+  Exp.Mul    = <<Exp> * <Exp>> {left}
+  Exp.Add    = <<Exp> + <Exp>> {left}
+
+  Exp.Cond   = <<Exp> ? <Exp> : <Exp>>
+  Exp        = <(<Exp>)> {bracket}
+
+  
+context-free sorts LValue
+context-free syntax
+  LValue.Member  = <<Exp>.<LExp>> {right}
+  LValue         = LExp
+
+context-free sorts LExp
+context-free syntax
+  LExp.Project   = <<MemAcc>.<LExp>> {right}
+  LExp           = MemAcc
+
+context-free sorts MemAcc
+context-free syntax
+  MemAcc.Var     = <<ID>>
+  MemAcc.Call    = <<ID>(<{Exp ", "}*>)>
+
+context-free priorities
+  LValue.Member <0> .> Exp = LValue,
+  LValue.Member <0> .> {
+    Exp.Not
+    Exp.Mul
+    Exp.Add
+    Exp.Eq
+    Exp.New
+    Exp.And
+    Exp.Cond
+  }
+  
+context-free sorts Type
+context-free syntax
+  Type.VoidType   = <void>
+  Type.IntType    = <int>
+  Type.BoolType   = <bool>
+  Type.ObjectType = <object>
+  Type.ClassType  = <<ID>>
+
+
+
+context-free priorities
+  {
+    Exp.New
+    LExp.Project
+    MemAcc.Var
+    MemAcc.Call
+  } > {
+    Exp.Not
+  } > {
+    Exp.Mul
+  } > {
+    Exp.Add
+  } > {
+    Exp.Lt
+  } > { left:
+    Exp.Eq
+    Exp.Neq
+  } > {
+    Exp.And
+  } > {
+    Exp.Cond
+  }
+
+template options
+  ID = keyword {reject}
+  keyword -/- [A-Za-z0-9]
+

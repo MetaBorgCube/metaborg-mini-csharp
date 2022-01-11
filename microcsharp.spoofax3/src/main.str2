@@ -1,0 +1,24 @@
+module main
+
+imports
+
+  statixruntime
+  statix/api
+  injections/-
+  signatures/start-sig
+  pp
+  completion
+
+rules // Analysis
+
+  pre-analyze            = explicate-injections-microcsharp
+  post-analyze           = implicate-injections-microcsharp
+  downgrade-placeholders = downgrade-placeholders-microcsharp
+  upgrade-placeholders   = upgrade-placeholders-microcsharp
+  is-inj                 = is-microcsharp-inj-cons
+  pp-partial             = pp-partial-microcsharp-string
+
+
+  editor-analyze = stx-editor-analyze(pre-analyze, post-analyze|"main", "programOk")
+  editor-resolve = stx-editor-resolve
+  editor-hover   = stx-editor-hover

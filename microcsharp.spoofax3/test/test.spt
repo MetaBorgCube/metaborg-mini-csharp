@@ -1,0 +1,57 @@
+module test
+
+start symbol Start
+
+fixture [[
+    class A
+    {
+        public B b;
+        public int f;
+
+        public B M(int a)
+        {
+            int l;
+            var _ = [[...]];
+            return b;
+        }
+    }
+
+    class B
+    {
+        public A a;
+        public bool bf;
+        public A BM(bool b) { return a; }
+    }
+]]
+
+test var [[
+    b
+]] parse succeeds
+
+test member 1 [[
+    b.bf
+]] parse succeeds
+
+test member 2 [[
+    b.a.b
+]] parse succeeds
+
+test call 0 [[
+    M(1)
+]] parse succeeds
+
+test call 0 member 1 [[
+    M(1).a
+]] parse succeeds
+
+test call 1 [[
+    M(1).BM(true)
+]] parse succeeds
+
+test call 2 member 1 [[
+    M(1).a
+]] parse succeeds
+
+test call 2 [[
+    M(1).BM(true).b
+]] parse succeeds
