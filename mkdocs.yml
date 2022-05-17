@@ -9,7 +9,7 @@ theme:
   name: material
   language: en
   icon:
-    logo: fontawesome/solid/sticky-note
+    logo: fontawesome/solid/note-sticky
     repo: fontawesome/brands/github
   palette:
     primary: green
@@ -20,11 +20,13 @@ theme:
 markdown_extensions:
   - abbr
   - admonition
-  - codehilite:
-      guess_lang: false
+  - attr_list
   - def_list
+  - footnotes
   - toc:
       permalink: true
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
@@ -32,14 +34,21 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      guess_lang: false
   - pymdownx.inlinehilite
-  - pymdownx.keys
+  - pymdownx.keys:
+      key_map:
+        click: "Click"
+        left-click: "Left Click"
+        right-click: "Right Click"
   - pymdownx.magiclink
   - pymdownx.mark
   - pymdownx.saneheaders
   - pymdownx.smartsymbols
   - pymdownx.superfences
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde

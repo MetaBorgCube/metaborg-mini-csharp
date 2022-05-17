@@ -56,3 +56,6 @@ fabric.properties
 
 # Documentation
 /.docs_site/
+
+# Misc
+.DS_Store

@@ -1,15 +1,41 @@
 name: docs
+
 on:
   push:
-    branches:
-      - master
+    branches: [ main, master ]
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      CI: 1   # needed for the mkdocs-git-revision-date-plugin
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v4
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
-          python-version: 3.x
-      - run: pip install mkdocs-material==7.0.6
-      - run: mkdocs gh-deploy --force
+          python-version: '3.x'
+      - name: Upgrade pip
+        run: python3 -m pip install --upgrade pip
+      - name: Get pip cache dir
+        id: pip-cache
+        run: echo "::set-output name=dir::$(pip cache dir)"
+      - name: Cache Python packages
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('mkdocs_requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install Python packages
+        run: python3 -m pip install -r mkdocs_requirements.txt
+      - name: Build documentation
+        run: mkdocs build
+      - name: Publish documentation
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site

@@ -1,0 +1,14 @@
+image: python:3.10
+
+pages:
+  stage: deploy
+  only:
+    - master
+    - main
+  script:
+    - python3 -m pip install --upgrade pip
+    - python3 -m pip install -r docs/mkdocs_requirements.txt
+    - mkdocs build --site-dir public
+  artifacts:
+    paths:
+      - public
