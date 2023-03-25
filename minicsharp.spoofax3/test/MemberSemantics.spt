@@ -1,0 +1,79 @@
+module MemberSemantics
+
+language minics
+
+start symbol Start
+
+fixture [[
+    using System;
+
+    class A
+    {
+        public int fa;
+        public bool MA() { return true; }
+    }
+
+    class B : A
+    {
+        public bool fb;
+        public int MB() { return 42; }
+    }
+
+    class C : B
+    {
+        public int fc;
+        public int MC() { return 10; }
+        [[...]]
+    }
+
+    class X {}
+]]
+
+test int field [[
+    public int x;
+]] analysis succeeds
+   run get-type to INT()
+
+test object field [[
+    public X x;
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("X", _), _)
+
+test field not unique [[
+    public bool fc;
+]] analysis fails
+
+test field present in parent [[
+    public int fb;
+]] analysis fails
+
+test int method [[
+    public int M() { return 1337; }
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test object method [[
+    public X M() { return new X(); }
+]] analysis succeeds
+   run get-type to METHOD([], OBJECT(CLASS("X", _), _))
+
+test object method with object parameter [[
+    public X M(X x) { return x; }
+]] analysis succeeds
+   run get-type to METHOD([OBJECT(CLASS("X", _), _)], OBJECT(CLASS("X", _), _))
+
+test method not unique [[
+    public bool MC() { return true; }
+]] analysis fails
+
+test method present in parent [[
+    public int MB() { return 11; }
+]] analysis fails
+
+test duplicate method with different signature (not supported in Mini C#) [[
+    public int MC(int x) { return x; }
+]] analysis fails
+
+test method with different signature present in parent (not supported in Mini C#) [[
+    public int MB(int x) { return x; }
+]] analysis fails

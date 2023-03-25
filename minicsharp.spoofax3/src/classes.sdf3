@@ -1,0 +1,49 @@
+module classes
+
+imports
+  Common
+  types
+  statements
+  expressions
+
+context-free sorts
+  UsingDecl ClassDecl MemberDecl ParamDecl ParentDecl
+
+context-free syntax
+
+  UsingDecl.Using = <using <ID>;>
+
+  ClassDecl.Class = <
+    class <ID><ParentDecl> {
+      <{MemberDecl "\n"}*>
+    }
+  >
+
+  MemberDecl.InstanceField = <public <Type> <ID>;>
+  MemberDecl.StaticField = <public static <Type> <ID>;>
+  MemberDecl.NewField = <public new <Type> <ID>;>
+
+  MemberDecl.InstanceMethod = <
+    public <Type> <ID>(<{ParamDecl ", "}*>) {
+        <{Stmt "\n"}*>
+        return <Exp>;
+    }
+  >
+  MemberDecl.StaticMethod = <
+    public static <Type> <ID>(<{ParamDecl ", "}*>) {
+        <{Stmt "\n"}*>
+        return <Exp>;
+    }
+  >
+
+  ParamDecl.Param = <<Type> <ID>>
+
+  ParentDecl.NoParent = <>
+  ParentDecl.Parent = < : <Type>>
+
+
+template options
+
+  ID = keyword {reject}
+  keyword -/- [A-Za-z0-9]
+

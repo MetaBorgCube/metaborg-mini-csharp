@@ -1,0 +1,440 @@
+module DeclSemantics
+
+language minics
+
+start symbol Start
+
+fixture [[
+    using System;
+
+    class A
+    {
+        public static int sfa;
+
+        public int fa;
+
+        public static bool SFA(int y) { return false; }
+
+        public bool MA() { return true; }
+    }
+
+    class B : A
+    {
+        public static X sfb;
+
+        public X fb;
+
+        public static X PSF(X x) { return new X(); }
+
+        public int MB() { return 10; }
+    }
+
+    class C2 : B { }
+
+    class C1 : B
+    {
+        public static int sfc;
+
+        public int fc;
+
+        public static int SF() { return 42; }
+
+        public C1 MC(int a)
+        {
+            int l;
+            var _ = [[...]];
+            return new C1();
+        }
+    }
+
+    class X { }
+]]
+
+// Local variables
+test local variable [[
+  l
+]] analysis succeeds
+   run get-type to INT()
+
+// Arguments
+test argument [[
+  a
+]] analysis succeeds
+   run get-type to INT()
+
+// Instance Fields
+test local field [[
+  fc
+]] analysis succeeds
+   run get-type to INT()
+
+test this local field [[
+  this.fc
+]] analysis succeeds
+   run get-type to INT()
+
+test base local field [[
+  base.fc
+]] analysis fails
+
+test remote field [[
+  new C1().fc
+]] analysis succeeds
+   run get-type to INT()
+
+test parent field [[
+  fb
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("X", _), _)
+
+test this parent field [[
+  this.fb
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("X", _), _)
+
+test base parent field [[
+  base.fb
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("X", _), _)
+
+test remote parent field [[
+  new C1().fb
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("X", _), _)
+
+test ancestor field [[
+  fa
+]] analysis succeeds
+   run get-type to INT()
+
+test this ancestor field [[
+  this.fa
+]] analysis succeeds
+   run get-type to INT()
+
+test base ancestor field [[
+  base.fa
+]] analysis succeeds
+   run get-type to INT()
+
+test remote ancestor field [[
+  new C1().fa
+]] analysis succeeds
+   run get-type to INT()
+
+
+// Static fields
+test local static field [[
+  sfc
+]] analysis succeeds
+   run get-type to INT()
+
+test this local static field [[
+  this.sfc
+]] analysis fails
+
+test base local static field [[
+  base.sfc
+]] analysis fails
+
+test direct static field [[
+  C1.sfc
+]] analysis succeeds
+   run get-type to INT()
+
+test remote static field [[
+  C1.sfc
+]] analysis succeeds
+   run get-type to INT()
+
+test parent static field [[
+  sfb
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("X", _), _)
+
+test this parent static field [[
+  this.sfb
+]] analysis fails
+
+test base parent static field [[
+  base.sfb
+]] analysis fails
+
+test remote parent static field [[
+  C1.sfb
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("X", _), _)
+
+test ancestor static field [[
+  sfa
+]] analysis succeeds
+   run get-type to INT()
+
+test this ancestor static field [[
+  this.sfa
+]] analysis fails
+
+test base ancestor static field [[
+  base.sfa
+]] analysis fails
+
+test remote ancestor static field [[
+  C1.sfa
+]] analysis succeeds
+   run get-type to INT()
+
+
+// Instance methods
+test local method [[
+  MC
+]] analysis succeeds
+   run get-type to METHOD([INT()], OBJECT(CLASS("C1", _), _))
+
+test this local method [[
+  this.MC
+]] analysis succeeds
+   run get-type to METHOD([INT()], OBJECT(CLASS("C1", _), _))
+
+test base local method [[
+  base.MC
+]] analysis fails
+
+test remote local method [[
+  new C1().MC
+]] analysis succeeds
+   run get-type to METHOD([INT()], OBJECT(CLASS("C1", _), _))
+
+test parent method [[
+  MB
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test this parent method [[
+  this.MB
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test base parent method [[
+  base.MB
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test remote parent method [[
+  new C1().MB
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test ancestor method [[
+  MA
+]] analysis succeeds
+   run get-type to METHOD([], BOOL())
+
+test this ancestor method [[
+  this.MA
+]] analysis succeeds
+   run get-type to METHOD([], BOOL())
+
+test base ancestor method [[
+  base.MA
+]] analysis succeeds
+   run get-type to METHOD([], BOOL())
+
+test remote ancestor method [[
+  new C1().MA
+]] analysis succeeds
+   run get-type to METHOD([], BOOL())
+
+
+// Instance method calls
+test local method call [[
+  MC(42)
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("C1", _), _)
+
+test this local method call [[
+  this.MC(42)
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("C1", _), _)
+
+test base local method call [[
+  base.MC(42)
+]] analysis fails
+
+test remote local method call [[
+  new C1().MC(42)
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("C1", _), _)
+
+test parent method call [[
+  MB()
+]] analysis succeeds
+   run get-type to INT()
+
+test this parent method call [[
+  this.MB()
+]] analysis succeeds
+   run get-type to INT()
+
+test base parent method call [[
+  base.MB()
+]] analysis succeeds
+   run get-type to INT()
+
+test remote parent method call [[
+  new C1().MB()
+]] analysis succeeds
+   run get-type to INT()
+
+test ancestor method call [[
+  MA()
+]] analysis succeeds
+   run get-type to BOOL()
+
+test this ancestor method call [[
+  this.MA()
+]] analysis succeeds
+   run get-type to BOOL()
+
+test base ancestor method call [[
+  base.MA()
+]] analysis succeeds
+   run get-type to BOOL()
+
+test remote ancestor method call [[
+  new C1().MA()
+]] analysis succeeds
+   run get-type to BOOL()
+
+
+// Static functions
+test local static function [[
+  SF
+]] analysis succeeds
+   run get-type to METHOD([], INT())
+
+test parent static function [[
+  PSF
+]] analysis succeeds
+   run get-type to METHOD([OBJECT(CLASS("X", _), _)], OBJECT(CLASS("X", _), _))
+
+test remote static function [[
+  A.SFA
+]] analysis succeeds
+   run get-type to METHOD([INT()], BOOL())
+
+
+// Static function calls
+test local static function call [[
+  SF()
+]] analysis succeeds
+   run get-type to INT()
+
+test parent static function call [[
+  PSF(new X())
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("X", _), _)
+
+test remote static function call [[
+  A.SFA(42)
+]] analysis succeeds
+   run get-type to BOOL()
+
+
+// Unresolved references
+test unresolved variable [[
+  q
+]] analysis fails
+
+test unresolved local field [[
+  this.q
+]] analysis fails
+
+test unresolved parent field [[
+  base.q
+]] analysis fails
+
+test unresolved remote field [[
+  new C1().q
+]] analysis fails
+
+test unresolved method call [[
+  q()
+]] analysis fails
+
+test unresolved local method call [[
+  this.q()
+]] analysis fails
+
+test unresolved parent method call [[
+  base.q()
+]] analysis fails
+
+test unresolved remote method call [[
+  new C1().q()
+]] analysis fails
+
+
+// Invalid instance method calls
+test local method call with wrong argument type [[
+  MC(false)
+]] analysis fails
+
+test this local method call with wrong argument type [[
+  this.MC(false)
+]] analysis fails
+
+test base local method call with wrong argument type [[
+  base.MC(false)
+]] analysis fails
+
+test remote local method call with wrong argument type [[
+  new C1().MC(false)
+]] analysis fails
+
+test local method call with too few arguments [[
+  MC()
+]] analysis fails
+
+test this local method call with too few arguments [[
+  this.MC()
+]] analysis fails
+
+test base local method call with too few arguments [[
+  base.MC()
+]] analysis fails
+
+test remote local method call with too few arguments [[
+  new C1().MC()
+]] analysis fails
+
+test local method call with too many arguments [[
+  MC(42, false)
+]] analysis fails
+
+test this local method call with too many arguments [[
+  this.MC(42, false)
+]] analysis fails
+
+test base local method call with too many arguments [[
+  base.MC(42, false)
+]] analysis fails
+
+test remote local method call with too many arguments [[
+  new C1().MC(42, false)
+]] analysis fails
+
+
+// Invalid static function calls
+test static function call with wrong argument type [[
+  A.SFA(false)
+]] analysis fails
+
+test static function call with too few arguments [[
+  A.SFA()
+]] analysis fails
+
+test static function call with too many arguments [[
+  A.SFA(42, false)
+]] analysis fails
+
+

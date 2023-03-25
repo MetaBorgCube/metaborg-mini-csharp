@@ -1,0 +1,6 @@
+shared.defaultArtifactId=minicsharp
+shared.defaultClassPrefix=Microcsharp
+shared.defaultGroupId=org.metaborg
+shared.defaultPackageId=mb.minicsharp
+shared.defaultVersion=0.1.0
+stratego.languageStrategyAffix=minicsharp

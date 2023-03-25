@@ -1,0 +1,112 @@
+module analysis/classes
+
+imports
+  signatures/minics-sig
+  analysis/types
+  analysis/statements
+  analysis/declarations
+  analysis/expressions
+
+rules usingOk : scope * UsingDecl
+  usingsOk maps usingOk(*, list(*))
+
+  usingOk(s, Using(ref)).   // TODO
+
+  usingOk(_, UsingDecl-Plhdr()).
+
+
+rules classOk : scope * ClassDecl
+  classesOk maps classOk(*, list(*))
+
+  classOk(globalScope, class@Class(name, parent, members)) :- {classScope instanceScope methodScope CT IT}
+    // Static class
+    new classScope,
+    classScope -P-> globalScope,
+    CT == CLASS(name, classScope),
+    globalScope -> Class{name@name} with type CT,
+
+    // Instance object
+    new instanceScope,
+    instanceScope -P-> globalScope,
+    IT == OBJECT(CT, instanceScope),
+
+    declareVarOccurrence(instanceScope, Var{"this"@name}, IT),      // @name
+    declareConstructor(classScope, IT),         // @name
+    parentOk(classScope, instanceScope, parent),
+    membersOk(classScope, instanceScope, members),
+    @class.type := CT.
+
+  classOk(_, ClassDecl-Plhdr()).
+
+rules parentOk : scope * scope * ParentDecl
+
+  parentOk(classScope, instanceScope, parent@NoParent()) :-
+    // TODO: Inherit from Object.
+    true.
+
+  parentOk(classScope, instanceScope, parent@Parent(type)) :- {parentClassScope parentInstanceScope CT PIT}
+    typeOfType(classScope, type) == CT,
+    CT == CLASS(_, parentClassScope) | error $[expected class, got [CT]],
+    // Ensure the ancestors are different from the class itself
+    ensureNoInheritanceCycle(classScope, parentClassScope),
+    classScope -E-> parentClassScope,
+
+    // Get the parent's instanceScope.
+    resolveConstructor(parentClassScope) == [(_, (_, PIT@OBJECT(_, parentInstanceScope)))],
+    declareVarOccurrence(instanceScope, Var{"base"@type}, PIT),     // @type
+    instanceScope -E-> parentInstanceScope,
+
+    instanceScope -S-> classScope,
+
+    @parent.type := CT.
+
+  parentOk(_, _, ParentDecl-Plhdr()).
+
+rules memberOk : scope * scope * MemberDecl
+  membersOk maps memberOk(*, *, list(*))
+
+  memberOk(classScope, instanceScope, field@InstanceField(type, name)) :- {T}
+    typeOfObjectType(classScope, type) == T,
+    declareInstanceMember(instanceScope, classScope, name, T),
+    @field.type := T.
+
+  memberOk(classScope, _, field@StaticField(type, name)) :- {T}
+    typeOfObjectType(classScope, type) == T,
+    declareStaticMember(classScope, name, T),
+    @field.type := T.
+
+  memberOk(classScope, instanceScope, method@InstanceMethod(returnType, name, params, stmts, returnExp)) :- {methodScope RT ERT PTS T}
+    new methodScope,
+    methodScope -P-> instanceScope,
+    typeOfObjectType(classScope, returnType) == RT,
+    typesOfParams(methodScope, params) == PTS,
+    T == METHOD(PTS, RT),
+    declareInstanceMember(instanceScope, classScope, name, T),
+    declareReturnType(methodScope, RT),      // @name
+    ERT@typeOfExp(methodScope, returnExp) == RT | error $[expected [RT], got [ERT]],
+    stmtsOk(methodScope, stmts),
+    @method.type := T.
+
+  memberOk(classScope, _, method@StaticMethod(returnType, name, params, stmts, returnExp)) :- {methodScope RT ERT PTS T}
+    new methodScope,
+    methodScope -P-> classScope,
+    typeOfObjectType(classScope, returnType) == RT,
+    typesOfParams(methodScope, params) == PTS,
+    T == METHOD(PTS, RT),
+    declareStaticMember(classScope, name, T),
+    declareReturnType(methodScope, RT),
+    ERT@typeOfExp(methodScope, returnExp) == RT | error $[expected [RT], got [ERT]],
+    stmtsOk(methodScope, stmts),
+    @method.type := T.
+
+  memberOk(_, _, MemberDecl-Plhdr()).
+
+rules typeOfParam : scope * ParamDecl -> TYPE
+  typesOfParams maps typeOfParam(*, list(*)) = list(*)
+
+  typeOfParam(s, Param(type, name)) = T :-
+    typeOfObjectType(s, type) == T,
+    declareVar(s, name, T).
+    //@name.type := T.
+
+  typeOfParam(_, ParamDecl-Plhdr()) = _.

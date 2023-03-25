@@ -1,0 +1,26 @@
+module start
+
+imports
+  Common
+  classes
+  statements
+  expressions
+
+context-free start-symbols
+  Start
+
+context-free sorts
+  Start
+
+context-free syntax
+
+  Start.Program = <
+    <{UsingDecl "\n"}*>
+    <{ClassDecl "\n"}*>
+  >
+
+template options
+
+  ID = keyword {reject}
+  keyword -/- [A-Za-z0-9]
+

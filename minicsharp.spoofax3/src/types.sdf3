@@ -1,0 +1,20 @@
+module types
+
+imports
+  Common
+
+context-free sorts
+  Type
+
+context-free syntax
+
+  Type.IntType = <int>
+  Type.BoolType = <bool>
+  Type.ObjectType = <object>
+  Type.ClassType = <<ID>>
+
+template options
+
+  ID = keyword {reject}
+  keyword -/- [A-Za-z0-9]
+

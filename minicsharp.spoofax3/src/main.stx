@@ -1,0 +1,33 @@
+module main
+
+imports
+
+  signatures/start-sig
+  signatures/common-sig
+  
+  analysis/init
+  analysis/statements
+  analysis/expressions
+  analysis/types
+  analysis/classes
+
+
+// Single-file entry point
+rules programOk : Start
+
+  programOk(Program(usings, classes)) :- {s}
+    new s,
+    init(s),
+    usingsOk(s, usings),
+    classesOk(s, classes).
+
+  programOk(Start-Plhdr()).
+
+// Multi-file entry point
+rules projectOk : scope
+
+  projectOk(s).
+
+rules fileOk : scope * Start
+
+  fileOk(s, _).

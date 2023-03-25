@@ -1,0 +1,192 @@
+module ExpSemantics
+
+language minics
+
+start symbol Start
+
+fixture [[
+    using System;
+
+    class A { }
+    class B : A
+    {
+        public bool M(int a)
+        {
+            int l;
+            var _ = [[...]];
+            return true;
+        }
+    }
+    class C1 : B { }
+    class C2 : B { }
+    class C2 : A { }
+
+    class X { }
+]]
+
+
+// Literals and Constants
+test true [[
+  true
+]] analysis succeeds
+   run get-type to BOOL()
+
+test false [[
+  false
+]] analysis succeeds
+   run get-type to BOOL()
+
+test this [[
+  this
+]] analysis succeeds
+  run get-type to OBJECT(CLASS("B", _), _)
+
+test base [[
+  base
+]] analysis succeeds
+  run get-type to OBJECT(CLASS("A", _), _)
+
+test integer [[
+  42
+]] analysis succeeds
+   run get-type to INT()
+
+
+// Boolean Operators
+test less than [[
+  10 < 42
+]] analysis succeeds
+   run get-type to BOOL()
+
+test less than or equal to [[
+  10 <= 42
+]] analysis succeeds
+   run get-type to BOOL()
+
+test greater than [[
+  10 > 42
+]] analysis succeeds
+   run get-type to BOOL()
+
+test greater than or equal to [[
+  10 >= 42
+]] analysis succeeds
+   run get-type to BOOL()
+
+test equal to [[
+  10 == 42
+]] analysis succeeds
+   run get-type to BOOL()
+
+test not equal to [[
+  10 != 42
+]] analysis succeeds
+   run get-type to BOOL()
+
+test logical and [[
+  true && false
+]] analysis succeeds
+   run get-type to BOOL()
+
+test logical or [[
+  true && false
+]] analysis succeeds
+   run get-type to BOOL()
+
+test not [[
+  !true
+]] analysis succeeds
+   run get-type to BOOL()
+
+
+// Integer Operators
+test positive integer [[
+  +42
+]] analysis succeeds
+   run get-type to INT()
+
+test positive boolean [[
+  +false
+]] analysis fails
+
+test negative integer [[
+  -42
+]] analysis succeeds
+   run get-type to INT()
+
+test negative boolean [[
+  -false
+]] analysis fails
+
+test integer multiplication [[
+  10 * 42
+]] analysis succeeds
+   run get-type to INT()
+
+test boolean multiplication [[
+  true * false
+]] analysis fails
+
+test integer division [[
+  10 / 42
+]] analysis succeeds
+   run get-type to INT()
+
+test boolean division [[
+  true / false
+]] analysis fails
+
+test integer addition [[
+  10 + 42
+]] analysis succeeds
+   run get-type to INT()
+
+test boolean addition [[
+  true + false
+]] analysis fails
+
+test integer subtraction [[
+  10 - 42
+]] analysis succeeds
+   run get-type to INT()
+
+test boolean subtraction [[
+  true - false
+]] analysis fails
+
+
+// Ternary Operator
+test ternary operator on integer [[
+  true ? 10 : 20
+]] analysis succeeds
+   run get-type to INT()
+
+test ternary operator on boolean [[
+  true ? true : false
+]] analysis succeeds
+   run get-type to BOOL()
+
+test ternary operator with non-boolean condition [[
+  42 ? true : false
+]] analysis fails
+
+test ternary operator with incompatible branch types [[
+  true ? 42 : false
+]] analysis fails
+
+test ternary operator on objects [[
+  true ? new C1() : new C1()
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("C1", _), _)
+
+test ternary operator on related objects [[
+  true ? new C2() : new C1()
+]] analysis succeeds
+   run get-type to OBJECT(CLASS("B", _), _)
+
+test ternary operator on unrelated objects [[
+  true ? new C1() : new X()
+]] analysis succeeds
+   run get-type to OBJECT()
+
+

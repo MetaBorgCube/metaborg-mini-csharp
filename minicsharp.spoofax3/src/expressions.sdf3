@@ -1,0 +1,91 @@
+module expressions
+
+imports
+  Common
+  types
+
+context-free sorts
+  Exp Ref
+
+context-free syntax
+
+  // Objects
+  Exp = <<Ref>>
+  Exp.Call = <<Exp>(<{Exp ", "}*>)>
+  Exp.New = <new <Type>(<>)>
+  Exp.Member = <<Exp>.<ID>>
+  //Exp.MemberElvis = <<Exp>?.<ID>>
+//  Exp.Cast = <(<Type>)<Exp>>
+//  Exp.Default = <default>
+  Exp.Null = <null>
+//  Exp.NullCoal = <??> {left}
+
+  // Boolean
+  Exp.True = <true>
+  Exp.False = <false>
+  Exp.Lt  = [[Exp] < [Exp]]  {left}
+  Exp.Le  = [[Exp] <= [Exp]] {left}
+  Exp.Gt  = [[Exp] > [Exp]]  {left}
+  Exp.Ge  = [[Exp] >= [Exp]] {left}
+  Exp.Eq  = [[Exp] == [Exp]] {left}
+  Exp.Neq = [[Exp] != [Exp]] {left}
+  Exp.And = <<Exp> && <Exp>> {left}
+  Exp.Or  = <<Exp> || <Exp>> {left}
+  Exp.Not = <!<Exp>>
+
+  // Integer
+  Exp.Int = <<INT>>
+  Exp.Plus = <+<Exp>>
+  Exp.Min = <-<Exp>>
+  Exp.Mul = <<Exp> * <Exp>> {left}
+  Exp.Div = <<Exp> / <Exp>> {left}
+  Exp.Add = <<Exp> + <Exp>> {left}
+  Exp.Sub = <<Exp> - <Exp>> {left}
+
+  Exp.Cond = <<Exp> ? <Exp> : <Exp>>
+  Exp = <(<Exp>)> {bracket}
+
+context-free syntax
+
+  Ref.Var = <<ID>>
+  Ref.This = <this>
+  Ref.Base = <base>
+
+context-free priorities
+
+  {
+    Exp.Member
+    Exp.Call
+    Exp.New
+  } > {
+    Exp.Plus
+    Exp.Min
+    Exp.Not
+  } > { left:
+    Exp.Mul
+    Exp.Div
+  } > { left:
+    Exp.Add
+    Exp.Sub
+  } > { left:
+    Exp.Lt
+    Exp.Le
+    Exp.Gt
+    Exp.Ge
+  } > { left:
+    Exp.Eq
+    Exp.Neq
+  } > {
+    Exp.And
+  } > {
+    Exp.Or
+  } > {
+    Exp.Cond
+  }
+
+template options
+
+  ID = keyword {reject}
+  keyword -/- [A-Za-z0-9]
+
+

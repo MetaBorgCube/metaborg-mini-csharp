@@ -1,0 +1,19 @@
+    class A
+    {
+        public B b;
+        public int f;
+
+        public B M(int a)
+        {
+            int l;
+            var _ = [[Exp]];
+            return b;
+        }
+    }
+
+    class B
+    {
+        public A a;
+        public bool bf;
+        public A BM(bool b) { return a; }
+    }

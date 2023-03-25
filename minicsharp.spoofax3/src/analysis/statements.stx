@@ -1,0 +1,56 @@
+module analysis/statements
+
+imports
+  signatures/minics-sig
+  analysis/types
+  analysis/expressions
+  analysis/declarations
+
+rules stmtOk : scope * Stmt
+  stmtsOk maps stmtOk(*, list(*))
+
+  stmtOk(blockScope, Block(stmts)) :- {nestedBlockScope}
+    new nestedBlockScope,
+    nestedBlockScope -P-> blockScope,
+    stmtsOk(nestedBlockScope, stmts).
+
+  stmtOk(blockScope, Nop()).
+
+  stmtOk(blockScope, Exp(e)) :-
+    typeOfExp(blockScope, e) == _.
+
+  stmtOk(blockScope, DeclareTypedVar(type, name)) :- {T}
+    typeOfObjectType(blockScope, type) == T,
+    // FIXME: Variable should only be declared in subsequent scopes
+    declareVar(blockScope, name, T).
+    //@name.type := T.
+
+  stmtOk(blockScope, DeclareTypedVarInit(type, name, e)) :- {T TE}
+    typeOfObjectType(blockScope, type) == T,
+    typeOfExp(blockScope, e) == TE,
+    T == TE | error $[expected [T], got [TE]],
+    // FIXME: Variable should only be declared in subsequent scopes
+    declareVar(blockScope, name, T).
+    //@name.type := T.
+
+  stmtOk(blockScope, DeclareVarInit(name, e)) :- {T}
+    typeOfExp(blockScope, e) == T,
+    // FIXME: Variable should only be declared in subsequent scopes
+    blockScope -> Var{name@name} with type T.
+    //@name.type := T.
+
+  stmtOk(blockScope, Assign(name, e)) :- {TE TV}
+    typeOfExp(blockScope, e) == TE,
+    // TODO: Disallow assigning to a class
+    typeOfVarMemberClass(blockScope, name) == TV,
+    TV == TE | error $[expected [TV], got [TE]].
+    //@name.type := TV.
+
+  stmtOk(blockScope, stmt@If(condExp, thenStmt, elseStmt)) :- {TC}
+    typeOfExp(blockScope, condExp) == TC,
+    TC == BOOL() | error $[expected [BOOL()], got [TC]],
+    stmtOk(blockScope, thenStmt),
+    stmtOk(blockScope, elseStmt),
+    @stmt.type := TC.
+
+  stmtOk(_, Stmt-Plhdr()).
